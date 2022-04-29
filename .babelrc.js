@@ -16,13 +16,13 @@ module.exports = {
     [
       "@emotion/babel-preset-css-prop",
       {
-        "labelFormat": "[filename]-[local]"
+        "autoLabel": "always",
+        "labelFormat": "[local]"
       },
     ],
   ],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
-    "pegjs-inline-precompile",
     `${__dirname}/scripts/babel/proptypes-from-ts-props`,
     "add-module-exports",
     // stage 3
@@ -47,5 +47,11 @@ module.exports = {
     "cypress_test": {
       "plugins": ["istanbul"]
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": `${__dirname}/src/components/search_bar/query/default_syntax.ts`,
+      "plugins": ["pegjs-inline-precompile"],
+    }
+  ]
 };

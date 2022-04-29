@@ -240,8 +240,8 @@ describe('EuiInMemoryTable', () => {
         },
       ],
       pagination: {
-        initialPageSize: 'all',
-        pageSizeOptions: [1, 2, 3, 'all'],
+        initialPageSize: 0,
+        pageSizeOptions: [1, 2, 3, 0],
       },
     };
     const component = render(<EuiInMemoryTable {...props} />);
@@ -985,7 +985,7 @@ describe('EuiInMemoryTable', () => {
       // this is specifically testing regression against https://github.com/elastic/eui/issues/1007
       component.setProps({});
 
-      expect(component).toMatchSnapshot();
+      expect(component.render()).toMatchSnapshot();
     });
 
     test('pagination with actions column and sorting set to true', async () => {

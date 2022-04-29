@@ -2,10 +2,11 @@ import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { transparentize, useEuiTheme } from '../../../../../src/services';
+import { getPropsFromComponent } from '../../../services/props/get_props';
 
 import { EuiCode, EuiColorPickerSwatch } from '../../../../../src';
 
-import { EuiThemeColors, getPropsFromThemeKey, ThemeRowType } from '../_props';
+import { EuiThemeColors, ThemeRowType } from '../_props';
 
 import { ThemeExample } from '../_components/_theme_example';
 import {
@@ -14,14 +15,14 @@ import {
   shade_colors,
   special_colors,
   text_colors,
-} from '../../../../../src/global_styling/variables/_colors';
+} from '../../../../../src/themes/amsterdam/global_styling/variables/_colors';
 import { ThemeValuesTable } from '../_components/_theme_values_table';
 
 export const brandKeys = Object.keys(brand_colors);
 
 export const BrandJS: FunctionComponent<ThemeRowType> = ({ description }) => {
   const { euiTheme } = useEuiTheme();
-  const props = getPropsFromThemeKey(EuiThemeColors);
+  const props = getPropsFromComponent(EuiThemeColors);
 
   return (
     <>
@@ -40,6 +41,7 @@ export const BrandJS: FunctionComponent<ThemeRowType> = ({ description }) => {
           </div>
         }
         snippet={'background: ${euiTheme.colors.warning};'}
+        snippetLanguage="emotion"
       />
 
       <ThemeValuesTable
@@ -63,7 +65,7 @@ export const textKeys = Object.keys(text_colors);
 
 export const TextJS: FunctionComponent<ThemeRowType> = ({ description }) => {
   const { euiTheme } = useEuiTheme();
-  const props = getPropsFromThemeKey(EuiThemeColors);
+  const props = getPropsFromComponent(EuiThemeColors);
   const textColors = textKeys.concat(brandTextKeys);
 
   return (
@@ -94,6 +96,7 @@ export const TextJS: FunctionComponent<ThemeRowType> = ({ description }) => {
           </div>
         }
         snippet={'color: ${euiTheme.colors.warningText};'}
+        snippetLanguage="emotion"
       />
 
       <ThemeValuesTable
@@ -126,7 +129,7 @@ export const shadeKeys = Object.keys(shade_colors);
 
 export const ShadeJS: FunctionComponent<ThemeRowType> = ({ description }) => {
   const { euiTheme } = useEuiTheme();
-  const props = getPropsFromThemeKey(EuiThemeColors);
+  const props = getPropsFromComponent(EuiThemeColors);
 
   return (
     <>
@@ -148,6 +151,7 @@ export const ShadeJS: FunctionComponent<ThemeRowType> = ({ description }) => {
         snippet={
           'background: ${transparentize(euiTheme.colors.mediumShade, .25)};'
         }
+        snippetLanguage="emotion"
       />
 
       <ThemeValuesTable
@@ -170,7 +174,7 @@ const specialKeys = Object.keys(special_colors);
 
 export const SpecialJS: FunctionComponent<ThemeRowType> = ({ description }) => {
   const { euiTheme } = useEuiTheme();
-  const props = getPropsFromThemeKey(EuiThemeColors);
+  const props = getPropsFromComponent(EuiThemeColors);
   const allSpecialKeys = specialKeys.concat(['ghost', 'ink']);
 
   return (
@@ -193,6 +197,7 @@ export const SpecialJS: FunctionComponent<ThemeRowType> = ({ description }) => {
         }
         snippet={`color: \${euiTheme.colors.ghost};
   background-color: \${euiTheme.colors.ink};`}
+        snippetLanguage="emotion"
       />
 
       <ThemeValuesTable

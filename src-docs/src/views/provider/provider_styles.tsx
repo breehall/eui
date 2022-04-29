@@ -1,33 +1,24 @@
 import React from 'react';
 
-import {
-  EuiCodeBlock,
-  EuiSpacer,
-  useEuiTheme,
-  isLegacyTheme,
-} from '../../../../src';
+import { EuiCodeBlock, EuiSpacer, useEuiTheme } from '../../../../src';
 
 export default () => {
-  const { euiTheme, colorMode } = useEuiTheme();
-  const isLegacy = isLegacyTheme(euiTheme.themeName);
+  const { colorMode } = useEuiTheme();
 
   return (
     <>
       <EuiCodeBlock language="html" fontSize="m" isCopyable>
-        {!isLegacy
-          ? `<!-- index.html -->
+        {`<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>My App</title>
-    <meta name="global-style-insert">
+    <meta name="emotion-style-insert">
   </head>
   <body>
     <div id="root"></div>
   </body>
-</html>`
-          : `<!-- index.html -->
-<!-- No template modifications necessary when using the Legacy theme -->`}
+</html>`}
       </EuiCodeBlock>
 
       <EuiSpacer size="s" />
@@ -35,20 +26,14 @@ export default () => {
       <EuiCodeBlock language="jsx" fontSize="m" isCopyable>
         {`// App.js
 import { EuiProvider } from '@elastic/eui'
-${
-  !isLegacy
-    ? `import createCache from '@emotion/cache';
+import createCache from '@emotion/cache';
 
 const cache = createCache({
   key: 'myApp',
-  container: document.querySelector('meta[name="global-style-insert"]'),
+  container: document.querySelector('meta[name="emotion-style-insert"]'),
 });
-`
-    : ''
-}
-<EuiProvider${isLegacy ? ' theme={null}' : ''}${
-          colorMode === 'DARK' ? ' colorMode="dark"' : ''
-        }${!isLegacy ? ' cache={cache}' : ''}>
+
+<EuiProvider${colorMode === 'DARK' ? ' colorMode="dark"' : ''} cache={cache}'>
   {/* Content */}
 </EuiProvider>
   `}

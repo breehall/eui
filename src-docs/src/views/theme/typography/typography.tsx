@@ -16,12 +16,11 @@ import {
   EuiLink,
   EuiRange,
   EuiCode,
-  EuiCallOut,
 } from '../../../../../src';
 
 import { ThemeExample } from '../_components/_theme_example';
 
-import { FontJS, FontWeightJS } from './_typography_js';
+import { FontJS, FontScaleJS, FontWeightJS } from './_typography_js';
 import {
   FontSass,
   FontWeightSass,
@@ -33,15 +32,14 @@ import { ThemeContext } from '../../../components/with_theme';
 
 // This array is used inside routes.js to create the sidenav sub-sections
 export const typographySections = [
-  { title: 'Font settings', id: 'font-settings' },
-  { title: 'Font weight', id: 'font-weight' },
   { title: 'Font scale', id: 'font-scale' },
+  { title: 'Font weight', id: 'font-weight' },
+  { title: 'Font settings', id: 'font-settings' },
 ];
 
 export default () => {
   const { euiTheme } = useEuiTheme();
   const themeContext = useContext(ThemeContext);
-  const legacyTheme = !themeContext.theme.includes('amsterdam');
   const currentLanguage = themeContext.themeLanguage;
   const showSass = currentLanguage.includes('sass');
 
@@ -57,36 +55,9 @@ export default () => {
 
   const scaleContent = useMemo(() => {
     if (showSass) {
-      return (
-        <>
-          <EuiText grow={false}>
-            <h2
-              id={`${typographySections[2].id}`}
-            >{`${typographySections[2].title}`}</h2>
-            <p>
-              The typographic scale is loosely based on the{' '}
-              <EuiLink href="https://type-scale.com/?size=16&scale=1.250&text=A%20Visual%20Type%20Scale&font=Inter&fontweight=400&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false">
-                Major Third (1.250) typographic scale
-              </EuiLink>
-              .
-            </p>
-          </EuiText>
-          <EuiSpacer size="xl" />
-          <FontScaleSass />
-        </>
-      );
+      return <FontScaleSass />;
     } else {
-      return (
-        <>
-          <EuiText grow={false}>
-            <h2
-              id={`${typographySections[2].id}`}
-            >{`${typographySections[2].title}`}</h2>
-          </EuiText>
-          <EuiSpacer />
-          <EuiCallOut title="Coming soon" />
-        </>
-      );
+      return <FontScaleJS />;
     }
   }, [showSass]);
 
@@ -108,7 +79,7 @@ export default () => {
     <GuidePage
       title="Typography"
       isBeta={!showSass}
-      notice={!showSass && <ThemeNotice />}
+      notice={<ThemeNotice />}
       showThemeLanguageToggle
       description={
         <>
@@ -130,11 +101,29 @@ export default () => {
         <h2
           id={`${typographySections[0].id}`}
         >{`${typographySections[0].title}`}</h2>
+        <p>
+          The typographic scale is loosely based on the{' '}
+          <EuiLink href="https://type-scale.com/?size=16&scale=1.250&text=A%20Visual%20Type%20Scale&font=Inter&fontweight=400&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false">
+            Major Third (1.250) typographic scale
+          </EuiLink>
+          .
+        </p>
+        <p>
+          While these functions and hooks exist to get precise font sizing and
+          associated line-height, we still highly recommend using the{' '}
+          <Link to="/display/text">
+            <strong>EuiText</strong>
+          </Link>{' '}
+          and{' '}
+          <Link to="/display/title">
+            <strong>EuiTitle</strong>
+          </Link>{' '}
+          components as wrappers of your content instead.
+        </p>
       </EuiText>
-
       <EuiSpacer size="xl" />
 
-      {baseContent}
+      {scaleContent}
 
       <EuiSpacer size="xl" />
 
@@ -156,54 +145,59 @@ export default () => {
 
       {weightContent}
 
-      {!legacyTheme ? (
-        <>
-          <ThemeExample
-            title="Variable fonts"
-            description={
-              <>
-                <p>
-                  EUI also supports variable font families which can be{' '}
-                  <EuiLink href="https://css-tricks.com/getting-the-most-out-of-variable-fonts-on-google-fonts/">
-                    imported from Google fonts using their new API
-                  </EuiLink>
-                  . Though we still recommend sticking to the theme token names.
-                </p>
-                <EuiRange
-                  fullWidth
-                  id={htmlIdGenerator()()}
-                  min={300}
-                  max={700}
-                  step={1}
-                  value={fontWeight}
-                  onChange={onFontWeightChange}
-                  showValue
-                  aria-label="Font weight"
-                  showTicks
-                  ticks={euiFontWeights.map(function (name) {
-                    return {
-                      label: name.split('euiFontWeight').pop(),
-                      value: fonts[name],
-                    };
-                  })}
-                />
-              </>
-            }
-            example={
-              <div style={{ fontWeight: fontWeight }}>The quick brown fox</div>
-            }
-            snippet={
-              showSass
-                ? findSassFontWeight({ fontWeight })
-                : findJSFontWeight({ fontWeight, euiTheme })
-            }
-            snippetLanguage={showSass ? 'scss' : 'jsx'}
-          />
-        </>
-      ) : undefined}
+      <ThemeExample
+        title="Variable fonts"
+        description={
+          <>
+            <p>
+              EUI also supports variable font families which can be{' '}
+              <EuiLink href="https://css-tricks.com/getting-the-most-out-of-variable-fonts-on-google-fonts/">
+                imported from Google fonts using their new API
+              </EuiLink>
+              . Though we still recommend sticking to the theme token names.
+            </p>
+            <EuiRange
+              fullWidth
+              id={htmlIdGenerator()()}
+              min={300}
+              max={700}
+              step={1}
+              value={fontWeight}
+              onChange={onFontWeightChange}
+              showValue
+              aria-label="Font weight"
+              showTicks
+              ticks={euiFontWeights.map(function (name) {
+                return {
+                  label: name.split('euiFontWeight').pop(),
+                  value: fonts[name],
+                };
+              })}
+            />
+          </>
+        }
+        example={
+          <div style={{ fontWeight: fontWeight }}>The quick brown fox</div>
+        }
+        snippet={
+          showSass
+            ? findSassFontWeight({ fontWeight })
+            : findJSFontWeight({ fontWeight, euiTheme })
+        }
+        snippetLanguage={showSass ? 'scss' : 'emotion'}
+      />
 
       <EuiSpacer size="xl" />
-      {scaleContent}
+
+      <EuiText grow={false}>
+        <h2
+          id={`${typographySections[2].id}`}
+        >{`${typographySections[2].title}`}</h2>
+      </EuiText>
+
+      <EuiSpacer size="xl" />
+
+      {baseContent}
     </GuidePage>
   );
 };

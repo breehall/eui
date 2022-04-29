@@ -73,21 +73,23 @@ export const useCellPopover = (): {
   // Note that this popover is rendered once at the top grid level, rather than one popover per cell
   const cellPopover = popoverIsOpen && popoverAnchor && (
     <EuiWrappingPopover
-      hasArrow={false}
-      button={popoverAnchor}
       isOpen={popoverIsOpen}
-      panelClassName="euiDataGridRowCell__popover"
-      panelPaddingSize="s"
+      button={popoverAnchor}
       display="block"
-      closePopover={closeCellPopover}
+      hasArrow={false}
+      panelPaddingSize="s"
+      panelClassName="euiDataGridRowCell__popover"
       panelProps={{
         'data-test-subj': 'euiDataGridExpansionPopover',
       }}
+      closePopover={closeCellPopover}
       onKeyDown={(event) => {
         if (event.key === keys.F2 || event.key === keys.ESCAPE) {
           event.preventDefault();
           event.stopPropagation();
           closeCellPopover();
+          // Ensure focus is returned to the parent cell
+          requestAnimationFrame(() => popoverAnchor.parentElement!.focus());
         }
       }}
     >

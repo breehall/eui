@@ -3,17 +3,23 @@ import { css } from '@emotion/react';
 import { keysOf, useEuiTheme, transparentize } from '../../../../../src';
 
 import {
-  _EuiThemeAnimationEasing,
-  _EuiThemeAnimationSpeed,
-} from '../../../../../src/global_styling/variables/_animations';
+  euiCanAnimate,
+  _EuiThemeAnimationEasings,
+  _EuiThemeAnimationSpeeds,
+} from '../../../../../src/global_styling/variables/animations';
 
-import {
-  getPropsFromThemeKey,
-  EuiThemeAnimationSpeed,
-  EuiThemeAnimationEasing,
-} from '../_props';
+import { EuiThemeAnimationSpeed, EuiThemeAnimationEasing } from '../_props';
+import { getPropsFromComponent } from '../../../services/props/get_props';
 import { ThemeExample } from '../_components/_theme_example';
 import { ThemeValuesTable } from '../_components/_theme_values_table';
+
+const canAnimateString = `\${euiCanAnimate} {
+    transition: background \${euiTheme.animation.slow};
+  }`;
+
+const animationString = `\${euiCanAnimate} {
+    transition: padding \${euiTheme.animation.slow} \${euiTheme.animation.resistance};
+  }`;
 
 export default ({
   speedDescription,
@@ -25,13 +31,13 @@ export default ({
   const { euiTheme } = useEuiTheme();
   const animation = euiTheme.animation;
 
-  const speedTypes = (getPropsFromThemeKey(
+  const speedTypes = (getPropsFromComponent(
     EuiThemeAnimationSpeed
-  ) as unknown) as _EuiThemeAnimationSpeed;
+  ) as unknown) as _EuiThemeAnimationSpeeds;
   const speeds = keysOf(speedTypes);
-  const easingTypes = (getPropsFromThemeKey(
+  const easingTypes = (getPropsFromComponent(
     EuiThemeAnimationEasing
-  ) as unknown) as _EuiThemeAnimationEasing;
+  ) as unknown) as _EuiThemeAnimationEasings;
   const eases = keysOf(easingTypes);
 
   return (
@@ -42,17 +48,20 @@ export default ({
         example={
           <div
             css={css`
-              transition: background ${euiTheme.animation.slow};
+              ${euiCanAnimate} {
+                transition: background ${euiTheme.animation.slow};
 
-              :hover {
-                background: ${transparentize(euiTheme.colors.danger, 0.25)};
+                :hover {
+                  background: ${transparentize(euiTheme.colors.danger, 0.25)};
+                }
               }
             `}
           >
             <strong>Hover me</strong>
           </div>
         }
-        snippet={'transition: background ${euiTheme.animation.slow};'}
+        snippet={canAnimateString}
+        snippetLanguage="emotion"
       />
 
       <ThemeValuesTable
@@ -64,6 +73,7 @@ export default ({
             value: animation[speed],
           };
         })}
+        tokenColumnProps={{ width: 'auto' }}
         sampleColumnProps={{ width: '80px', align: 'left' }}
         render={(item) => (
           <div className={'guideSass__animRow'}>
@@ -86,21 +96,22 @@ export default ({
         example={
           <div
             css={css`
-              padding: ${euiTheme.size.s};
-              transition: padding ${euiTheme.animation.slow}
-                ${euiTheme.animation.resistance};
+              ${euiCanAnimate} {
+                padding: ${euiTheme.size.s};
+                transition: padding ${euiTheme.animation.slow}
+                  ${euiTheme.animation.resistance};
 
-              &:hover {
-                padding: ${euiTheme.size.xl};
+                &:hover {
+                  padding: ${euiTheme.size.xl};
+                }
               }
             `}
           >
             <strong>Hover me</strong>
           </div>
         }
-        snippet={
-          'transition: padding ${euiTheme.animation.slow} ${euiTheme.animation.resistance}'
-        }
+        snippet={animationString}
+        snippetLanguage="emotion"
       />
 
       <ThemeValuesTable
@@ -113,8 +124,8 @@ export default ({
           };
         })}
         sampleColumnProps={{ width: '80px', align: 'left' }}
-        typeColumnProps={{ width: '70px' }}
         valueColumnProps={{ width: '260px' }}
+        tokenColumnProps={{ width: 'auto' }}
         render={(item) => (
           <div className={'guideSass__animRow'}>
             <div className={'guideSass__animParent'}>

@@ -8,40 +8,28 @@
 
 import React from 'react';
 import { Global, css } from '@emotion/react';
-import { useScrollBar } from '../mixins/_helpers';
+import { euiScrollBarStyles } from '../mixins';
 import { shade, tint, transparentize } from '../../services/color';
 import { useEuiTheme } from '../../services/theme';
 import { resetStyles as reset } from './reset';
-import { isLegacyTheme } from '../../themes';
 
 export interface EuiGlobalStylesProps {}
 
 export const EuiGlobalStyles = ({}: EuiGlobalStylesProps) => {
-  const {
-    euiTheme: { base, border, colors, font, themeName },
-    colorMode,
-  } = useEuiTheme();
+  const { euiTheme, colorMode } = useEuiTheme();
+  const { base, border, colors, font } = euiTheme;
 
   /**
    * Declaring the top level scrollbar colors to match the theme also requires setting the sizes on Chrome
    * so that it knows to use custom styles. Therefore, we just reuse the same scrollbar mixin with thick size.
    */
-  const scrollbarStyles = useScrollBar({
+  const scrollbarStyles = euiScrollBarStyles(euiTheme, {
     trackColor:
       colorMode === 'LIGHT'
         ? shade(colors.body, 0.03)
         : tint(colors.body, 0.07),
     width: 'auto',
   });
-
-  /**
-   * Early return with no styles if using the legacy theme,
-   * which has reset and global styles included in the compiled CSS.
-   * Comes after `scrollbarStyles` because of hook rules.
-   */
-  if (isLegacyTheme(themeName)) {
-    return null;
-  }
 
   /**
    * This font reset sets all our base font/typography related properties
@@ -52,11 +40,6 @@ export const EuiGlobalStyles = ({}: EuiGlobalStylesProps) => {
     font-size: ${`${font.scale[font.body.scale] * base}px`};
     line-height: ${base / (font.scale[font.body.scale] * base)};
     font-weight: ${font.weight[font.body.weight]};
-    ${
-      font.body.letterSpacing
-        ? `letter-spacing: ${font.body.letterSpacing};`
-        : ''
-    }
   `;
 
   /**

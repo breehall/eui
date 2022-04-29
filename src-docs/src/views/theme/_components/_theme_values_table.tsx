@@ -11,13 +11,14 @@ import {
 } from '../../../../../src';
 import { getType } from '../_props';
 
-import { getDescriptionSmall } from './_theme_values_descriptions';
+import { getDescriptionSmall } from '../../../services/props/get_description';
 
 interface BasicItem {
   id: string;
   token: string;
   type?: any;
   value?: any;
+  styleFn?: (...args: any[]) => any;
   /**
    * Requires a Markdown style string
    */
