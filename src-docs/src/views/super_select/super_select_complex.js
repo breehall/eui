@@ -11,9 +11,7 @@ export default () => {
         <Fragment>
           <strong>Option one</strong>
           <EuiText size="s" color="subdued">
-            <p className="euiTextColor--subdued">
-              Has a short description giving more detail to the option.
-            </p>
+            <p>Has a short description giving more detail to the option.</p>
           </EuiText>
         </Fragment>
       ),
@@ -25,9 +23,7 @@ export default () => {
         <Fragment>
           <strong>Option two</strong>
           <EuiText size="s" color="subdued">
-            <p className="euiTextColor--subdued">
-              Has a short description giving more detail to the option.
-            </p>
+            <p>Has a short description giving more detail to the option.</p>
           </EuiText>
         </Fragment>
       ),
@@ -39,16 +35,14 @@ export default () => {
         <Fragment>
           <strong>Option three</strong>
           <EuiText size="s" color="subdued">
-            <p className="euiTextColor--subdued">
-              Has a short description giving more detail to the option.
-            </p>
+            <p>Has a short description giving more detail to the option.</p>
           </EuiText>
         </Fragment>
       ),
     },
   ];
 
-  const [value, setValue] = useState('option_one');
+  const [value, setValue] = useState();
 
   const onChange = (value) => {
     setValue(value);
@@ -58,6 +52,7 @@ export default () => {
     <EuiSuperSelect
       options={options}
       valueOfSelected={value}
+      placeholder="Select an option"
       onChange={(value) => onChange(value)}
       itemLayoutAlign="top"
       hasDividers

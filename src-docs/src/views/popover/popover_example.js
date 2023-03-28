@@ -12,6 +12,8 @@ import {
   EuiCallOut,
 } from '../../../../src/components';
 
+import { EuiPopoverPanelProps } from './props';
+
 import Popover from './popover';
 const popoverSource = require('!!raw-loader!./popover');
 
@@ -20,6 +22,9 @@ const initialFocusSource = require('!!raw-loader!./initial_focus');
 
 import TrapFocus from './trap_focus';
 const trapFocusSource = require('!!raw-loader!./trap_focus');
+
+import OutsideClick from './outside_click';
+const outsideClickSource = require('!!raw-loader!./outside_click');
 
 import PopoverAnchorPosition from './popover_anchor_position';
 const popoverAnchorPositionSource = require('!!raw-loader!./popover_anchor_position');
@@ -68,6 +73,18 @@ const initialFocusSnippet = `<EuiPopover
   button={button}
   isOpen={isPopoverOpen}
   closePopover={closePopover}>
+  <!-- Popover content -->
+</EuiPopover>`;
+
+const outsideClickSnippet = `<EuiPopover
+  button={button}
+  isOpen={isPopoverOpen}
+  closePopover={closePopover}
+  focusTrapProps={{
+    clickOutsideDisables: false,
+    onClickOutside: doSomething,
+  }}
+>
   <!-- Popover content -->
 </EuiPopover>`;
 
@@ -171,7 +188,7 @@ export const PopoverExample = {
           </p>
         </>
       ),
-      props: { EuiPopover },
+      props: { EuiPopover, EuiPopoverPanelProps },
       snippet: popOverSnippet,
       demo: <Popover />,
     },
@@ -221,7 +238,7 @@ export const PopoverExample = {
       text: (
         <>
           <p>
-            Popovers often need titling. Use the
+            Popovers often need titling. Use the{' '}
             <strong>EuiPopoverTitle</strong> component nested somewhere inside
             the popover contents.
           </p>
@@ -400,6 +417,28 @@ export const PopoverExample = {
       props: { EuiPopover },
       snippet: initialFocusSnippet,
       demo: <InitialFocus />,
+    },
+    {
+      title: 'Custom outside click behavior',
+      source: [
+        {
+          type: GuideSectionTypes.JS,
+          code: outsideClickSource,
+        },
+      ],
+      text: (
+        <>
+          <p>
+            If you do not wish the popover to auto-close on outside clicks, you
+            can use <EuiCode language="ts">focusTrapProps</EuiCode> to customize
+            this behavior. The below example triggers a confirmation modal which
+            can leave the popover open if the user presses &apos;No&apos;.
+          </p>
+        </>
+      ),
+      props: { EuiPopover },
+      snippet: outsideClickSnippet,
+      demo: <OutsideClick />,
     },
     {
       title: 'Removing the focus trap',

@@ -4,7 +4,7 @@ import { slugify } from '../../src/services';
 
 import { createHashHistory } from 'history';
 
-import { GuidePage, GuideSection, GuideMarkdownFormat } from './components';
+import { GuideSection, GuideMarkdownFormat } from './components';
 
 import { GuideTabbedPage } from './components/guide_tabbed_page';
 
@@ -28,15 +28,21 @@ import {
 
 // Templates
 
-import { PageTemplateExample } from './views/page/page_template_example';
+import {
+  PageTemplateGuidelines,
+  pageTemplateGuidelinesSections,
+} from './views/page_template/guidelines';
+import {
+  PageTemplateInfo,
+  PageTemplateExample,
+  pageTemplateExamplesSections,
+} from './views/page_template/examples';
 
-import { SitewideSearchExample } from './views/selectable/selectable_sitewide_template_example';
+import { SitewideSearchExample } from './views/selectable/selectable_templates/sitewide_example';
 
 // Services
 
 import { ColorPaletteExample } from './views/color_palette/color_palette_example';
-
-import { ColorExample } from './views/color/color_example';
 
 import { PrettyDurationExample } from './views/pretty_duration/pretty_duration_example';
 
@@ -153,9 +159,9 @@ import { ListGroupExample } from './views/list_group/list_group_example';
 
 import { LoadingExample } from './views/loading/loading_example';
 
-import { MarkdownEditorExample } from './views/markdown_editor/mardown_editor_example';
+import { MarkdownEditorExample } from './views/markdown_editor/markdown_editor_example';
 
-import { MarkdownFormatExample } from './views/markdown_editor/mardown_format_example';
+import { MarkdownFormatExample } from './views/markdown_editor/markdown_format_example';
 
 import { MarkdownPluginExample } from './views/markdown_editor/markdown_plugin_example';
 
@@ -168,6 +174,8 @@ import { NotificationEventExample } from './views/notification_event/notificatio
 import { OutsideClickDetectorExample } from './views/outside_click_detector/outside_click_detector_example';
 
 import { OverlayMaskExample } from './views/overlay_mask/overlay_mask_example';
+
+import { PageExample } from './views/page_components/page_example';
 
 import { PageHeaderExample } from './views/page_header/page_header_example';
 
@@ -191,7 +199,6 @@ import { ResizeObserverExample } from './views/resize_observer/resize_observer_e
 
 import { ResizableContainerExample } from './views/resizable_container/resizable_container_example';
 
-import { ResponsiveExample } from './views/responsive/responsive_example';
 import { ScrollExample } from './views/scroll/scroll_example';
 
 import { SearchBarExample } from './views/search_bar/search_bar_example';
@@ -199,6 +206,8 @@ import { SearchBarExample } from './views/search_bar/search_bar_example';
 import { SelectableExample } from './views/selectable/selectable_example';
 
 import { SideNavExample } from './views/side_nav/side_nav_example';
+
+import { SkeletonExample } from './views/skeleton/skeleton_example';
 
 import { SpacerExample } from './views/spacer/spacer_example';
 
@@ -240,13 +249,27 @@ import { SuperSelectExample } from './views/super_select/super_select_example';
 
 import { ThemeExample } from './views/theme/theme_example';
 import { ColorModeExample } from './views/theme/color_mode/color_mode_example';
-import Breakpoints from './views/theme/breakpoints/breakpoints';
+import { BreakpointsExample } from './views/theme/breakpoints/breakpoints_example';
 import Borders, { bordersSections } from './views/theme/borders/borders';
-import Color, { colorsSections } from './views/theme/color/colors';
-import Sizing, { sizingSections } from './views/theme/sizing/sizing';
+import Color, { colorsInfo, colorsSections } from './views/theme/color/tokens';
+import ColorContrast, { contrastSections } from './views/theme/color/contrast';
+import ColorFunctions, {
+  colorsFunctionsSections,
+} from './views/theme/color/functions';
+import Sizing, {
+  sizingInfo,
+  sizingSections,
+} from './views/theme/sizing/tokens';
+import SizingFunctions, {
+  sizingFunctionSections,
+} from './views/theme/sizing/functions';
 import Typography, {
+  typographyInfo,
   typographySections,
-} from './views/theme/typography/typography';
+} from './views/theme/typography/values';
+import TextUtilities, {
+  textUtilitiesSections,
+} from './views/theme/typography/utilities';
 import Other, { otherSections } from './views/theme/other/other';
 import ThemeValues from './views/theme/customizing/values';
 
@@ -263,6 +286,8 @@ import { ElasticChartsSparklinesExample } from './views/elastic_charts/sparkline
 import { ElasticChartsPieExample } from './views/elastic_charts/pie_example';
 
 import { ElasticChartsAccessibilityExample } from './views/elastic_charts/accessibility_example';
+
+import { MetricChartExample } from './views/elastic_charts/metric/metric_chart_example';
 
 const createExample = (example, customTitle) => {
   if (!example) {
@@ -305,7 +330,7 @@ const createExample = (example, customTitle) => {
 
   const component = () => (
     <EuiErrorBoundary>
-      <GuidePage
+      <GuideTabbedPage
         title={title}
         isBeta={beta}
         playground={playgroundComponent}
@@ -313,7 +338,7 @@ const createExample = (example, customTitle) => {
         {...rest}
       >
         {renderedSections}
-      </GuidePage>
+      </GuideTabbedPage>
     </EuiErrorBoundary>
   );
 
@@ -326,24 +351,9 @@ const createExample = (example, customTitle) => {
   };
 };
 
-const createTabbedPage = ({
-  title,
-  pages,
-  isNew,
-  description,
-  showThemeLanguageToggle,
-  notice,
-  isBeta,
-}) => {
+const createTabbedPage = ({ title, pages, isNew, ...rest }) => {
   const component = () => (
-    <GuideTabbedPage
-      title={title}
-      pages={pages}
-      description={description}
-      showThemeLanguageToggle={showThemeLanguageToggle}
-      notice={notice}
-      isBeta={isBeta}
-    />
+    <GuideTabbedPage title={title} pages={pages} {...rest} />
   );
 
   const pagesSections = pages.map((page, index) => {
@@ -375,9 +385,9 @@ const createMarkdownExample = (file, name, intro) => {
   return {
     name,
     component: () => (
-      <GuidePage title={name}>
+      <GuideTabbedPage title={name}>
         <GuideMarkdownFormat grow={false}>{file.default}</GuideMarkdownFormat>
-      </GuidePage>
+      </GuideTabbedPage>
     ),
     sections: sections,
   };
@@ -411,30 +421,62 @@ const navigation = [
     items: [
       createExample(ThemeExample, 'Theme provider'),
       createExample(ColorModeExample),
-      {
-        name: 'Breakpoints',
-        component: Breakpoints,
-      },
+      createTabbedPage(BreakpointsExample),
       {
         name: 'Borders',
         component: Borders,
         sections: bordersSections,
       },
-      {
-        name: 'Colors',
-        component: Color,
-        sections: colorsSections,
-      },
-      {
-        name: 'Sizing',
-        component: Sizing,
-        sections: sizingSections,
-      },
-      {
-        name: 'Typography',
-        component: Typography,
-        sections: typographySections,
-      },
+      createTabbedPage({
+        ...colorsInfo,
+        pages: [
+          {
+            title: 'Values',
+            page: Color,
+            sections: colorsSections,
+          },
+          {
+            title: 'Utilities',
+            page: ColorFunctions,
+            sections: colorsFunctionsSections,
+          },
+          {
+            title: 'Contrast',
+            page: ColorContrast,
+            sections: contrastSections,
+          },
+        ],
+      }),
+      createTabbedPage({
+        ...sizingInfo,
+        pages: [
+          {
+            title: 'Values',
+            page: Sizing,
+            sections: sizingSections,
+          },
+          {
+            title: 'Utilities',
+            page: SizingFunctions,
+            sections: sizingFunctionSections,
+          },
+        ],
+      }),
+      createTabbedPage({
+        ...typographyInfo,
+        pages: [
+          {
+            title: 'Values',
+            page: Typography,
+            sections: typographySections,
+          },
+          {
+            title: 'Utilities',
+            page: TextUtilities,
+            sections: textUtilitiesSections,
+          },
+        ],
+      }),
       {
         name: 'More tokens',
         component: Other,
@@ -449,10 +491,24 @@ const navigation = [
   {
     name: 'Templates',
     items: [
-      PageTemplateExample,
-      SitewideSearchExample,
-      SuperDatePickerExample,
-    ].map((example) => createExample(example)),
+      createTabbedPage({
+        ...PageTemplateInfo,
+        pages: [
+          {
+            title: 'Examples',
+            page: PageTemplateExample,
+            sections: pageTemplateExamplesSections,
+          },
+          {
+            title: 'Guidelines',
+            page: PageTemplateGuidelines,
+            sections: pageTemplateGuidelinesSections,
+          },
+        ],
+      }),
+      createExample(SitewideSearchExample),
+      createExample(SuperDatePickerExample),
+    ],
   },
   {
     name: 'Layout',
@@ -464,6 +520,7 @@ const navigation = [
       HeaderExample,
       HorizontalRuleExample,
       ModalExample,
+      PageExample,
       PageHeaderExample,
       PanelExample,
       PopoverExample,
@@ -508,6 +565,7 @@ const navigation = [
       LoadingExample,
       NotificationEventExample,
       ProgressExample,
+      SkeletonExample,
       StatExample,
       TextExample,
       TimelineExample,
@@ -568,6 +626,7 @@ const navigation = [
       ElasticChartsTimeExample,
       ElasticChartsCategoryExample,
       ElasticChartsPieExample,
+      MetricChartExample,
       ElasticChartsAccessibilityExample,
     ].map((example) => createExample(example)),
   },
@@ -577,7 +636,6 @@ const navigation = [
       AccessibilityExample,
       AutoSizerExample,
       BeaconExample,
-      ColorExample,
       ColorPaletteExample,
       CopyExample,
       UtilityClassesExample,
@@ -595,7 +653,6 @@ const navigation = [
       PrettyDurationExample,
       ProviderExample,
       ResizeObserverExample,
-      ResponsiveExample,
       ScrollExample,
       TextDiffExample,
       WindowEventExample,
@@ -639,21 +696,5 @@ export default {
 
   getAppRoutes: function getAppRoutes() {
     return allRoutes;
-  },
-
-  getPreviousRoute: function getPreviousRoute(routeName) {
-    const index = allRoutes.findIndex((item) => {
-      return item.name === routeName;
-    });
-
-    return index >= 0 ? allRoutes[index - 1] : undefined;
-  },
-
-  getNextRoute: function getNextRoute(routeName) {
-    const index = allRoutes.findIndex((item) => {
-      return item.name === routeName;
-    });
-
-    return index < allRoutes.length - 1 ? allRoutes[index + 1] : undefined;
   },
 };

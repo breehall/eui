@@ -65,7 +65,7 @@ type Sorting = boolean | SortingOptions;
 
 type InMemoryTableProps<T> = Omit<
   EuiBasicTableProps<T>,
-  'pagination' | 'sorting' | 'noItemsMessage'
+  'pagination' | 'sorting' | 'noItemsMessage' | 'onChange'
 > & {
   message?: ReactNode;
   /**
@@ -79,6 +79,12 @@ type InMemoryTableProps<T> = Omit<
    */
   allowNeutralSort?: boolean;
   /**
+   * `onChange` is not required when `pagination` and/or `sorting` are configured,
+   * but if `onChange` is present it is responsible for handling state for each/both.
+   * See #Criteria or #CriteriaWithPagination
+   */
+  onChange?: EuiBasicTableProps<T>['onChange'];
+  /**
    * Callback for when table pagination or sorting is changed. This is meant to be informational only, and not used to set any state as the in-memory table already manages this state. See #Criteria or #CriteriaWithPagination.
    */
   onTableChange?: (nextValues: Criteria<T>) => void;
@@ -86,6 +92,11 @@ type InMemoryTableProps<T> = Omit<
     defaultFields?: string[];
     isClauseMatcher?: (...args: any) => boolean;
     explain?: boolean;
+    /**
+     * When the search bar Query is controlled and passed to the `search` prop it is by default executed against the items passed to the table to filter them out.
+     * If the filtering is already done before passing the `items` to the table we can disable the execution by setting `enabled` to `false`.
+     */
+    enabled?: boolean;
   };
   /**
    * Insert content between the search bar and table components.
@@ -319,6 +330,11 @@ export class EuiInMemoryTable<T> extends Component<
     ) {
       updatedPrevState = {
         ...updatedPrevState,
+        prevProps: {
+          ...updatedPrevState.prevProps,
+          sortName,
+          sortDirection,
+        },
         sortName,
         sortDirection,
       };
@@ -572,9 +588,10 @@ export class EuiInMemoryTable<T> extends Component<
 
     const { query, sortName, pageIndex, pageSize } = this.state;
 
-    const matchingItems = query
-      ? EuiSearchBar.Query.execute(query, items, executeQueryOptions)
-      : items;
+    const matchingItems =
+      query !== null && executeQueryOptions?.enabled !== false
+        ? EuiSearchBar.Query.execute(query, items, executeQueryOptions)
+        : items;
 
     const sortedItems = sortName
       ? matchingItems

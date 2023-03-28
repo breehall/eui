@@ -22,9 +22,10 @@ import { tabbable } from 'tabbable';
 import { keys } from '../../../services';
 import { EuiScreenReaderOnly } from '../../accessibility';
 import { EuiFocusTrap } from '../../focus_trap';
-import { useEuiI18n } from '../../i18n';
+import { EuiI18n } from '../../i18n';
 import { hasResizeObserver } from '../../observer/resize_observer/resize_observer';
 import { DataGridFocusContext } from '../utils/focus';
+import { RowHeightVirtualizationUtils } from '../utils/row_heights';
 import {
   EuiDataGridCellProps,
   EuiDataGridCellState,
@@ -46,6 +47,7 @@ const EuiDataGridCellContent: FunctionComponent<
     setCellContentsRef: EuiDataGridCell['setCellContentsRef'];
     isExpanded: boolean;
     isDefinedHeight: boolean;
+    ariaRowIndex: number;
   }
 > = memo(
   ({
@@ -55,6 +57,7 @@ const EuiDataGridCellContent: FunctionComponent<
     rowHeightsOptions,
     rowIndex,
     colIndex,
+    ariaRowIndex,
     rowHeightUtils,
     isDefinedHeight,
     ...rest
@@ -63,12 +66,6 @@ const EuiDataGridCellContent: FunctionComponent<
     const CellElement = renderCellValue as JSXElementConstructor<
       EuiDataGridCellValueElementProps
     >;
-
-    const positionText = useEuiI18n(
-      'euiDataGridCell.position',
-      'Row: {row}; Column: {col}',
-      { row: rowIndex + 1, col: colIndex + 1 }
-    );
 
     return (
       <>
@@ -96,7 +93,18 @@ const EuiDataGridCellContent: FunctionComponent<
           />
         </div>
         <EuiScreenReaderOnly>
-          <p>{positionText}</p>
+          <p>
+            {'- '}
+            <EuiI18n
+              token="euiDataGridCell.position"
+              default="{columnId}, column {col}, row {row}"
+              values={{
+                columnId: column?.displayAsText || rest.columnId,
+                col: colIndex + 1,
+                row: ariaRowIndex,
+              }}
+            />
+          </p>
         </EuiScreenReaderOnly>
       </>
     );
@@ -292,6 +300,26 @@ export class EuiDataGridCell extends Component<
     }
 
     if (
+      (this.props.rowHeightUtils as RowHeightVirtualizationUtils)
+        ?.compensateForLayoutShift &&
+      this.props.rowHeightsOptions?.scrollAnchorRow &&
+      this.props.colIndex === 0 && // once per row
+      this.props.columnId === prevProps.columnId && // if this is still the same column
+      this.props.rowIndex === prevProps.rowIndex && // if this is still the same row
+      this.props.style?.top !== prevProps.style?.top // if the top position has changed
+    ) {
+      const previousTop = parseFloat(prevProps.style?.top as string);
+      const currentTop = parseFloat(this.props.style?.top as string);
+
+      // @ts-ignore We've already checked that this virtualization util is available above
+      this.props.rowHeightUtils.compensateForLayoutShift(
+        this.props.rowIndex,
+        currentTop - previousTop,
+        this.props.rowHeightsOptions?.scrollAnchorRow
+      );
+    }
+
+    if (
       this.props.popoverContext.popoverIsOpen !==
         prevProps.popoverContext.popoverIsOpen ||
       this.props.popoverContext.cellLocation !==
@@ -455,7 +483,11 @@ export class EuiDataGridCell extends Component<
 
   handleCellPopover = () => {
     if (this.isPopoverOpen()) {
-      const { setPopoverAnchor, setPopoverContent } = this.props.popoverContext;
+      const {
+        setPopoverAnchor,
+        setPopoverContent,
+        setCellPopoverProps,
+      } = this.props.popoverContext;
 
       // Set popover anchor
       const cellAnchorEl = this.popoverAnchorRef.current!;
@@ -492,6 +524,7 @@ export class EuiDataGridCell extends Component<
             <EuiDataGridCellPopoverActions {...sharedProps} column={column} />
           }
           DefaultCellPopover={DefaultCellPopover}
+          setCellPopoverProps={setCellPopoverProps}
         >
           <CellElement
             {...sharedProps}
@@ -518,6 +551,7 @@ export class EuiDataGridCell extends Component<
       rowHeightUtils,
       rowHeightsOptions,
       rowManager,
+      pagination,
       ...rest
     } = this.props;
     const { rowIndex, visibleRowIndex, colIndex } = rest;
@@ -539,6 +573,10 @@ export class EuiDataGridCell extends Component<
       className
     );
 
+    const ariaRowIndex = pagination
+      ? visibleRowIndex + 1 + pagination.pageSize * pagination.pageIndex
+      : visibleRowIndex + 1;
+
     const {
       isExpandable: _, // Not a valid DOM property, so needs to be destructured out
       style: cellPropsStyle,
@@ -554,8 +592,8 @@ export class EuiDataGridCell extends Component<
     };
 
     cellProps.style = {
-      ...style, // from react-window
-      top: 0, // The cell's row will handle top positioning
+      ...style, // set by react-window or the custom renderer
+      top: style?.top ? 0 : undefined, // The cell's row will handle top positioning
       width, // column width, can be undefined
       lineHeight: rowHeightsOptions?.lineHeight ?? undefined, // lineHeight configuration
       ...cellPropsStyle, // apply anything from setCellProps({ style })
@@ -635,6 +673,7 @@ export class EuiDataGridCell extends Component<
       rowHeightsOptions,
       rowHeightUtils,
       isDefinedHeight,
+      ariaRowIndex,
     };
 
     const anchorClass = 'euiDataGridRowCell__expandFlex';
@@ -686,6 +725,7 @@ export class EuiDataGridCell extends Component<
     const content = (
       <div
         role="gridcell"
+        aria-rowindex={ariaRowIndex}
         tabIndex={
           this.state.isFocused && !this.state.disableCellTabIndex ? 0 : -1
         }
@@ -697,7 +737,6 @@ export class EuiDataGridCell extends Component<
         data-gridcell-column-index={this.props.colIndex} // Affected by column reordering
         data-gridcell-row-index={this.props.rowIndex} // Index from data, not affected by sorting or pagination
         data-gridcell-visible-row-index={this.props.visibleRowIndex} // Affected by sorting & pagination
-        data-gridcell-id={`${this.props.colIndex},${this.props.rowIndex}`} // TODO: Deprecate in favor of the above 4 data attrs
         onKeyDown={handleCellKeyDown}
         onFocus={this.onFocus}
         onMouseEnter={() => {

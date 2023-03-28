@@ -117,6 +117,8 @@ export * from './overlay_mask';
 
 export * from './page';
 
+export * from './page_template';
+
 export * from './pagination';
 
 export * from './panel';
@@ -138,6 +140,8 @@ export * from './search_bar';
 export * from './selectable';
 
 export * from './side_nav';
+
+export * from './skeleton';
 
 export * from './spacer';
 

@@ -14,20 +14,21 @@
 import React, {
   FunctionComponent,
   HTMLAttributes,
+  MutableRefObject,
   ReactNode,
+  Ref,
   useEffect,
-  useRef,
   useState,
 } from 'react';
-import { createPortal } from 'react-dom';
-import classNames from 'classnames';
+import { cx } from '@emotion/css';
+import { Global } from '@emotion/react';
 import { CommonProps, keysOf } from '../common';
+import { useCombinedRefs, useEuiTheme } from '../../services';
+import { EuiPortal } from '../portal';
+import { euiOverlayMaskStyles } from './overlay_mask.styles';
+import { euiOverlayMaskBodyStyles } from './overlay_mask_body.styles';
 
 export interface EuiOverlayMaskInterface {
-  /**
-   * Function that applies to clicking the mask itself and not the children
-   */
-  onClick?: () => void;
   /**
    * ReactNode to render as this component's content
    */
@@ -36,9 +37,13 @@ export interface EuiOverlayMaskInterface {
    * Should the mask visually sit above or below the EuiHeader (controlled by z-index)
    */
   headerZindexLocation?: 'above' | 'below';
+  /**
+   * React ref to be passed to the wrapping container
+   */
+  maskRef?: Ref<HTMLDivElement> | MutableRefObject<HTMLDivElement>;
 }
 
-export type EuiOverlayMaskProps = CommonProps &
+export type EuiOverlayMaskProps = Omit<CommonProps, 'css'> &
   Omit<
     Partial<Record<keyof HTMLAttributes<HTMLDivElement>, string>>,
     keyof EuiOverlayMaskInterface
@@ -48,83 +53,48 @@ export type EuiOverlayMaskProps = CommonProps &
 export const EuiOverlayMask: FunctionComponent<EuiOverlayMaskProps> = ({
   className,
   children,
-  onClick,
   headerZindexLocation = 'above',
+  maskRef,
   ...rest
 }) => {
-  const overlayMaskNode = useRef<HTMLDivElement>();
-  const [isPortalTargetReady, setIsPortalTargetReady] = useState(false);
+  const [overlayMaskNode, setOverlayMaskNode] = useState<HTMLDivElement | null>(
+    null
+  );
+  const combinedMaskRef = useCombinedRefs<HTMLDivElement | null>([
+    setOverlayMaskNode,
+    maskRef,
+  ]);
+  const euiTheme = useEuiTheme();
+  const styles = euiOverlayMaskStyles(euiTheme);
+  const cssStyles = cx([
+    styles.euiOverlayMask,
+    styles[`${headerZindexLocation}Header`],
+  ]);
 
   useEffect(() => {
-    document.body.classList.add('euiBody-hasOverlayMask');
-
-    return () => {
-      document.body.classList.remove('euiBody-hasOverlayMask');
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      overlayMaskNode.current = document.createElement('div');
-    }
-  }, []);
-
-  useEffect(() => {
-    const portalTarget = overlayMaskNode.current;
-
-    if (portalTarget) {
-      document.body.appendChild(portalTarget);
-    }
-
-    setIsPortalTargetReady(true);
-
-    return () => {
-      if (portalTarget) {
-        document.body.removeChild(portalTarget);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!overlayMaskNode.current) return;
+    if (!overlayMaskNode) return;
     keysOf(rest).forEach((key) => {
       if (typeof rest[key] !== 'string') {
         throw new Error(
           `Unhandled property type. EuiOverlayMask property ${key} is not a string.`
         );
       }
-      if (overlayMaskNode.current) {
-        overlayMaskNode.current.setAttribute(key, rest[key]!);
+      if (overlayMaskNode) {
+        overlayMaskNode.setAttribute(key, rest[key]!);
       }
     });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [overlayMaskNode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!overlayMaskNode.current) return;
-    overlayMaskNode.current.className = classNames(
-      'euiOverlayMask',
-      `euiOverlayMask--${headerZindexLocation}Header`,
-      className
-    );
-  }, [className, headerZindexLocation]);
+    if (!overlayMaskNode) return;
+    overlayMaskNode.className = cx('euiOverlayMask', cssStyles, className);
+    overlayMaskNode.dataset.relativeToHeader = headerZindexLocation;
+  }, [overlayMaskNode, className, cssStyles, headerZindexLocation]);
 
-  useEffect(() => {
-    const portalTarget = overlayMaskNode.current;
-    if (!portalTarget || !onClick) return;
-
-    const listener = (e: Event) => {
-      if (e.target === portalTarget) {
-        onClick();
-      }
-    };
-    portalTarget.addEventListener('click', listener);
-
-    return () => {
-      portalTarget.removeEventListener('click', listener);
-    };
-  }, [onClick]);
-
-  return isPortalTargetReady ? (
-    <>{createPortal(children, overlayMaskNode.current!)}</>
-  ) : null;
+  return (
+    <EuiPortal portalRef={combinedMaskRef}>
+      <Global styles={euiOverlayMaskBodyStyles} />
+      {children}
+    </EuiPortal>
+  );
 };

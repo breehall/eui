@@ -9,9 +9,9 @@ import {
 } from '../../../../src';
 
 import ScrollBar from './scroll';
-import Utilities from './utility_classes_overflow';
 import ScrollX from './scroll_x';
 import ScrollY from './scroll_y';
+import FullHeight from './full_height';
 
 export const ScrollExample = {
   title: 'Scroll',
@@ -50,6 +50,7 @@ export const ScrollExample = {
     },
     {
       title: 'Vertical (scroll-y)',
+      color: 'subdued',
       wrapText: false,
       text: (
         <>
@@ -98,12 +99,9 @@ export const ScrollExample = {
     },
     {
       title: 'Full height layout',
+      color: 'subdued',
       wrapText: false,
-      text: (
-        <>
-          <Utilities />
-        </>
-      ),
+      text: <FullHeight />,
     },
   ],
 };

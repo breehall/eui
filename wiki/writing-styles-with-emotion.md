@@ -19,6 +19,45 @@ export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => {
 };
 ```
 
+---
+<details>
+  <summary>🎉 <b>ProTip:</b> VS Code snippet</summary>
+  To make generating component boilerplate just a little bit easier, you can add the following block to a global or local snippet file in VS Code. Once saved, you'll be able to generate the boilerplate by typing `euisc` `tab`. <a href="https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets" target="_blank">Learn how to add snippets in VS Code</a>:
+
+  ```json
+  "euiStyledComponent": {
+    "prefix": "euisc",
+    "body": [
+      "/*",
+      "* Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one",
+      "* or more contributor license agreements. Licensed under the Elastic License",
+      "* 2.0 and the Server Side Public License, v 1; you may not use this file except",
+      "* in compliance with, at your election, the Elastic License 2.0 or the Server",
+      "* Side Public License, v 1.",
+      "*/",
+      "",
+      "import { css } from '@emotion/react';",
+      "import {",
+      "  euiFontSize,",
+      "  logicalCSS,",
+      "} from '../../global_styling';",
+      "import { UseEuiTheme } from '../../services';",
+      "",
+      "export const ${1:componentName}Styles = ({ euiTheme }: UseEuiTheme) => {",
+      "  return {",
+      "    ${1:componentName}: css`",
+      "      ${2:property}: tomato;",
+      "    `",
+      "  };",
+      "};"
+    ],
+    "description": "EUI styled component"
+  }
+  ```
+</details>
+
+---
+
 ```tsx
 /* {component name}.tsx */
 import { useEuiTheme } from '../../services';
@@ -62,22 +101,22 @@ export const EuiAvatar: FunctionComponent<EuiAvatarProps> = ({...}) => {
   const styles = euiAvatarStyles(euiTheme);
 
   ...
-  
+
   // build the styles array
   const cssStyles = [
     styles.euiAvatar, // base styles
     styles[size], // styles associated with the `size` prop's value
     styles[type], // styles associated with the `type` prop's value
-    
+
     // optional styles
     isPlain && styles.plain,
     isSubdued && styles.subdued,
     isDisabled && styles.isDisabled,
   ];
-  
+
   ...
 
-  // pass the styles array to the `css` prop of the target element 
+  // pass the styles array to the `css` prop of the target element
   return (
     <div css={cssStyles} />
   )
@@ -110,7 +149,6 @@ const cssStyles = [
 
 When building styles based on an array of possible prop values, you'll want to establish the array of values first in the component file then use that array to create your prop values and your styles map.
 
-
 ```tsx
 export const SIZES = ['s', 'm', 'l', 'xl', 'xxl'] as const;
 export type EuiComponentNameSize = typeof SIZES[number];
@@ -118,13 +156,13 @@ export type EuiComponentNameSize = typeof SIZES[number];
 export type EuiComponentNameProps = CommonProps & {
   size?: EuiComponentNameSize;
 };
-  
+
 export const EuiComponentName: FunctionComponent<EuiComponentNameProps> = ({...}) => {
   const euiTheme = useEuiTheme();
-  
+
   const styles = euiComponentNameStyles(euiTheme);
   const cssStyles = [styles.euiComponentName, styles[size]];
-  
+
   return (
     <div css={cssStyles} />
   )
@@ -157,7 +195,6 @@ export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => ({
   ...etc
 });
 ```
-
 
 ## Style helpers
 
@@ -227,15 +264,11 @@ Although possible in some contexts, it is not recommended to "shortcut" logic us
 
 ## Child selectors
 
-Most components also contain child elements that have their own styles. Each element should have it's own theme function to keep things tidy. Keep them within a single `styles.ts` file if they exist in the same `.tsx` file.
+Most components also contain child elements that have their own styles. If you have just a few child elements, consider having them in the same function.
 
 ```ts
 export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => ({
-  euiComponentName: css``
-});
-
-
-export const euiComponentNameChildStyles = ({ euiTheme }: UseEuiTheme) => ({
+  euiComponentName: css``,
   euiComponentName__child: css``
 });
 ```
@@ -243,16 +276,59 @@ export const euiComponentNameChildStyles = ({ euiTheme }: UseEuiTheme) => ({
 ```tsx
 export const EuiComponentName: FunctionComponent<EuiComponentNameProps> = ({...}) => {
   const euiTheme = useEuiTheme();
-  
+
   const styles = euiComponentNameStyles(euiTheme);
   const cssStyles = [styles.euiComponentName];
-  
-  const childStyles = euiComponentNameChildStyles(euiTheme);
-  const cssChildStyles = [childStyles.euiComponentName__child];
-  
+  const cssChildStyles = [styles.euiComponentName__child];
+
   return (
     <div css={cssStyles}>
       <span css={cssChildStyles} />
+    </div>
+  )
+}
+```
+
+If you have multiple child elements, consider grouping them in different theme functions to keep things tidy. Keep them within a single `styles.ts` file if they exist in the same `.tsx` file.
+
+```ts
+export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => ({
+  euiComponentName: css``
+});
+
+export const euiComponentNameHeaderStyles = ({ euiTheme }: UseEuiTheme) => ({
+  euiComponentName__header: css``,
+  euiComponentName__headerIcon: css``,
+  euiComponentName__headerButton: css``
+});
+
+export const euiComponentNameFooterStyles = ({ euiTheme }: UseEuiTheme) => ({
+  euiComponentName__footer: css``
+});
+```
+
+```tsx
+export const EuiComponentName: FunctionComponent<EuiComponentNameProps> = ({...}) => {
+  const euiTheme = useEuiTheme();
+
+  const styles = euiComponentNameStyles(euiTheme);
+  const cssStyles = [styles.euiComponentName];
+
+  const headerStyles = euiComponentNameHeaderStyles(euiTheme);
+  const cssHeaderStyles = [headerStyles.euiComponentName__header];
+  const cssHeaderIconStyles = [headerStyles.euiComponentName__headerIcon];
+  const cssHeaderButtonStyles = [headerStyles.euiComponentName__headerButton];
+
+  const footerStyles = euiComponentNameFooterStyles(euiTheme);
+  const cssFooterStyles = [footerStyles.euiComponentName__footer];
+
+  return (
+    <div css={cssStyles}>
+      <div css={cssHeaderStyles}>
+        <span css={cssHeaderIconStyles} />
+        <button css={cssHeaderButtonStyles}>My button</button>
+      </div>
+      <div css={cssFooterStyles} />
     </div>
   )
 }
@@ -270,7 +346,6 @@ export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => ({
   m: css``,
 });
 
-
 export const euiComponentNameChildStyles = ({ euiTheme }: UseEuiTheme) => ({
   euiComponentName__child: css``,
   // Sizes
@@ -282,23 +357,22 @@ export const euiComponentNameChildStyles = ({ euiTheme }: UseEuiTheme) => ({
 ```tsx
 export const EuiComponentName: FunctionComponent<EuiComponentNameProps> = ({...}) => {
   const euiTheme = useEuiTheme();
-  
+
   const styles = euiComponentNameStyles(euiTheme);
   const cssStyles = [styles.euiComponentName, styles[size]];
-  
+
   const childStyles = euiComponentNameChildStyles(euiTheme);
   const cssChildStyles = [childStyles.euiComponentName__child, childStyles[size]];
-  
+
   return (
     <div css={cssStyles}>
-      <span> css={cssChildStyles} />
+      <span css={cssChildStyles} />
     </div>
   )
 }
 ```
 
 If for other reasons, it is absolutely necessary to target a child from within another selector, you should use the [class attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors) to match a part of the class string you expect to find.
-
 
 ```ts
 export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => ({
@@ -308,6 +382,71 @@ export const euiComponentNameStyles = ({ euiTheme }: UseEuiTheme) => ({
 });
 ```
 
+## Creating `colorMode` specific components
+
+When creating components that rely on a specific `colorMode` from `<EuiThemeProvider>`, use this pattern to create a wrapper that will pass the entire component `<EuiThemeProvider>` details.
+
+- `_EuiComponentName` is an internal component that contains the desired functionality and styles.
+- `EuiComponentName` is the exportable component that wraps `_EuiComponentName` inside of `<EuiThemeProvider>`.
+
+```tsx
+const _EuiComponentName = ({ componentProps }) => {
+  return <div />;
+}
+
+export const EuiComponentName = ({ componentProps }) => {
+    const Component = _EuiComponentName;
+    return (
+      <EuiThemeProvider colorMode={ colorMode }>
+        <Component {...componentProps} />
+      </EuiThemeProvider>
+    );
+  }
+);
+```
+
+**[Refer to EuiBottomBar to see an example of this pattern in practice and as an example of using `forwardRef`.](../src/components/bottom_bar/bottom_bar.tsx)**
+
+## Emotion mixins & utilities
+
+When creating mixins & utilities for reuse within Emotion CSS, consider the following best practices:
+
+- Publicly-exported mixins & utilities should go in [`src/global_styling/mixins`](https://github.com/elastic/eui/tree/main/src/global_styling/mixins). Utilities that are internal to EUI only should live in [`src/global_styling/functions`](https://github.com/elastic/eui/tree/main/src/global_styling/functions).
+- If the mixin is simple and does not reference `euiTheme`, you do not need to create a hook version of it.
+- In general, prefer returning CSS strings in your mixin.
+  - However, you should consider creating a 2nd util that returns a style object instead of a CSS string if the following scenarios apply to your mixin usage:
+    - If you anticipate your mixin being used in the `style` prop instead of `css` (since React will want an object and camelCased CSS properties)
+    - If you want your mixin to be partially composable, so if you think developers will want to obtain a single line/property from your mixin instead of the entire thing (e.g. `euiFontSize.lineHeight`)
+
+### Naming
+
+When naming your mixins & utilities, consider the following statements:
+
+- Always prefix publicly-exported functions with `eui` unless it's purely a generic helper utility with no specific EUI consideration
+- When creating both a returned string version and object version, append the function name with `CSS` for strings and `Style` for objects. Example: `euiMixinCSS()` vs `euiMixinStyle()`.
+
+### API pattern
+
+For consistency, use the following pattern for style mixins that accept required and/or optional arguments:
+
+```ts
+const euiMixin = (
+  euiTheme: UseEuiTheme;
+  required: RequiredProperty;
+  optional?: {
+    optionalKey1?: OptionalProperty;
+    optionalKey2?: OptionalProperty;
+  }
+) => {}
+```
+
+If the mixin does not accept required or optional properties, the argument can be removed.
+
+## Writing unit tests for output styles
+
+If using complex utilities or calculations that leaves you unsure as to the output of your styles, it may be worth writing Jest snapshot tests to capture the final output. See [EuiText's style](https://github.com/elastic/eui/blob/main/src/components/text/text.styles.test.ts) [snapshots](https://github.com/elastic/eui/blob/main/src/components/text/__snapshots__/text.styles.test.ts.snap) or [EuiTitle](https://github.com/elastic/eui/blob/main/src/components/title/title.styles.test.ts) for an example of this.
+
+If writing straightforward or static CSS, unit tests should be unnecessary.
 
 ## FAQ
 

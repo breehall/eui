@@ -16,6 +16,7 @@ import {
 import { comboBoxKeys } from '../../services';
 
 import { EuiComboBox, EuiComboBoxProps } from './combo_box';
+import type { EuiComboBoxOptionOption } from './types';
 
 jest.mock('../portal', () => ({
   EuiPortal: ({ children }: { children: ReactNode }) => children,
@@ -65,6 +66,17 @@ describe('EuiComboBox', () => {
     const component = render(<EuiComboBox {...requiredProps} />);
 
     expect(component).toMatchSnapshot();
+  });
+
+  test('supports thousands of options in an options group', () => {
+    // tests for a regression: RangeError: Maximum call stack size exceeded
+    // https://mathiasbynens.be/demo/javascript-argument-count
+    const options: EuiComboBoxOptionOption[] = [{ label: 'test', options: [] }];
+    for (let i = 0; i < 250000; i++) {
+      options[0].options?.push({ label: `option ${i}` });
+    }
+
+    mount(<EuiComboBox {...requiredProps} options={options} />);
   });
 });
 
@@ -446,6 +458,56 @@ describe('behavior', () => {
       });
 
       expect(component.state('matchingOptions')[0].label).toBe('Dione');
+    });
+  });
+
+  describe('isCaseSensitive', () => {
+    const isCaseSensitiveOptions = [
+      {
+        label: 'Case sensitivity',
+      },
+    ];
+
+    test('options "false"', () => {
+      const component = mount<
+        EuiComboBox<TitanOption>,
+        EuiComboBoxProps<TitanOption>,
+        { matchingOptions: TitanOption[] }
+      >(
+        <EuiComboBox options={isCaseSensitiveOptions} isCaseSensitive={false} />
+      );
+
+      findTestSubject(component, 'comboBoxSearchInput').simulate('change', {
+        target: { value: 'case' },
+      });
+
+      expect(component.state('matchingOptions')[0].label).toBe(
+        'Case sensitivity'
+      );
+    });
+
+    test('options "true"', () => {
+      const component = mount<
+        EuiComboBox<TitanOption>,
+        EuiComboBoxProps<TitanOption>,
+        { matchingOptions: TitanOption[] }
+      >(
+        <EuiComboBox options={isCaseSensitiveOptions} isCaseSensitive={true} />
+      );
+
+      findTestSubject(component, 'comboBoxSearchInput').simulate('change', {
+        target: { value: 'case' },
+      });
+
+      expect(component.state('matchingOptions').length).toBe(0);
+
+      findTestSubject(component, 'comboBoxSearchInput').simulate('change', {
+        target: { value: 'Case' },
+      });
+
+      expect(component.state('matchingOptions')[0].label).toBe(
+        'Case sensitivity'
+      );
     });
   });
 

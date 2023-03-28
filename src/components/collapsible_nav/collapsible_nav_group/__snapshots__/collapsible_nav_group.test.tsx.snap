@@ -39,10 +39,10 @@ exports[`EuiCollapsibleNavGroup props iconProps renders data-test-subj 1`] = `
     class="euiCollapsibleNavGroup__heading"
   >
     <div
-      class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+      class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
     >
       <div
-        class="euiFlexItem euiFlexItem--flexGrowZero"
+        class="euiFlexItem emotion-euiFlexItem-growZero"
       >
         <span
           data-euiicon-type="bolt"
@@ -50,10 +50,10 @@ exports[`EuiCollapsibleNavGroup props iconProps renders data-test-subj 1`] = `
         />
       </div>
       <div
-        class="euiFlexItem"
+        class="euiFlexItem emotion-euiFlexItem-grow-1"
       >
         <h3
-          class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+          class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
           id="id__title"
         >
           Title
@@ -73,20 +73,20 @@ exports[`EuiCollapsibleNavGroup props iconSize is rendered 1`] = `
     class="euiCollapsibleNavGroup__heading"
   >
     <div
-      class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+      class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
     >
       <div
-        class="euiFlexItem euiFlexItem--flexGrowZero"
+        class="euiFlexItem emotion-euiFlexItem-growZero"
       >
         <span
           data-euiicon-type="bolt"
         />
       </div>
       <div
-        class="euiFlexItem"
+        class="euiFlexItem emotion-euiFlexItem-grow-1"
       >
         <h3
-          class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+          class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
           id="id__title"
         >
           Title
@@ -106,20 +106,20 @@ exports[`EuiCollapsibleNavGroup props iconType is rendered 1`] = `
     class="euiCollapsibleNavGroup__heading"
   >
     <div
-      class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+      class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
     >
       <div
-        class="euiFlexItem euiFlexItem--flexGrowZero"
+        class="euiFlexItem emotion-euiFlexItem-growZero"
       >
         <span
           data-euiicon-type="bolt"
         />
       </div>
       <div
-        class="euiFlexItem"
+        class="euiFlexItem emotion-euiFlexItem-grow-1"
       >
         <h3
-          class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+          class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
           id="id__title"
         >
           Title
@@ -139,13 +139,13 @@ exports[`EuiCollapsibleNavGroup props title is rendered 1`] = `
     class="euiCollapsibleNavGroup__heading"
   >
     <div
-      class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+      class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
     >
       <div
-        class="euiFlexItem"
+        class="euiFlexItem emotion-euiFlexItem-grow-1"
       >
         <h3
-          class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+          class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
           id="id__title"
         >
           Title
@@ -165,13 +165,13 @@ exports[`EuiCollapsibleNavGroup props titleElement can change the rendered eleme
     class="euiCollapsibleNavGroup__heading"
   >
     <div
-      class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+      class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
     >
       <div
-        class="euiFlexItem"
+        class="euiFlexItem emotion-euiFlexItem-grow-1"
       >
         <h2
-          class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+          class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
           id="id__title"
         >
           Title
@@ -203,13 +203,13 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true accepts accordion pro
   data-test-subj="test subject string"
 >
   <div
-    class="euiAccordion__triggerWrapper"
+    class="euiAccordion__triggerWrapper emotion-euiAccordion__triggerWrapper"
   >
     <button
       aria-controls="id"
       aria-expanded="false"
       aria-label="aria-label"
-      class="euiAccordion__button euiCollapsibleNavGroup__heading testClass1 testClass2"
+      class="euiAccordion__button euiCollapsibleNavGroup__heading testClass1 testClass2 emotion-euiAccordion__button"
       data-test-subj="test subject string"
       id="generated-id"
       type="button"
@@ -218,13 +218,13 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true accepts accordion pro
         class="euiAccordion__buttonContent"
       >
         <div
-          class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+          class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
         >
           <div
-            class="euiFlexItem"
+            class="euiFlexItem emotion-euiFlexItem-grow-1"
           >
             <h3
-              class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+              class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
               id="id__title"
             >
               Title
@@ -237,7 +237,7 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true accepts accordion pro
       aria-controls="id"
       aria-expanded="false"
       aria-labelledby="generated-id"
-      class="euiButtonIcon euiButtonIcon--text euiButtonIcon--empty euiButtonIcon--xSmall euiAccordion__iconButton euiAccordion__iconButton--right"
+      class="euiButtonIcon euiButtonIcon--xSmall euiAccordion__iconButton euiAccordion__iconButton--right emotion-euiButtonIcon-empty-text-hoverStyles-euiAccordion__iconButton-arrowRight"
       tabindex="-1"
       type="button"
     >
@@ -251,14 +251,14 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true accepts accordion pro
   </div>
   <div
     aria-labelledby="generated-id"
-    class="euiAccordion__childWrapper"
+    class="euiAccordion__childWrapper emotion-euiAccordion__childWrapper"
     id="id"
     role="region"
     tabindex="-1"
   >
     <div>
       <div
-        class=""
+        class=" emotion-euiAccordion__children"
       />
     </div>
   </div>
@@ -270,12 +270,12 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true will render an accord
   class="euiAccordion euiCollapsibleNavGroup euiCollapsibleNavGroup--withHeading"
 >
   <div
-    class="euiAccordion__triggerWrapper"
+    class="euiAccordion__triggerWrapper emotion-euiAccordion__triggerWrapper"
   >
     <button
       aria-controls="id"
       aria-expanded="false"
-      class="euiAccordion__button euiCollapsibleNavGroup__heading"
+      class="euiAccordion__button euiCollapsibleNavGroup__heading emotion-euiAccordion__button"
       id="generated-id"
       type="button"
     >
@@ -283,13 +283,13 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true will render an accord
         class="euiAccordion__buttonContent"
       >
         <div
-          class="euiFlexGroup euiFlexGroup--gutterMedium euiFlexGroup--alignItemsCenter euiFlexGroup--directionRow"
+          class="euiFlexGroup emotion-euiFlexGroup-m-flexStart-center-row"
         >
           <div
-            class="euiFlexItem"
+            class="euiFlexItem emotion-euiFlexItem-grow-1"
           >
             <h3
-              class="euiTitle euiCollapsibleNavGroup__title css-1po7voc-euiTitle-xxs"
+              class="euiTitle euiCollapsibleNavGroup__title emotion-euiTitle-xxs"
               id="id__title"
             >
               Title
@@ -302,7 +302,7 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true will render an accord
       aria-controls="id"
       aria-expanded="false"
       aria-labelledby="generated-id"
-      class="euiButtonIcon euiButtonIcon--text euiButtonIcon--empty euiButtonIcon--xSmall euiAccordion__iconButton euiAccordion__iconButton--right"
+      class="euiButtonIcon euiButtonIcon--xSmall euiAccordion__iconButton euiAccordion__iconButton--right emotion-euiButtonIcon-empty-text-hoverStyles-euiAccordion__iconButton-arrowRight"
       tabindex="-1"
       type="button"
     >
@@ -316,14 +316,14 @@ exports[`EuiCollapsibleNavGroup when isCollapsible is true will render an accord
   </div>
   <div
     aria-labelledby="generated-id"
-    class="euiAccordion__childWrapper"
+    class="euiAccordion__childWrapper emotion-euiAccordion__childWrapper"
     id="id"
     role="region"
     tabindex="-1"
   >
     <div>
       <div
-        class=""
+        class=" emotion-euiAccordion__children"
       />
     </div>
   </div>

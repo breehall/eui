@@ -9,10 +9,13 @@
 import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../test';
+import { shouldRenderCustomStyles } from '../../test/internal';
 
 import { STATUS, EuiStepNumber } from './step_number';
 
 describe('EuiStepNumber', () => {
+  shouldRenderCustomStyles(<EuiStepNumber {...requiredProps} />);
+
   test('is rendered', () => {
     const component = render(<EuiStepNumber {...requiredProps} />);
 
@@ -20,14 +23,6 @@ describe('EuiStepNumber', () => {
   });
 
   describe('props', () => {
-    describe('isHollow', () => {
-      it('is rendered', () => {
-        const component = render(<EuiStepNumber number={1} isHollow />);
-
-        expect(component).toMatchSnapshot();
-      });
-    });
-
     describe('has titleSize', () => {
       it('is rendered', () => {
         const component = render(<EuiStepNumber titleSize="xs" number={1} />);

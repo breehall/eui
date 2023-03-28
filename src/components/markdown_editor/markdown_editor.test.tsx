@@ -9,12 +9,24 @@
 import React from 'react';
 import { render, mount, ReactWrapper } from 'enzyme';
 import { requiredProps } from '../../test/required_props';
+import { shouldRenderCustomStyles } from '../../test/internal';
+
 import { EuiMarkdownEditor } from './markdown_editor';
 import * as MarkdownTooltip from './plugins/markdown_tooltip';
 import MarkdownActions from './markdown_actions';
 import { getDefaultEuiMarkdownPlugins } from './plugins/markdown_default_plugins';
 
 describe('EuiMarkdownEditor', () => {
+  shouldRenderCustomStyles(
+    <EuiMarkdownEditor
+      {...requiredProps}
+      onChange={() => {}}
+      value="Test"
+      initialViewMode="viewing"
+    />,
+    { childProps: ['markdownFormatProps'] }
+  );
+
   test('is rendered', () => {
     const component = render(
       <EuiMarkdownEditor
@@ -119,17 +131,13 @@ describe('EuiMarkdownEditor', () => {
         {...requiredProps}
       />
     );
-    component.find('EuiButtonEmpty').simulate('click');
+    component
+      .find('button[data-test-subj="markdown_editor_preview_button"]')
+      .simulate('click');
+    const rendered = component.render();
     expect(
-      component
-        .find('EuiText.euiMarkdownFormat')
-        .childAt(0)
-        .childAt(0)
-        .matchesElement(<h2>Hello world</h2>)
-    );
-    expect(
-      component.find('EuiText.euiMarkdownFormat').childAt(0).childAt(0).text()
-    ).toBe('Hello world');
+      rendered.find('.euiText.euiMarkdownFormat').find('h2').text()
+    ).toEqual('Hello world');
   });
 
   test('modal with help syntax is rendered', () => {
@@ -144,7 +152,7 @@ describe('EuiMarkdownEditor', () => {
     expect(component.find('EuiModal').length).toBe(0);
 
     component
-      .find('EuiButtonIcon.euiMarkdownEditorFooter__helpButton')
+      .find('button.euiMarkdownEditorFooter__helpButton')
       .simulate('click');
 
     expect(component.find('EuiModal').length).toBe(1);
@@ -169,10 +177,10 @@ describe('EuiMarkdownEditor', () => {
       />
     );
     component
-      .find('EuiButtonIcon.euiMarkdownEditorFooter__helpButton')
+      .find('button.euiMarkdownEditorFooter__helpButton')
       .simulate('click');
 
-    expect(component).toMatchSnapshot();
+    expect(component.render()).toMatchSnapshot();
   });
 
   test('fires onChange on text area change', () => {

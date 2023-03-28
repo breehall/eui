@@ -9,7 +9,7 @@ exports[`EuiKeyPadMenuItem checkable renders as checkbox 1`] = `
     class="euiKeyPadMenuItem__inner"
   >
     <div
-      class="euiCheckbox euiCheckbox--noLabel euiKeyPadMenuItem__checkableInput"
+      class="euiCheckbox euiCheckbox--noLabel euiKeyPadMenuItem__checkableInput emotion-euiCheckbox"
     >
       <input
         class="euiCheckbox__input"
@@ -95,7 +95,7 @@ exports[`EuiKeyPadMenuItem is rendered 1`] = `
 
 exports[`EuiKeyPadMenuItem props betaBadge renders 1`] = `
 <span
-  class="euiToolTipAnchor"
+  class="euiToolTipAnchor emotion-euiToolTipAnchor-inlineBlock"
 >
   <button
     class="euiKeyPadMenuItem euiKeyPadMenuItem--hasBetaBadge"
@@ -104,12 +104,14 @@ exports[`EuiKeyPadMenuItem props betaBadge renders 1`] = `
     <span
       class="euiKeyPadMenuItem__inner"
     >
-      <span
-        aria-hidden="true"
-        class="euiBetaBadge euiBetaBadge--singleLetter euiBetaBadge--subdued euiBetaBadge--small euiKeyPadMenuItem__betaBadge"
-        title="B"
-      >
-        B
+      <span>
+        <span
+          aria-hidden="true"
+          class="euiBetaBadge euiKeyPadMenuItem__betaBadge emotion-euiBetaBadge-subdued-s-baseline"
+          title="B"
+        >
+          B
+        </span>
       </span>
       <span
         class="euiKeyPadMenuItem__icon"
@@ -128,7 +130,7 @@ exports[`EuiKeyPadMenuItem props betaBadge renders 1`] = `
 
 exports[`EuiKeyPadMenuItem props betaBadge renders extra betaBadgeTooltipProps 1`] = `
 <span
-  class="euiToolTipAnchor customTooltipClass"
+  class="euiToolTipAnchor customTooltipClass emotion-euiToolTipAnchor-inlineBlock"
 >
   <button
     class="euiKeyPadMenuItem euiKeyPadMenuItem--hasBetaBadge"
@@ -137,12 +139,14 @@ exports[`EuiKeyPadMenuItem props betaBadge renders extra betaBadgeTooltipProps 1
     <span
       class="euiKeyPadMenuItem__inner"
     >
-      <span
-        aria-hidden="true"
-        class="euiBetaBadge euiBetaBadge--singleLetter euiBetaBadge--subdued euiBetaBadge--small euiKeyPadMenuItem__betaBadge"
-        title="B"
-      >
-        B
+      <span>
+        <span
+          aria-hidden="true"
+          class="euiBetaBadge euiKeyPadMenuItem__betaBadge emotion-euiBetaBadge-subdued-s-baseline"
+          title="B"
+        >
+          B
+        </span>
       </span>
       <span
         class="euiKeyPadMenuItem__icon"
@@ -161,7 +165,7 @@ exports[`EuiKeyPadMenuItem props betaBadge renders extra betaBadgeTooltipProps 1
 
 exports[`EuiKeyPadMenuItem props betaBadge renders with betaBadgeIconType 1`] = `
 <span
-  class="euiToolTipAnchor"
+  class="euiToolTipAnchor emotion-euiToolTipAnchor-inlineBlock"
 >
   <button
     class="euiKeyPadMenuItem euiKeyPadMenuItem--hasBetaBadge"
@@ -170,17 +174,19 @@ exports[`EuiKeyPadMenuItem props betaBadge renders with betaBadgeIconType 1`] = 
     <span
       class="euiKeyPadMenuItem__inner"
     >
-      <span
-        aria-hidden="true"
-        class="euiBetaBadge euiBetaBadge--iconOnly euiBetaBadge--singleLetter euiBetaBadge--subdued euiBetaBadge--small euiKeyPadMenuItem__betaBadge"
-        title="B"
-      >
+      <span>
         <span
           aria-hidden="true"
-          class="euiBetaBadge__icon"
-          color="inherit"
-          data-euiicon-type="bolt"
-        />
+          class="euiBetaBadge euiKeyPadMenuItem__betaBadge emotion-euiBetaBadge-subdued-s-baseline"
+          title="B"
+        >
+          <span
+            aria-hidden="true"
+            class="euiBetaBadge__icon emotion-euiBetaBadge__icon"
+            color="inherit"
+            data-euiicon-type="bolt"
+          />
+        </span>
       </span>
       <span
         class="euiKeyPadMenuItem__icon"
@@ -199,7 +205,7 @@ exports[`EuiKeyPadMenuItem props betaBadge renders with betaBadgeIconType 1`] = 
 
 exports[`EuiKeyPadMenuItem props betaBadge renders with betaBadgeTooltipContent 1`] = `
 <span
-  class="euiToolTipAnchor"
+  class="euiToolTipAnchor emotion-euiToolTipAnchor-inlineBlock"
 >
   <button
     class="euiKeyPadMenuItem euiKeyPadMenuItem--hasBetaBadge"
@@ -208,12 +214,14 @@ exports[`EuiKeyPadMenuItem props betaBadge renders with betaBadgeTooltipContent 
     <span
       class="euiKeyPadMenuItem__inner"
     >
-      <span
-        aria-hidden="true"
-        class="euiBetaBadge euiBetaBadge--singleLetter euiBetaBadge--subdued euiBetaBadge--small euiKeyPadMenuItem__betaBadge"
-        title="B"
-      >
-        B
+      <span>
+        <span
+          aria-hidden="true"
+          class="euiBetaBadge euiKeyPadMenuItem__betaBadge emotion-euiBetaBadge-subdued-s-baseline"
+          title="B"
+        >
+          B
+        </span>
       </span>
       <span
         class="euiKeyPadMenuItem__icon"

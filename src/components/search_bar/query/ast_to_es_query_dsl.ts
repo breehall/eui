@@ -6,19 +6,19 @@
  * Side Public License, v 1.
  */
 
-import { printIso8601 } from './date_format';
-import { isDateValue, dateValue, DateValue } from './date_value';
+import { isArray, isDateLike, isString } from '../../../services/predicate';
+import { keysOf } from '../../common';
 import {
-  _AST,
   AST,
   FieldClause,
   IsClause,
   OperatorType,
   TermClause,
   Value,
+  _AST,
 } from './ast';
-import { isArray, isDateLike, isString } from '../../../services/predicate';
-import { keysOf } from '../../common';
+import { printIso8601 } from './date_format';
+import { dateValue, DateValue, isDateValue } from './date_value';
 
 export interface QueryContainer {
   bool?: BoolQuery;
@@ -140,14 +140,24 @@ export const _fieldValuesToQuery = (
           }
         });
 
-        if (terms.length > 0) {
+        if (terms.length > 1) {
           queries.push({
-            match: {
-              [field]: {
-                query: terms.join(' '),
-                operator: andOr,
-              },
+            bool: {
+              [andOr === 'and' ? 'must' : 'should']: [
+                ...terms.map((value) => ({
+                  match: {
+                    [field]: {
+                      query: value,
+                      operator: andOr,
+                    },
+                  },
+                })),
+              ],
             },
+          });
+        } else if (terms.length === 1) {
+          queries.push({
+            match: { [field]: { query: terms[0], operator: andOr } },
           });
         }
 

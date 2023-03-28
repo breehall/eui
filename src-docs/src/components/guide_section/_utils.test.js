@@ -74,6 +74,22 @@ describe('renderJsSourceCode', () => {
           export default () => 'Hello world!';`)
       );
     });
+
+    it('handles aliased imports', () => {
+      expect(
+        renderJsSourceCode({
+          default: dedent(`
+            import { EuiPageTemplate_Deprecated as EuiPageTemplate } from '@elastic/eui';
+  
+            export default () => 'Hello world!';`),
+        })
+      ).toEqual(
+        dedent(`
+          import { EuiPageTemplate_Deprecated as EuiPageTemplate } from '@elastic/eui';
+  
+          export default () => 'Hello world!';`)
+      );
+    });
   });
 
   describe('React import', () => {
@@ -296,6 +312,33 @@ describe('renderJsSourceCode', () => {
           import { EuiButton, EuiCode } from '@elastic/eui';
 
           export default () => 'Hello world!';`)
+      );
+    });
+
+    it('does not handle import statements within template literal backticks', () => {
+      expect(
+        renderJsSourceCode({
+          default: dedent(`
+            import React from 'react';
+
+            import { v4 } from '@uuid/v4';
+
+            const jsCode = \`/* I'm an example of JS */
+            import React from 'react';
+            const hello = 'world';\`;
+  
+            export default () => 'Hello world!';`),
+        })
+      ).toEqual(
+        dedent(`
+            import React from 'react';
+            import { v4 } from '@uuid/v4';
+
+            const jsCode = \`/* I'm an example of JS */
+            import React from 'react';
+            const hello = 'world';\`;
+  
+            export default () => 'Hello world!';`)
       );
     });
   });

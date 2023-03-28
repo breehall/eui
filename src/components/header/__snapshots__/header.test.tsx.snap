@@ -27,6 +27,7 @@ exports[`EuiHeader renders dark theme 1`] = `
 exports[`EuiHeader renders in fixed position 1`] = `
 <div
   class="euiHeader euiHeader--default euiHeader--fixed"
+  data-fixed-header="true"
 >
   <span>
     Hello!
@@ -40,17 +41,18 @@ exports[`EuiHeader sections render breadcrumbs and props 1`] = `
 >
   <nav
     aria-label="Breadcrumbs"
-    class="euiBreadcrumbs euiHeaderBreadcrumbs euiBreadcrumbs--truncate"
+    class="euiBreadcrumbs euiHeaderBreadcrumbs emotion-euiHeaderBreadcrumbs"
   >
     <ol
-      class="euiBreadcrumbs__list"
+      class="euiBreadcrumbs__list emotion-euiBreadcrumbs__list-isTruncated"
     >
       <li
-        class="euiBreadcrumb euiBreadcrumb--last"
+        class="euiBreadcrumb emotion-euiBreadcrumb-application-isTruncated"
+        data-test-subj="euiBreadcrumb"
       >
         <span
           aria-current="page"
-          class="euiBreadcrumb__content"
+          class="euiBreadcrumb__content emotion-euiBreadcrumb__content-application-isTruncatedLast-onlyChild-euiTextColor-default"
         >
           Breadcrumb
         </span>

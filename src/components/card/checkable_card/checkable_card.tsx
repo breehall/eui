@@ -17,6 +17,8 @@ import {
 } from '../../form';
 import { EuiSplitPanel } from '../../panel';
 import { _EuiSplitPanelOuterProps } from '../../panel/split_panel';
+import { useEuiTheme } from '../../../services';
+import { euiCheckableCardStyles } from './checkable_card.styles';
 
 interface EuiCheckableCardBaseProps {
   id: string;
@@ -48,6 +50,7 @@ export type EuiCheckableCardProps = Omit<
 export const EuiCheckableCard: FunctionComponent<EuiCheckableCardProps> = ({
   children,
   className,
+  css,
   checkableType = 'radio',
   label,
   checked,
@@ -56,16 +59,22 @@ export const EuiCheckableCard: FunctionComponent<EuiCheckableCardProps> = ({
   hasBorder = true,
   ...rest
 }) => {
+  const euiThemeContext = useEuiTheme();
+  const styles = euiCheckableCardStyles(euiThemeContext);
+  const baseStyles = [
+    styles.euiCheckableCard,
+    checked && !disabled && styles.isChecked,
+    css,
+  ];
+  const labelStyles = [
+    styles.label.euiCheckableCard__label,
+    disabled && styles.label.isDisabled,
+  ];
+  const childStyles = [styles.euiCheckableCard__children];
+
   const { id } = rest;
   const labelEl = useRef<HTMLLabelElement>(null);
-  const classes = classNames(
-    'euiCheckableCard',
-    {
-      'euiCheckableCard-isChecked': checked,
-      'euiCheckableCard-isDisabled': disabled,
-    },
-    className
-  );
+  const classes = classNames('euiCheckableCard', className);
 
   let checkableElement;
   if (checkableType === 'radio') {
@@ -82,9 +91,7 @@ export const EuiCheckableCard: FunctionComponent<EuiCheckableCardProps> = ({
     );
   }
 
-  const labelClasses = classNames('euiCheckableCard__label', {
-    'euiCheckableCard__label-isDisabled': disabled,
-  });
+  const labelClasses = classNames('euiCheckableCard__label');
 
   const onChangeAffordance = () => {
     if (labelEl.current) {
@@ -99,6 +106,7 @@ export const EuiCheckableCard: FunctionComponent<EuiCheckableCardProps> = ({
       hasBorder={hasBorder}
       direction="row"
       className={classes}
+      css={baseStyles}
     >
       <EuiSplitPanel.Inner
         // Bubbles up the change event when clicking on the whole div for extra affordance
@@ -112,13 +120,18 @@ export const EuiCheckableCard: FunctionComponent<EuiCheckableCardProps> = ({
         <label
           ref={labelEl}
           className={labelClasses}
+          css={labelStyles}
           htmlFor={id}
           aria-describedby={children ? `${id}-details` : undefined}
         >
           {label}
         </label>
         {children && (
-          <div id={`${id}-details`} className="euiCheckableCard__children">
+          <div
+            id={`${id}-details`}
+            className="euiCheckableCard__children"
+            css={childStyles}
+          >
             {children}
           </div>
         )}

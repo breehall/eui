@@ -9,6 +9,7 @@
 import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../../test/required_props';
+import { shouldRenderCustomStyles } from '../../../test/internal';
 
 import { EuiSelectableTemplateSitewide } from './selectable_template_sitewide';
 import { EuiSelectableTemplateSitewideOption } from './selectable_template_sitewide_option';
@@ -50,7 +51,7 @@ const options: EuiSelectableTemplateSitewideOption[] = [
     label: 'Other metas',
     searchableLabel: 'Totally custom with pink metadata',
     icon: {
-      type: 'alert',
+      type: 'warning',
       color: 'accent',
     },
     meta: [
@@ -74,6 +75,11 @@ const options: EuiSelectableTemplateSitewideOption[] = [
 ];
 
 describe('EuiSelectableTemplateSitewide', () => {
+  shouldRenderCustomStyles(
+    <EuiSelectableTemplateSitewide options={options} />,
+    { childProps: ['popoverProps'] }
+  );
+
   test('is rendered', () => {
     const component = render(
       <EuiSelectableTemplateSitewide options={options} {...requiredProps} />

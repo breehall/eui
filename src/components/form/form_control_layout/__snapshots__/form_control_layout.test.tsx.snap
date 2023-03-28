@@ -56,7 +56,7 @@ exports[`EuiFormControlLayout props compressed renders small-sized icon, clear b
         <span
           aria-hidden="true"
           class="euiFormControlLayoutCustomIcon__icon"
-          data-euiicon-type="alert"
+          data-euiicon-type="error"
         />
       </span>
     </div>
@@ -75,7 +75,7 @@ exports[`EuiFormControlLayout props compressed renders small-sized icon, clear b
       </button>
       <span
         aria-label="Loading"
-        class="euiLoadingSpinner css-1y37fq2-euiLoadingSpinner-s"
+        class="euiLoadingSpinner emotion-euiLoadingSpinner-s"
         role="progressbar"
       />
     </div>
@@ -109,7 +109,7 @@ exports[`EuiFormControlLayout props icon is rendered as a string 1`] = `
         <span
           aria-hidden="true"
           class="euiFormControlLayoutCustomIcon__icon"
-          data-euiicon-type="alert"
+          data-euiicon-type="error"
         />
       </span>
     </div>
@@ -134,7 +134,7 @@ exports[`EuiFormControlLayout props icon is rendered as an object 1`] = `
         <span
           aria-hidden="true"
           class="euiFormControlLayoutCustomIcon__icon"
-          data-euiicon-type="alert"
+          data-euiicon-type="error"
         />
       </span>
     </div>
@@ -158,7 +158,7 @@ exports[`EuiFormControlLayout props icon side left is rendered 1`] = `
         <span
           aria-hidden="true"
           class="euiFormControlLayoutCustomIcon__icon"
-          data-euiicon-type="alert"
+          data-euiicon-type="error"
         />
       </span>
     </div>
@@ -182,7 +182,7 @@ exports[`EuiFormControlLayout props icon side right is rendered 1`] = `
         <span
           aria-hidden="true"
           class="euiFormControlLayoutCustomIcon__icon"
-          data-euiicon-type="alert"
+          data-euiicon-type="error"
         />
       </span>
     </div>
@@ -226,7 +226,7 @@ exports[`EuiFormControlLayout props isInvalid is rendered 1`] = `
     >
       <span
         color="danger"
-        data-euiicon-type="alert"
+        data-euiicon-type="warning"
       />
     </div>
   </div>
@@ -245,7 +245,7 @@ exports[`EuiFormControlLayout props isLoading is rendered 1`] = `
     >
       <span
         aria-label="Loading"
-        class="euiLoadingSpinner css-155ohbx-euiLoadingSpinner-m"
+        class="euiLoadingSpinner emotion-euiLoadingSpinner-m"
         role="progressbar"
       />
     </div>

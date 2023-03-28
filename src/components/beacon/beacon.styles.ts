@@ -7,10 +7,22 @@
  */
 
 import { keyframes, css } from '@emotion/react';
-import { euiPaletteColorBlind } from '../../services';
-import { euiCanAnimate } from '../../global_styling';
+import { UseEuiTheme } from '../../services';
+import {
+  euiCanAnimate,
+  logicalCSS,
+  logicalSizeCSS,
+} from '../../global_styling';
 
-const visColors = euiPaletteColorBlind();
+const _colorCSS = (color: string) => {
+  return `
+    background-color: ${color};
+    &:before,
+    &:after {
+      box-shadow: 0 0 1px 1px ${color};
+    }
+  `;
+};
 
 const euiBeaconPulseLarge = keyframes`
  0% {
@@ -44,24 +56,21 @@ const euiBeaconPulseSmall = keyframes`
   }
 `;
 
-export const euiBeaconStyles = () => ({
+export const euiBeaconStyles = ({ euiTheme }: UseEuiTheme) => ({
   // Base
   euiBeacon: css`
     position: relative;
-    background-color: ${visColors[0]};
     border-radius: 50%;
 
     &:before,
     &:after {
       position: absolute;
       content: '';
-      height: 100%;
-      width: 100%;
-      inset-inline-start: 0;
-      inset-block-start: 0;
+      ${logicalSizeCSS('100%', '100%')}
+      ${logicalCSS('left', 0)}
+      ${logicalCSS('top', 0)}
       background-color: transparent;
       border-radius: 50%;
-      box-shadow: 0 0 1px 1px ${visColors[0]};
     }
 
     // Without the animation, we only display one ring around the circle
@@ -85,4 +94,10 @@ export const euiBeaconStyles = () => ({
       }
     }
   `,
+  subdued: css(_colorCSS(euiTheme.colors.subduedText)),
+  primary: css(_colorCSS(euiTheme.colors.primary)),
+  success: css(_colorCSS(euiTheme.colors.success)),
+  warning: css(_colorCSS(euiTheme.colors.warning)),
+  danger: css(_colorCSS(euiTheme.colors.danger)),
+  accent: css(_colorCSS(euiTheme.colors.accent)),
 });

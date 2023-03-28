@@ -9,14 +9,29 @@
 import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../../test/required_props';
+import { shouldRenderCustomStyles } from '../../../test/internal';
 
+import { EuiForm } from '../form';
 import { EuiRange } from './range';
 
 const props = {
   value: '8',
+  min: 0,
+  max: 100,
 };
 
 describe('EuiRange', () => {
+  shouldRenderCustomStyles(
+    <EuiRange
+      name="name"
+      id="id"
+      onChange={() => {}}
+      {...props}
+      {...requiredProps}
+    />,
+    { skipStyles: true } // style is in ...rest and is spread to a different location than className/css
+  );
+
   test('is rendered', () => {
     const component = render(
       <EuiRange
@@ -162,6 +177,8 @@ describe('EuiRange', () => {
             },
           ]}
           value={20}
+          min={0}
+          max={100}
         />
       );
 
@@ -185,5 +202,17 @@ describe('EuiRange', () => {
     );
 
     expect(component).toMatchSnapshot();
+  });
+
+  describe('inherits', () => {
+    test('fullWidth from <EuiForm />', () => {
+      const component = render(
+        <EuiForm fullWidth>
+          <EuiRange value={20} min={0} max={100} />
+        </EuiForm>
+      );
+
+      expect(component).toMatchSnapshot();
+    });
   });
 });

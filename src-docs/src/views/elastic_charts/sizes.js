@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import moment from 'moment';
-import { ThemeContext } from '../../components';
 import {
   Chart,
   Settings,
+  Tooltip,
   Axis,
   timeFormatter,
   niceTimeFormatByDay,
@@ -21,7 +21,7 @@ import {
   EuiTitle,
   EuiFlexGrid,
   EuiFlexItem,
-  EuiPageContent,
+  EuiPageContent_Deprecated as EuiPageContent,
   EuiFormRow,
   EuiRange,
   EuiPage,
@@ -29,13 +29,17 @@ import {
   EuiCopy,
 } from '../../../../src/components';
 
-import { formatDate, dateFormatAliases } from '../../../../src/services';
+import {
+  formatDate,
+  dateFormatAliases,
+  withEuiTheme,
+} from '../../../../src/services';
 
 import { MultiChartCard, ChartCard } from './shared';
 
 import { TIME_DATA, TIME_DATA_2 } from './data';
 
-export class Sizes extends Component {
+class Sizes extends Component {
   constructor(props) {
     super(props);
 
@@ -168,7 +172,7 @@ export class Sizes extends Component {
       changeDescription,
     } = this.state;
 
-    const isDarkTheme = this.context.theme.includes('dark');
+    const isDarkTheme = this.props.theme.colorMode === 'DARK';
     const theme = isDarkTheme
       ? EUI_CHARTS_THEME_DARK.theme
       : EUI_CHARTS_THEME_LIGHT.theme;
@@ -190,7 +194,7 @@ export class Sizes extends Component {
     }
 
     return (
-      <Fragment>
+      <>
         <EuiPage>
           <EuiPageContent
             role={null}
@@ -211,8 +215,8 @@ export class Sizes extends Component {
                 theme={theme}
                 showLegend={multi}
                 legendPosition={legendPosition}
-                tooltip={tooltipProps}
               />
+              <Tooltip {...tooltipProps} />
               <BarSeries
                 id="series1"
                 data={data1}
@@ -297,12 +301,14 @@ export class Sizes extends Component {
     theme={isDarkTheme ? EUI_CHARTS_THEME_DARK.theme : EUI_CHARTS_THEME_LIGHT.theme}
     showLegend={${multi}}
     legendPosition="${legendPosition}"
-    tooltip={{ headerFormatter: tooltipData => {
+  />
+  <Tooltip 
+    headerFormatter={(tooltipData) => {
       return \`\${formatDate(
         tooltipData.value,
         dateFormatAliases.shortDateTime
       )}\`;
-    }}}
+    }}
   />
   <BarSeries
     id="series1"
@@ -366,9 +372,9 @@ export class Sizes extends Component {
             )}
           </EuiCopy>
         </div>
-      </Fragment>
+      </>
     );
   }
 }
 
-Sizes.contextType = ThemeContext;
+export default withEuiTheme(Sizes);

@@ -9,11 +9,16 @@
 import React from 'react';
 import { render, mount } from 'enzyme';
 import { requiredProps } from '../../test/required_props';
+import { shouldRenderCustomStyles } from '../../test/internal';
 
 import { STATUS } from './step_number';
 import { EuiStepHorizontal } from './step_horizontal';
 
 describe('EuiStepHorizontal', () => {
+  shouldRenderCustomStyles(
+    <EuiStepHorizontal {...requiredProps} onClick={() => {}} />
+  );
+
   test('is rendered', () => {
     const component = render(
       <EuiStepHorizontal {...requiredProps} onClick={() => {}} />
@@ -39,22 +44,6 @@ describe('EuiStepHorizontal', () => {
       expect(component).toMatchSnapshot();
     });
 
-    test('isSelected', () => {
-      const component = render(
-        <EuiStepHorizontal isSelected onClick={() => {}} />
-      );
-
-      expect(component).toMatchSnapshot();
-    });
-
-    test('isComplete', () => {
-      const component = render(
-        <EuiStepHorizontal isComplete onClick={() => {}} />
-      );
-
-      expect(component).toMatchSnapshot();
-    });
-
     describe('status', () => {
       STATUS.forEach((status) => {
         test(`${status} is rendered`, () => {
@@ -64,6 +53,14 @@ describe('EuiStepHorizontal', () => {
 
           expect(component).toMatchSnapshot();
         });
+      });
+
+      test('disabled overrides the passed status', () => {
+        const component = render(
+          <EuiStepHorizontal status="current" disabled onClick={() => {}} />
+        );
+
+        expect(component).toMatchSnapshot();
       });
     });
 
@@ -75,9 +72,8 @@ describe('EuiStepHorizontal', () => {
           <EuiStepHorizontal step={1} onClick={onClickHandler} />
         );
 
-        component.simulate('click');
-
-        expect(onClickHandler).toBeCalledTimes(1);
+        component.find('button').simulate('click');
+        expect(onClickHandler.mock.calls.length).toEqual(1);
       });
 
       test("isn't called when clicked if it's disabled", () => {
@@ -87,9 +83,8 @@ describe('EuiStepHorizontal', () => {
           <EuiStepHorizontal disabled step={1} onClick={onClickHandler} />
         );
 
-        component.simulate('click');
-
-        expect(onClickHandler).not.toBeCalled();
+        component.find('button').simulate('click');
+        expect(onClickHandler.mock.calls.length).toEqual(0);
       });
     });
   });

@@ -24,6 +24,7 @@ import {
   useDataGridDisplaySelector,
   startingStyles,
   useDataGridFullScreenSelector,
+  useDataGridKeyboardShortcuts,
   checkOrDefaultToolBarDisplayOptions,
   EuiDataGridToolbar,
 } from './controls';
@@ -51,6 +52,7 @@ import {
 } from './utils/data_grid_schema';
 import { useImperativeGridRef } from './utils/ref';
 import {
+  emptyControlColumns,
   EuiDataGridColumn,
   EuiDataGridProps,
   EuiDataGridRefProps,
@@ -104,8 +106,8 @@ const cellPaddingsToClassMap: {
 export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
   (props, ref) => {
     const {
-      leadingControlColumns = [],
-      trailingControlColumns = [],
+      leadingControlColumns = emptyControlColumns,
+      trailingControlColumns = emptyControlColumns,
       columns,
       columnVisibility,
       schemaDetectors,
@@ -125,6 +127,7 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
       width,
       rowHeightsOptions: _rowHeightsOptions,
       virtualizationOptions,
+      renderCustomGridBody,
       ...rest
     } = props;
 
@@ -271,9 +274,11 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
     const { cellPopoverContext, cellPopover } = useCellPopover();
 
     /**
-     * Toolbar & fullscreen
+     * Toolbar, keyboard shortcuts, & fullscreen
      */
     const showToolbar = !!toolbarVisibility;
+
+    const { keyboardShortcuts } = useDataGridKeyboardShortcuts();
 
     const {
       isFullScreen,
@@ -287,6 +292,7 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
      */
     useImperativeGridRef({
       ref,
+      gridRef,
       setIsFullScreen,
       focusContext,
       cellPopoverContext,
@@ -383,6 +389,7 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
                     toolbarVisibility={toolbarVisibility}
                     isFullScreen={isFullScreen}
                     fullScreenSelector={fullScreenSelector}
+                    keyboardShortcuts={keyboardShortcuts}
                     displaySelector={displaySelector}
                     columnSelector={columnSelector}
                     columnSorting={columnSorting}
@@ -420,6 +427,7 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
                   data-test-subj="euiDataGridBody"
                   className="euiDataGrid__content"
                   role="grid"
+                  aria-rowcount={rowCount}
                   id={gridId}
                   {...wrappingDivFocusProps} // re: above jsx-a11y - tabIndex is handled by these props, but the linter isn't smart enough to know that
                   {...gridAriaProps}
@@ -451,6 +459,7 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
                     gridRef={gridRef}
                     gridItemsRendered={gridItemsRendered}
                     wrapperRef={contentRef}
+                    renderCustomGridBody={renderCustomGridBody}
                   />
                 </div>
                 {pagination && props['aria-labelledby'] && (

@@ -37,12 +37,14 @@ export const ResizeObserverHookExample = () => {
           </p>
         ) : (
           <p>
-            <EuiIcon type="crossInACircleFilled" color="danger" /> Browser does
-            not support ResizeObserver API. Using MutationObserver.
+            <EuiIcon type="error" color="danger" /> Browser does not support
+            ResizeObserver API. Using MutationObserver.
           </p>
         )}
         <p>
-          <EuiCode>{`height: ${dimensions.height}; width: ${dimensions.width}`}</EuiCode>
+          <EuiCode>
+            height: {dimensions.height}; width: {dimensions.width}
+          </EuiCode>
         </p>
       </EuiText>
 

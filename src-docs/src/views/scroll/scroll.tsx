@@ -3,7 +3,13 @@ import React, { useContext } from 'react';
 
 import { ThemeContext } from '../../components/with_theme';
 
-import { EuiCode, useEuiScrollBar, useEuiTheme } from '../../../../src';
+import {
+  EuiCode,
+  useEuiScrollBar,
+  useEuiTheme,
+  logicalCSS,
+  logicalCSSWithFallback,
+} from '../../../../src';
 import { ThemeExample } from '../theme/_components/_theme_example';
 import { ScrollContent } from './_scroll_content';
 
@@ -18,6 +24,7 @@ export default () => {
     <>
       <ThemeExample
         title={<code>.eui-scrollBar</code>}
+        type="className"
         description={
           <>
             <p>
@@ -39,7 +46,8 @@ export default () => {
             className="eui-scrollBar"
             style={{
               overflowY: 'auto',
-              height: euiTheme.base * 10,
+              overflowBlock: 'auto',
+              blockSize: euiTheme.base * 10,
             }}
           >
             <ScrollContent />
@@ -50,7 +58,7 @@ export default () => {
   role="region"
   aria-label=""
   className="eui-scrollBar"
-  style={{ overflowY: 'auto', euiTheme.base * 10 }}>
+>
   <EuiPanel />
   <EuiPanel />
   <EuiPanel />
@@ -60,6 +68,7 @@ export default () => {
       {!showSass && (
         <ThemeExample
           title={<code>useEuiScrollBar()</code>}
+          type="hook"
           description={
             <>
               <p>
@@ -83,8 +92,8 @@ export default () => {
               aria-label="Example of useEuiScrollBar region"
               css={css`
                 ${useEuiScrollBar()}
-                overflow-y: auto;
-                height: ${euiTheme.base * 10}px;
+                ${logicalCSSWithFallback('overflow-y', 'auto')}
+                ${logicalCSS('height', `${euiTheme.base * 10}px`)}
               `}
             >
               <ScrollContent />
@@ -97,7 +106,8 @@ export default () => {
 
       {showSass && (
         <ThemeExample
-          title={<code>@mixin euiScrollBar;</code>}
+          title={<code>@include euiScrollBar</code>}
+          type="mixin"
           description={
             <>
               <p>
@@ -127,8 +137,9 @@ export default () => {
           snippetLanguage="scss"
           snippet={`.scrollBarRegion {
   @include euiScrollBar;
-  overflow-y: auto;
-  height: $euiSize * 10;
+  overflow-y: auto; ${/* eslint-disable-line local/css-logical-properties */ ''}
+  overflow-block: auto;
+  block-size: $euiSize * 10;
 }`}
         />
       )}

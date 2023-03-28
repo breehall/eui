@@ -5,11 +5,15 @@ import format from 'html-format';
 import { useView, Compiler, Placeholder } from 'react-view';
 import {
   EuiCodeBlock,
-  EuiErrorBoundary,
   EuiFlyoutBody,
   EuiFlyoutHeader,
   EuiPanel,
-} from '../../../../src/components';
+  useEuiTheme,
+} from '../../../../src';
+import {
+  EuiErrorMessage,
+  EuiErrorBoundary,
+} from '../../../../src/components/error_boundary/error_boundary';
 import Knobs from './knobs';
 import { GuideSectionPropsDescription } from '../../components/guide_section/guide_section_parts/guide_section_props_description';
 
@@ -17,6 +21,7 @@ export default ({
   config,
   setGhostBackground,
   playgroundClassName,
+  playgroundCssStyles,
   playgroundPanelProps,
 }) => {
   const getSnippet = (code) => {
@@ -50,6 +55,7 @@ export default ({
   };
 
   const Playground = () => {
+    const euiTheme = useEuiTheme();
     const [isGhost, setGhost] = useState(false);
     const params = useView(config);
 
@@ -64,6 +70,10 @@ export default ({
         setGhost(needGhostTheme);
       }
     }, [params.knobProps]);
+
+    // react-view swallows errors thrown in the Compiler, so we need to grab
+    // them via errorProps and pass them to our own EUI component
+    const thrownError = params.errorProps.msg; // string or null
 
     return (
       <>
@@ -83,12 +93,17 @@ export default ({
               guideDemo__ghostBackground: isGhost,
             })}
             {...playgroundPanelProps}
+            paddingSize={
+              thrownError ? 'none' : playgroundPanelProps?.paddingSize
+            }
           >
             <Compiler
+              css={playgroundCssStyles?.(euiTheme)}
               {...params.compilerProps}
               placeholder={Placeholder}
               className={classNames('playground__demo', playgroundClassName)}
             />
+            {thrownError && <EuiErrorMessage errorMessage={thrownError} />}
           </EuiPanel>
         </EuiFlyoutHeader>
         <EuiFlyoutHeader className="playground__codeWrapper" hasBorder>

@@ -78,12 +78,14 @@ export const IconExample = {
           <p>
             Glyphs are small, monochromatic icons that typically should always
             use the default size of{' '}
-            <EuiCode language="js">size=&quot;m&quot;</EuiCode>.
+            <EuiCode language="js">size=&quot;m&quot;</EuiCode>. They are named
+            according to their appearance or the action they represent. For
+            example, <EuiCode>star</EuiCode>, <EuiCode>play</EuiCode>, etc.
           </p>
           <p>
             If you would like to contribute to our growing list of glyphs, you
             can follow{' '}
-            <EuiLink to="https://github.com/elastic/eui/blob/main/wiki/creating-icons.md">
+            <EuiLink href="https://github.com/elastic/eui/blob/main/wiki/creating-icons.md">
               these guidelines
             </EuiLink>
             .
@@ -126,6 +128,9 @@ export const IconExample = {
       title: 'Apps',
       text: (
         <p>
+          App logos are logos for Elastic Apps, and can contain multiple colors.
+          Normally the Elastic Design team creates those icons. They are not
+          meant to be used outside of Elastic, because they represent our apps.
           App logos are usually displayed at <EuiCode>32x32</EuiCode> or above
           and can contain multiple colors.
         </p>
@@ -162,11 +167,11 @@ export const IconExample = {
       demo: <Tokens />,
     },
     {
+      title: 'Custom tokens',
       wrapText: false,
       text: (
         <>
           <EuiText>
-            <h3>Custom tokens</h3>
             <p>
               By default, an <EuiCode>iconType</EuiCode> with the token prefix
               (i.e. those listed above) will have predefined styles. However,
@@ -247,11 +252,34 @@ export const IconExample = {
             the CSS helpers if you have complex logos that need to work with
             theming.
           </p>
+          <EuiCallOut
+            iconType="accessibility"
+            title={
+              <>Important considerations when importing SVGs as components</>
+            }
+            color="warning"
+          >
+            <p>
+              When importing an SVG as a component like{' '}
+              <EuiCode language="js">
+                {"import { ReactComponent as ReactLogo } from './logo.svg';"}
+              </EuiCode>
+              , keep in mind that the component will not support the{' '}
+              <EuiCode language="js">title</EuiCode> prop. The{' '}
+              <EuiCode language="js">title</EuiCode> prop is designed to only
+              work with our icons or SVGs imported as images or passed as a Data
+              URL. So, if you&apos;re importing your SVG as a component, be sure
+              to use an
+              <EuiCode language="js">aria-label</EuiCode> instead of a{' '}
+              <EuiCode language="js">title</EuiCode> prop to enhance
+              accessibility and avoid potential issues.
+            </p>
+          </EuiCallOut>
         </>
       ),
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: iconTypesSource,
         },
       ],

@@ -22,13 +22,16 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Settings,
 } from 'unified';
-import markdown from 'remark-parse';
+import markdown from 'remark-parse-no-trim';
 import emoji from 'remark-emoji';
 import breaks from 'remark-breaks';
 import highlight from '../remark/remark_prismjs';
 import * as MarkdownTooltip from '../markdown_tooltip';
 import * as MarkdownCheckbox from '../markdown_checkbox';
-import { markdownLinkValidator } from '../markdown_link_validator';
+import {
+  euiMarkdownLinkValidator,
+  EuiMarkdownLinkValidatorOptions,
+} from '../markdown_link_validator';
 
 export type DefaultEuiMarkdownParsingPlugins = PluggableList;
 
@@ -41,7 +44,13 @@ export const getDefaultEuiMarkdownParsingPlugins = ({
     [highlight, {}],
     [emoji, { emoticon: false }],
     [breaks, {}],
-    [markdownLinkValidator, {}],
+    [
+      euiMarkdownLinkValidator,
+      {
+        allowRelative: true,
+        allowProtocols: ['https:', 'http:', 'mailto:'],
+      } as EuiMarkdownLinkValidatorOptions,
+    ],
     [MarkdownCheckbox.parser, {}],
   ];
 

@@ -1,6 +1,5 @@
-import React, { useState, ReactNode } from 'react';
-// @ts-ignore - faker does not have type declarations
-import { fake } from 'faker';
+import React, { useState, useEffect, ReactNode } from 'react';
+import { faker } from '@faker-js/faker';
 
 import {
   EuiDataGrid,
@@ -53,13 +52,13 @@ const columns: EuiDataGridColumn[] = [
 const data: Array<{ [key: string]: ReactNode }> = [];
 for (let i = 1; i < 5; i++) {
   data.push({
-    default: fake('{{name.lastName}}, {{name.firstName}} {{name.suffix}}'),
-    datetime: fake('{{date.past}}'),
+    default: `${faker.name.lastName()}, ${faker.name.firstName()} ${faker.name.suffix()}`,
+    datetime: `${faker.date.past()}`,
     json: JSON.stringify([
       {
-        numeric: fake('{{finance.account}}'),
-        currency: fake('${{finance.amount}}'),
-        date: fake('{{date.past}}'),
+        numeric: faker.finance.account(),
+        currency: faker.finance.amount(),
+        date: `${faker.date.past()}`,
       },
     ]),
     custom: i % 2 === 0 ? 'Star Wars' : 'Star Trek',
@@ -74,11 +73,17 @@ const RenderCellPopover = (props: EuiDataGridCellPopoverElementProps) => {
     cellActions,
     cellContentsElement,
     DefaultCellPopover,
+    setCellPopoverProps,
   } = props;
 
   let title: ReactNode = 'Custom popover';
   let content: ReactNode = <EuiText size="s">{children}</EuiText>;
   let footer: ReactNode = cellActions;
+
+  // Set custom cell expansion popover props
+  useEffect(() => {
+    setCellPopoverProps({ panelClassName: 'customCellPopover' });
+  }, [setCellPopoverProps]);
 
   // An example of custom popover content
   if (schema === 'favoriteFranchise') {

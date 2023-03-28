@@ -31,7 +31,7 @@ import {
 } from './markdown_editor_text_area';
 import { EuiMarkdownFormat, EuiMarkdownFormatProps } from './markdown_format';
 import { EuiMarkdownEditorDropZone } from './markdown_editor_drop_zone';
-import { useGeneratedHtmlId } from '../../services/';
+import { useGeneratedHtmlId } from '../../services';
 
 import { MARKDOWN_MODE, MODE_EDITING, MODE_VIEWING } from './markdown_modes';
 import {
@@ -44,7 +44,6 @@ import {
 
 import { EuiModal } from '../modal';
 import { ContextShape, EuiMarkdownContext } from './markdown_context';
-import * as MarkdownTooltip from './plugins/markdown_tooltip';
 import {
   defaultParsingPlugins,
   defaultProcessingPlugins,
@@ -227,13 +226,6 @@ export const EuiMarkdownEditor = forwardRef<
     >(undefined);
 
     const toolbarPlugins = [...uiPlugins];
-    // @ts-ignore __originatedFromEui is a custom property
-    if (!uiPlugins.__originatedFromEui) {
-      toolbarPlugins.unshift(MarkdownTooltip.plugin);
-      console.warn(
-        'Deprecation warning: uiPlugins passed to EuiMarkdownEditor does not include the tooltip plugin, which has been added for you. This automatic inclusion has been deprecated and will be removed in the future, see https://github.com/elastic/eui/pull/4383'
-      );
-    }
 
     const markdownActions = useMemo(
       () => new MarkdownActions(editorId, toolbarPlugins),

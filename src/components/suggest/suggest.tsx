@@ -15,9 +15,7 @@ import React, {
 } from 'react';
 import classNames from 'classnames';
 import { CommonProps, ExclusiveUnion } from '../common';
-import { useGeneratedHtmlId } from '../../services';
 
-import { EuiScreenReaderOnly } from '../accessibility';
 import { EuiIcon } from '../icon';
 import { useEuiI18n } from '../i18n';
 import { EuiInputPopover } from '../popover';
@@ -111,6 +109,12 @@ type _EuiSuggestProps = CommonProps &
      * Default is `60vh`
      */
     maxHeight?: CSSProperties['maxHeight'];
+
+    /**
+     * Control whether or not options get filtered internally or if consumer will filter.
+     * Default `false`
+     */
+    isPreFiltered?: boolean;
   };
 
 export type EuiSuggestProps = _EuiSuggestProps &
@@ -138,6 +142,7 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
   id,
   'aria-label': ariaLabel,
   'aria-labelledby': labelId,
+  isPreFiltered = false,
   isVirtualized = false,
   fullWidth = true,
   maxHeight = '60vh',
@@ -174,8 +179,6 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
   const searchOnChange = (value: string) => {
     onSearch?.(value);
   };
-
-  const inputDescribedbyId = useGeneratedHtmlId({ prefix: id });
 
   /**
    * Status
@@ -280,13 +283,10 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
     [onItemClick, suggestions]
   );
 
-  const classes = classNames('euiInputPopover', {
-    'euiInputPopover--fullWidth': fullWidth,
-  });
-
   return (
     <>
       <EuiSelectable<EuiSuggestionProps>
+        selectableScreenReaderText={stateMessage}
         singleSelection={true}
         height={isVirtualized ? undefined : 'full'}
         options={suggestionList}
@@ -301,6 +301,7 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
           isVirtualized,
         }}
         searchable
+        isPreFiltered={isPreFiltered}
         searchProps={{
           id,
           append: appendArray.length ? appendArray : undefined,
@@ -310,7 +311,6 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
           onBlur: searchOnBlur,
           onInput: searchOnInput,
           onChange: searchOnChange,
-          'aria-describedby': inputDescribedbyId,
           'aria-label': ariaLabel,
           'aria-labelledby': labelId,
           ...rest,
@@ -319,7 +319,6 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
         {(list, search) => (
           <EuiInputPopover
             disableFocusTrap
-            className={classes}
             input={<>{search}</>}
             isOpen={isPopoverOpen}
             panelPaddingSize="none"
@@ -338,9 +337,6 @@ export const EuiSuggest: FunctionComponent<EuiSuggestProps> = ({
           </EuiInputPopover>
         )}
       </EuiSelectable>
-      <EuiScreenReaderOnly>
-        <p id={inputDescribedbyId}>{stateMessage}</p>
-      </EuiScreenReaderOnly>
     </>
   );
 };

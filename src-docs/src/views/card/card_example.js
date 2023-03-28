@@ -73,7 +73,7 @@ export const CardExample = {
         },
       ],
       text: (
-        <div>
+        <>
           <p>
             At its core an <strong>EuiCard</strong> should contain a{' '}
             <EuiCode>title</EuiCode>,<EuiCode>description</EuiCode>, and an{' '}
@@ -87,7 +87,7 @@ export const CardExample = {
             changed via the <EuiCode>titleElement</EuiCode> prop without
             altering the visual size.
           </p>
-        </div>
+        </>
       ),
       props: { EuiCard },
       demo: <Card />,
@@ -106,12 +106,12 @@ export const CardExample = {
       title: 'Layout',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardLayoutSource,
         },
       ],
       text: (
-        <div>
+        <>
           <p>
             Most of the time, cards should read from top to bottom (vertical).
             However, in some cases, you may want the icon to be to the left of
@@ -129,7 +129,7 @@ export const CardExample = {
               </span>
             }
           />
-        </div>
+        </>
       ),
       props: { EuiCard },
       demo: <CardLayout />,
@@ -148,12 +148,12 @@ export const CardExample = {
       title: 'Images',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardImageSource,
         },
       ],
       text: (
-        <div>
+        <>
           <p>
             Images can be added in place of, or in conjuction with, icons. Just
             pass a url into the <EuiCode>image</EuiCode> prop and it will expand
@@ -175,7 +175,7 @@ export const CardExample = {
               a style of <EuiCode>width: 100%</EuiCode>.
             </p>
           </EuiCallOut>
-        </div>
+        </>
       ),
       props: { EuiCard },
       demo: <CardImage />,
@@ -194,7 +194,7 @@ export const CardExample = {
       title: 'Footer',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardFooterSource,
         },
       ],
@@ -235,7 +235,7 @@ export const CardExample = {
       title: 'Beta badge',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardBetaSource,
         },
       ],
@@ -269,7 +269,7 @@ export const CardExample = {
       title: 'Selectable',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardSelectableSource,
         },
       ],
@@ -319,7 +319,7 @@ export const CardExample = {
       ),
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardCheckableCheckboxSource,
         },
       ],
@@ -345,7 +345,7 @@ export const CardExample = {
       ),
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardCheckableSource,
         },
       ],
@@ -358,7 +358,7 @@ export const CardExample = {
       title: 'Custom children',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardChildrenSource,
         },
       ],
@@ -395,7 +395,7 @@ export const CardExample = {
       title: 'Plain and other colors',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: cardDisplaySource,
         },
       ],

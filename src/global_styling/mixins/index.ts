@@ -6,5 +6,9 @@
  * Side Public License, v 1.
  */
 
+export * from './_color';
 export * from './_helpers';
+export * from './_padding';
+export * from './_states';
 export * from './_typography';
+export * from './_responsive';

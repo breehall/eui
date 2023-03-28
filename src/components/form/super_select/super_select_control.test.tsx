@@ -10,6 +10,7 @@ import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../../test';
 
+import { EuiForm } from '../form';
 import { EuiSuperSelectControl } from './super_select_control';
 
 describe('EuiSuperSelectControl', () => {
@@ -86,6 +87,44 @@ describe('EuiSuperSelectControl', () => {
       );
 
       expect(component).toMatchSnapshot();
+    });
+
+    test('placeholder is rendered', () => {
+      const component = render(
+        <EuiSuperSelectControl
+          options={[
+            { value: '1', inputDisplay: 'Option #1' },
+            { value: '2', inputDisplay: 'Option #2' },
+          ]}
+          placeholder="Select an option"
+          onChange={() => {}}
+        />
+      );
+
+      expect(component).toMatchSnapshot();
+      expect(
+        component.find('.euiSuperSelectControl__placeholder')
+      ).toBeTruthy();
+    });
+  });
+
+  describe('inherits', () => {
+    test('fullWidth from <EuiForm />', () => {
+      const component = render(
+        <EuiForm fullWidth>
+          <EuiSuperSelectControl />
+        </EuiForm>
+      );
+
+      if (
+        !component
+          .find('.euiSuperSelectControl')
+          .hasClass('euiSuperSelectControl--fullWidth')
+      ) {
+        throw new Error(
+          'expected EuiSuperSelectControl to inherit fullWidth from EuiForm'
+        );
+      }
     });
   });
 });

@@ -6,7 +6,12 @@
  * Side Public License, v 1.
  */
 
-import React, { Component, FunctionComponent } from 'react';
+import React, {
+  Component,
+  FocusEventHandler,
+  FunctionComponent,
+  ReactNode,
+} from 'react';
 import classNames from 'classnames';
 import moment, { LocaleSpecifier } from 'moment'; // eslint-disable-line import/named
 import dateMath from '@elastic/datemath';
@@ -34,7 +39,10 @@ import {
   EuiSuperUpdateButton,
   EuiSuperUpdateButtonProps,
 } from './super_update_button';
-import { EuiQuickSelectPopover } from './quick_select_popover/quick_select_popover';
+import {
+  EuiQuickSelectPopover,
+  CustomQuickSelectRenderOptions,
+} from './quick_select_popover/quick_select_popover';
 import { EuiDatePopoverButton } from './date_popover/date_popover_button';
 
 import { EuiDatePopoverContentProps } from './date_popover/date_popover_content';
@@ -55,6 +63,15 @@ export interface OnRefreshProps extends DurationRange {
 export type EuiSuperDatePickerProps = CommonProps & {
   commonlyUsedRanges?: DurationRange[];
   customQuickSelectPanels?: QuickSelectPanel[];
+
+  /**
+   * An optional render prop function that allows customizing the display of the Quick Select menu.
+   * This function passes all default quick select panels within an object, allowing you to
+   * re-order panels, omit certain panels entirely, or pass in your own fully custom content.
+   */
+  customQuickSelectRender?: (
+    options: CustomQuickSelectRenderOptions
+  ) => ReactNode;
 
   /**
    * Specifies the formatted used when displaying dates and/or datetimes
@@ -86,6 +103,11 @@ export type EuiSuperDatePickerProps = CommonProps & {
    * Used to localize e.g. month names, passed to `moment`
    */
   locale?: LocaleSpecifier;
+
+  /**
+   * Triggered whenever the EuiSuperDatePicker's dates are focused
+   */
+  onFocus?: FocusEventHandler;
 
   /**
    * Callback for when the refresh interval is fired.
@@ -393,6 +415,7 @@ export class EuiSuperDatePickerInternal extends Component<
       timeFormat,
       utcOffset,
       compressed,
+      onFocus,
     } = this.props;
 
     if (
@@ -415,6 +438,7 @@ export class EuiSuperDatePickerInternal extends Component<
             data-test-subj="superDatePickerShowDatesButton"
             disabled={isDisabled}
             onClick={this.hidePrettyDuration}
+            onFocus={onFocus}
           >
             <PrettyDuration
               timeFrom={start}
@@ -433,6 +457,8 @@ export class EuiSuperDatePickerInternal extends Component<
           <EuiDatePickerRange
             className="euiDatePickerRange--inGroup"
             iconType={false}
+            isInvalid={isInvalid}
+            disabled={isDisabled}
             isCustom
             startDateControl={
               <EuiDatePopoverButton
@@ -452,6 +478,7 @@ export class EuiSuperDatePickerInternal extends Component<
                 onPopoverToggle={this.onStartDatePopoverToggle}
                 onPopoverClose={this.onStartDatePopoverClose}
                 timeOptions={timeOptions}
+                buttonProps={{ onFocus }}
               />
             }
             endDateControl={
@@ -472,6 +499,7 @@ export class EuiSuperDatePickerInternal extends Component<
                 onPopoverToggle={this.onEndDatePopoverToggle}
                 onPopoverClose={this.onEndDatePopoverClose}
                 timeOptions={timeOptions}
+                buttonProps={{ onFocus }}
               />
             }
           />
@@ -525,6 +553,7 @@ export class EuiSuperDatePickerInternal extends Component<
       commonlyUsedRanges,
       timeOptions,
       customQuickSelectPanels,
+      customQuickSelectRender,
       dateFormat,
       end,
       isAutoRefreshOnly,
@@ -539,6 +568,7 @@ export class EuiSuperDatePickerInternal extends Component<
       width: _width,
       isQuickSelectOnly,
       compressed,
+      className,
     } = this.props;
 
     // Force reduction in width if showing quick select only
@@ -563,6 +593,7 @@ export class EuiSuperDatePickerInternal extends Component<
         applyTime={this.applyQuickTime}
         commonlyUsedRanges={commonlyUsedRanges}
         customQuickSelectPanels={customQuickSelectPanels}
+        customQuickSelectRender={customQuickSelectRender}
         dateFormat={dateFormat}
         end={end}
         isDisabled={isDisabled}
@@ -598,13 +629,14 @@ export class EuiSuperDatePickerInternal extends Component<
               compressed={compressed}
               isDisabled={isDisabled}
               data-test-subj={dataTestSubj}
+              className={className}
             />
           </EuiFlexItem>
         ) : (
           <>
             <EuiFlexItem>
               <EuiFormControlLayout
-                className="euiSuperDatePicker"
+                className={classNames('euiSuperDatePicker', className)}
                 compressed={compressed}
                 isDisabled={isDisabled}
                 prepend={quickSelect}

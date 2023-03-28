@@ -98,12 +98,14 @@ export const EuiHeader: FunctionComponent<EuiHeaderProps> = ({
       // Increment fixed header counter for each fixed header
       euiHeaderFixedCounter++;
       document.body.classList.add('euiBody--headerIsFixed');
+      document.body.dataset.fixedHeaders = String(euiHeaderFixedCounter);
 
       return () => {
         // Both decrement the fixed counter AND then check if there are none
         if (--euiHeaderFixedCounter === 0) {
           // If there are none, THEN remove class
           document.body.classList.remove('euiBody--headerIsFixed');
+          delete document.body.dataset.fixedHeaders;
         }
       };
     }
@@ -146,7 +148,11 @@ export const EuiHeader: FunctionComponent<EuiHeaderProps> = ({
   }
 
   return (
-    <div className={classes} {...rest}>
+    <div
+      className={classes}
+      data-fixed-header={position === 'fixed' || undefined} // Used by EuiFlyouts as a query selector
+      {...rest}
+    >
       {contents}
     </div>
   );

@@ -13,6 +13,7 @@ import { requiredProps } from '../../test';
 import { EuiInMemoryTable, EuiInMemoryTableProps } from './in_memory_table';
 import { keys, SortDirection } from '../../services';
 import { SearchFilterConfig } from '../search_bar/filters';
+import { Query } from '../search_bar/query';
 
 interface BasicItem {
   id: number | string;
@@ -453,6 +454,85 @@ describe('EuiInMemoryTable', () => {
         mount(<EuiInMemoryTable {...props} />);
       }).not.toThrow();
     });
+
+    test('changing the sort field and direction via sorting prop', () => {
+      // regression for https://github.com/elastic/eui/issues/6032
+      const props: EuiInMemoryTableProps<BasicItem> = {
+        ...requiredProps,
+        items: [
+          { id: '3', name: 'name3' },
+          { id: '1', name: 'name1' },
+          { id: '2', name: 'name2' },
+        ],
+        columns: [
+          {
+            field: 'id',
+            name: 'Id',
+            sortable: true,
+          },
+          {
+            field: 'name',
+            name: 'Name',
+            sortable: true,
+          },
+        ],
+        sorting: {
+          sort: {
+            field: 'id',
+            direction: SortDirection.ASC,
+          },
+        },
+      };
+
+      const component = mount(<EuiInMemoryTable {...props} />);
+
+      // initial sorting: id asc
+      expect(
+        component
+          .find('tbody .euiTableCellContent__text')
+          .map((cell) => cell.text())
+      ).toEqual(['1', 'name1', '2', 'name2', '3', 'name3']);
+
+      // sorting: id desc
+      component.setProps({
+        sorting: { sort: { field: 'id', direction: SortDirection.DESC } },
+      });
+      expect(
+        component
+          .find('tbody .euiTableCellContent__text')
+          .map((cell) => cell.text())
+      ).toEqual(['3', 'name3', '2', 'name2', '1', 'name1']);
+
+      // sorting: name asc
+      component.setProps({
+        sorting: { sort: { field: 'name', direction: SortDirection.ASC } },
+      });
+      expect(
+        component
+          .find('tbody .euiTableCellContent__text')
+          .map((cell) => cell.text())
+      ).toEqual(['1', 'name1', '2', 'name2', '3', 'name3']);
+
+      // sorting: name desc
+      component.setProps({
+        sorting: { sort: { field: 'name', direction: SortDirection.DESC } },
+      });
+      expect(
+        component
+          .find('tbody .euiTableCellContent__text')
+          .map((cell) => cell.text())
+      ).toEqual(['3', 'name3', '2', 'name2', '1', 'name1']);
+
+      // can return to initial sorting: id asc
+      component.setProps({
+        sorting: { sort: { field: 'id', direction: SortDirection.ASC } },
+      });
+      expect(
+        component
+          .find('tbody .euiTableCellContent__text')
+          .map((cell) => cell.text())
+      ).toEqual(['1', 'name1', '2', 'name2', '3', 'name3']);
+    });
   });
 
   test('with initial sorting', () => {
@@ -510,7 +590,7 @@ describe('EuiInMemoryTable', () => {
         initialSelected: [{ id: '1', name: 'name1' }],
       },
     };
-    const component = mount(<EuiInMemoryTable {...props} />);
+    const component = shallow(<EuiInMemoryTable {...props} />);
 
     expect(component).toMatchSnapshot();
   });
@@ -978,7 +1058,7 @@ describe('EuiInMemoryTable', () => {
       const component = mount(<EuiInMemoryTable {...props} />);
 
       component
-        .find('EuiButtonEmpty[data-test-subj="pagination-button-1"]')
+        .find('a[data-test-subj="pagination-button-1"]')
         .simulate('click');
 
       // forces EuiInMemoryTable's getDerivedStateFromProps to re-execute
@@ -1011,7 +1091,7 @@ describe('EuiInMemoryTable', () => {
       const component = mount(<EuiInMemoryTable {...props} />);
 
       component
-        .find('EuiButtonEmpty[data-test-subj="pagination-button-1"]')
+        .find('a[data-test-subj="pagination-button-1"]')
         .simulate('click');
     });
 
@@ -1044,7 +1124,7 @@ describe('EuiInMemoryTable', () => {
 
       // Pagination change
       component
-        .find('EuiButtonEmpty[data-test-subj="pagination-button-1"]')
+        .find('a[data-test-subj="pagination-button-1"]')
         .simulate('click');
       expect(props.onTableChange).toHaveBeenCalledTimes(1);
       expect(props.onTableChange).toHaveBeenLastCalledWith({
@@ -1075,7 +1155,7 @@ describe('EuiInMemoryTable', () => {
 
       // Sorted pagination change
       component
-        .find('EuiButtonEmpty[data-test-subj="pagination-button-1"]')
+        .find('a[data-test-subj="pagination-button-1"]')
         .simulate('click');
       expect(props.onTableChange).toHaveBeenCalledTimes(3);
       expect(props.onTableChange).toHaveBeenLastCalledWith({
@@ -1132,7 +1212,7 @@ describe('EuiInMemoryTable', () => {
 
       // click the first pagination button
       component
-        .find('EuiButtonEmpty[data-test-subj="pagination-button-0"]')
+        .find('a[data-test-subj="pagination-button-0"]')
         .simulate('click');
       expect(onTableChange).toHaveBeenCalledTimes(1);
       expect(onTableChange).toHaveBeenCalledWith({
@@ -1233,6 +1313,54 @@ describe('EuiInMemoryTable', () => {
       expect(component.find('td').at(1).text()).toBe('Index1');
       expect(component.find('td').at(2).text()).toBe('Index2');
       expect(component.find('td').at(3).text()).toBe('Index3');
+    });
+  });
+
+  describe('controlled search query', () => {
+    it('execute the Query and filters the table items', () => {
+      const items = [{ title: 'foo' }, { title: 'bar' }, { title: 'baz' }];
+      const columns = [{ field: 'title', name: 'Title' }];
+      const query = Query.parse('baz');
+
+      const component = mount(
+        <EuiInMemoryTable
+          items={items}
+          search={{ query }}
+          columns={columns}
+          executeQueryOptions={{ defaultFields: ['title'] }}
+        />
+      );
+
+      const tableContent = component.find(
+        '.euiTableRowCell .euiTableCellContent'
+      );
+
+      expect(tableContent.length).toBe(1); // only 1 match
+      expect(tableContent.at(0).text()).toBe('baz');
+    });
+
+    it('does not execute the Query and renders the items passed as is', () => {
+      const items = [{ title: 'foo' }, { title: 'bar' }, { title: 'baz' }];
+      const columns = [{ field: 'title', name: 'Title' }];
+      const query = Query.parse('baz');
+
+      const component = mount(
+        <EuiInMemoryTable
+          items={items}
+          search={{ query }}
+          columns={columns}
+          executeQueryOptions={{ defaultFields: ['title'], enabled: false }}
+        />
+      );
+
+      const tableContent = component.find(
+        '.euiTableRowCell .euiTableCellContent'
+      );
+
+      expect(tableContent.length).toBe(3);
+      expect(tableContent.at(0).text()).toBe('foo');
+      expect(tableContent.at(1).text()).toBe('bar');
+      expect(tableContent.at(2).text()).toBe('baz');
     });
   });
 });

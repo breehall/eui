@@ -6,28 +6,42 @@
  * Side Public License, v 1.
  */
 
-import { RowHeightUtils as ActualRowHeightUtils } from '../row_heights';
+import {
+  RowHeightUtilsType,
+  RowHeightUtils as ActualRowHeightUtils,
+  RowHeightVirtualizationUtils as ActualRowHeightVirtualizationUtils,
+} from '../row_heights';
 
-const actual = new ActualRowHeightUtils();
+// Note: for test expedience purposes, this mock always returns the
+// full virtualization height utils w/ all APIs
+type RowHeightUtilsPublicAPI = Pick<
+  ActualRowHeightVirtualizationUtils,
+  keyof ActualRowHeightVirtualizationUtils
+>;
 
-export const mockRowHeightUtils = ({
-  cacheStyles: jest.fn(),
-  setGrid: jest.fn(),
-  getStylesForCell: jest.fn(() => ({
-    wordWrap: 'break-word',
-    wordBreak: 'break-word',
-    flexGrow: 1,
-  })),
-  isAutoHeight: jest.fn(() => false),
-  setRowHeight: jest.fn(),
-  pruneHiddenColumnHeights: jest.fn(),
-  getRowHeight: jest.fn(() => 32),
-  getRowHeightOption: jest.fn(actual.getRowHeightOption),
-  getCalculatedHeight: jest.fn(actual.getCalculatedHeight),
-  getLineCount: jest.fn(actual.getLineCount),
-  calculateHeightForLineCount: jest.fn(() => 50),
-  isRowHeightOverride: jest.fn(actual.isRowHeightOverride),
-  setRerenderGridBody: jest.fn(),
-} as unknown) as ActualRowHeightUtils;
+export const RowHeightUtils = jest.fn().mockImplementation(() => {
+  const rowHeightUtils = new ActualRowHeightUtils();
 
-export const RowHeightUtils = jest.fn(() => mockRowHeightUtils);
+  const rowHeightUtilsMock: RowHeightUtilsPublicAPI = {
+    cacheStyles: jest.fn(),
+    getStylesForCell: jest.fn(() => ({
+      wordWrap: 'break-word',
+      wordBreak: 'break-word',
+      flexGrow: 1,
+    })),
+    isAutoHeight: jest.fn(() => false),
+    setRowHeight: jest.fn(),
+    pruneHiddenColumnHeights: jest.fn(),
+    getRowHeight: jest.fn(() => 32),
+    getRowHeightOption: jest.fn(rowHeightUtils.getRowHeightOption),
+    getCalculatedHeight: jest.fn(rowHeightUtils.getCalculatedHeight),
+    getLineCount: jest.fn(rowHeightUtils.getLineCount),
+    calculateHeightForLineCount: jest.fn(() => 50),
+    isRowHeightOverride: jest.fn(rowHeightUtils.isRowHeightOverride),
+    resetRow: jest.fn(),
+    resetGrid: jest.fn(),
+    compensateForLayoutShift: jest.fn(),
+  };
+
+  return (rowHeightUtilsMock as unknown) as RowHeightUtilsType;
+});

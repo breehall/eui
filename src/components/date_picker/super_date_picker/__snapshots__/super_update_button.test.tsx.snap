@@ -16,8 +16,9 @@ exports[`EuiSuperUpdateButton iconOnly 1`] = `
       iconType="refresh"
       isDisabled={false}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -42,6 +43,7 @@ exports[`EuiSuperUpdateButton iconOnly 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Refresh"
@@ -73,8 +75,9 @@ exports[`EuiSuperUpdateButton is rendered 1`] = `
       iconType="refresh"
       isDisabled={false}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -104,6 +107,7 @@ exports[`EuiSuperUpdateButton is rendered 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Refresh"
@@ -141,8 +145,9 @@ exports[`EuiSuperUpdateButton isDisabled 1`] = `
       iconType="refresh"
       isDisabled={true}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -172,6 +177,7 @@ exports[`EuiSuperUpdateButton isDisabled 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Refresh"
@@ -203,8 +209,9 @@ exports[`EuiSuperUpdateButton isLoading 1`] = `
       iconType="kqlFunction"
       isDisabled={false}
       isLoading={true}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -234,6 +241,7 @@ exports[`EuiSuperUpdateButton isLoading 1`] = `
       isLoading={true}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Updating"
@@ -271,8 +279,9 @@ exports[`EuiSuperUpdateButton needsUpdate 1`] = `
       iconType="kqlFunction"
       isDisabled={false}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -302,6 +311,7 @@ exports[`EuiSuperUpdateButton needsUpdate 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Update"
@@ -336,8 +346,9 @@ exports[`EuiSuperUpdateButton responsive can be all 1`] = `
       iconType="refresh"
       isDisabled={false}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -370,6 +381,7 @@ exports[`EuiSuperUpdateButton responsive can be all 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Refresh"
@@ -396,8 +408,9 @@ exports[`EuiSuperUpdateButton responsive can be false 1`] = `
       iconType="refresh"
       isDisabled={false}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -422,6 +435,7 @@ exports[`EuiSuperUpdateButton responsive can be false 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Refresh"
@@ -453,8 +467,9 @@ exports[`EuiSuperUpdateButton showTooltip 1`] = `
       iconType="refresh"
       isDisabled={false}
       isLoading={false}
-      minWidth={0}
+      minWidth={false}
       onClick={[Function]}
+      size="m"
       textProps={
         Object {
           "className": "euiScreenReaderOnly",
@@ -484,6 +499,7 @@ exports[`EuiSuperUpdateButton showTooltip 1`] = `
       isLoading={false}
       minWidth={118}
       onClick={[Function]}
+      size="m"
     >
       <EuiI18n
         default="Refresh"

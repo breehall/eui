@@ -21,7 +21,6 @@ import {
 
 import { EuiFlexGroup, EuiFlexItem } from '../../flex';
 import { EuiHighlight } from '../../highlight';
-import { EuiPanel } from '../../panel';
 import { EuiText } from '../../text';
 import { EuiLoadingSpinner } from '../../loading';
 import { EuiComboBoxTitle } from './combo_box_title';
@@ -40,12 +39,13 @@ import {
   UpdatePositionHandler,
 } from '../types';
 import { CommonProps } from '../../common';
-import { EuiBadge } from '../../badge/';
+import { EuiBadge } from '../../badge';
+import { EuiPopoverPanel } from '../../popover/popover_panel';
 
 const OPTION_CONTENT_CLASSNAME = 'euiComboBoxOption__content';
 
 export type EuiComboBoxOptionsListProps<T> = CommonProps &
-  ComponentProps<typeof EuiPanel> & {
+  ComponentProps<typeof EuiPopoverPanel> & {
     'data-test-subj': string;
     activeOptionIndex?: number;
     areAllOptionsSelected?: boolean;
@@ -56,10 +56,12 @@ export type EuiComboBoxOptionsListProps<T> = CommonProps &
      */
     customOptionText?: string;
     fullWidth?: boolean;
-    getSelectedOptionForSearchValue?: (
-      searchValue: string,
-      selectedOptions: any[]
-    ) => EuiComboBoxOptionOption<T> | undefined;
+    getSelectedOptionForSearchValue?: (params: {
+      isCaseSensitive?: boolean;
+      searchValue: string;
+      selectedOptions: any[];
+    }) => EuiComboBoxOptionOption<T> | undefined;
+    isCaseSensitive?: boolean;
     isLoading?: boolean;
     listRef: RefCallback<HTMLDivElement>;
     matchingOptions: Array<EuiComboBoxOptionOption<T>>;
@@ -113,6 +115,7 @@ export class EuiComboBoxOptionsList<T> extends Component<
   static defaultProps = {
     'data-test-subj': '',
     rowHeight: 29, // row height of default option renderer
+    isCaseSensitive: false,
   };
 
   updatePosition = () => {
@@ -218,7 +221,7 @@ export class EuiComboBoxOptionsList<T> extends Component<
 
     if (isGroupLabelOption) {
       return (
-        <div key={key ?? label.toLowerCase()} style={style}>
+        <div key={key ?? label} style={style}>
           <EuiComboBoxTitle>{label}</EuiComboBoxTitle>
         </div>
       );
@@ -241,7 +244,7 @@ export class EuiComboBoxOptionsList<T> extends Component<
     return (
       <EuiFilterSelectItem
         style={style}
-        key={option.key ?? option.label.toLowerCase()}
+        key={option.key ?? option.label}
         onClick={() => {
           if (onOptionClick) {
             onOptionClick(option);
@@ -267,6 +270,7 @@ export class EuiComboBoxOptionsList<T> extends Component<
           ) : (
             <EuiHighlight
               search={searchValue}
+              strict={this.props.isCaseSensitive}
               className={OPTION_CONTENT_CLASSNAME}
             >
               {label}
@@ -286,6 +290,7 @@ export class EuiComboBoxOptionsList<T> extends Component<
       customOptionText,
       fullWidth,
       getSelectedOptionForSearchValue,
+      isCaseSensitive,
       isLoading,
       listRef,
       matchingOptions,
@@ -345,10 +350,11 @@ export class EuiComboBoxOptionsList<T> extends Component<
             </div>
           );
         } else {
-          const selectedOptionForValue = getSelectedOptionForSearchValue(
+          const selectedOptionForValue = getSelectedOptionForSearchValue({
+            isCaseSensitive,
             searchValue,
-            selectedOptions
-          );
+            selectedOptions,
+          });
           if (selectedOptionForValue) {
             // Disallow duplicate custom options.
             emptyStateContent = (
@@ -465,29 +471,25 @@ export class EuiComboBoxOptionsList<T> extends Component<
      * Reusing the EuiPopover__panel classes to help with consistency/maintenance.
      * But this should really be converted to user the popover component.
      */
-    const classes = classNames(
-      'euiComboBoxOptionsList',
-      'euiPopover__panel',
-      'euiPopover__panel-isAttached',
-      'euiPopover__panel-noArrow',
-      'euiPopover__panel-isOpen',
-      `euiPopover__panel--${position}`
-    );
+    const classes = classNames('euiComboBoxOptionsList');
 
     return (
-      <EuiPanel
+      <EuiPopoverPanel
         paddingSize="none"
         hasShadow={false}
         className={classes}
         panelRef={this.listRefCallback}
         data-test-subj={`comboBoxOptionsList ${dataTestSubj}`}
         style={{ ...style, zIndex: zIndex }}
+        isOpen
+        isAttached
+        position={position}
         {...rest}
       >
         <div className="euiComboBoxOptionsList__rowWrap">
           {emptyState || optionsList}
         </div>
-      </EuiPanel>
+      </EuiPopoverPanel>
     );
   }
 }

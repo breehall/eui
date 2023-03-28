@@ -35,7 +35,15 @@ export const BrandSass: FunctionComponent<ThemeRowType> = ({ description }) => {
         snippet={'background: $euiColorWarning;'}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const BrandValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiBrandColors.map((color) => {
           return {
@@ -66,7 +74,7 @@ export const TextSass: FunctionComponent<ThemeRowType> = ({ description }) => {
               If your background color is anything other than or darker than the{' '}
               <EuiCode>$euiPageBackgroundColor</EuiCode>, you will want to
               re-calculate the high contrast version by using the{' '}
-              <Link to="/utilities/color-functions">
+              <Link to="/theming/colors/utilities">
                 <EuiCode>
                   @include makeHighContrastColor($foreground, $background)
                 </EuiCode>
@@ -83,7 +91,15 @@ export const TextSass: FunctionComponent<ThemeRowType> = ({ description }) => {
         snippet={'color: $euiColorWarningText;'}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const TextValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiTextColors.map((color) => {
           return {
@@ -116,7 +132,15 @@ export const ShadeSass: FunctionComponent<ThemeRowType> = ({ description }) => {
         snippet={'background: tintOrShade($euiColorMediumShade, 90%, 70%);'}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const ShadeValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiShadeColors.map((color) => {
           return {
@@ -143,8 +167,6 @@ const euiSpecialColors = [
 export const SpecialSass: FunctionComponent<ThemeRowType> = ({
   description,
 }) => {
-  const values = useJsonVars();
-
   return (
     <>
       <ThemeExample
@@ -161,7 +183,15 @@ export const SpecialSass: FunctionComponent<ThemeRowType> = ({
 background-color: \$euiColorInk;`}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const SpecialValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiSpecialColors.map((color) => {
           return {

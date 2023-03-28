@@ -8,23 +8,23 @@
 
 import React, {
   Component,
-  cloneElement,
-  Fragment,
   ReactElement,
   ReactNode,
   MouseEvent as ReactMouseEvent,
+  HTMLAttributes,
 } from 'react';
 import classNames from 'classnames';
 
-import { keysOf } from '../common';
-import { EuiPortal } from '../portal';
-import { EuiToolTipPopover } from './tool_tip_popover';
-import { enqueueStateChange } from '../../services/react';
+import { CommonProps, keysOf } from '../common';
 import { findPopoverPosition, htmlIdGenerator } from '../../services';
-
+import { enqueueStateChange } from '../../services/react';
 import { EuiResizeObserver } from '../observer/resize_observer';
+import { EuiPortal } from '../portal';
 
-export type ToolTipPositions = 'top' | 'right' | 'bottom' | 'left';
+import { EuiToolTipPopover, ToolTipPositions } from './tool_tip_popover';
+import { EuiToolTipAnchor } from './tool_tip_anchor';
+import { EuiToolTipArrow } from './tool_tip_arrow';
+import { toolTipManager } from './tool_tip_manager';
 
 const positionsToClassNameMap: { [key in ToolTipPositions]: string } = {
   top: 'euiToolTip--top',
@@ -70,9 +70,13 @@ const DEFAULT_TOOLTIP_STYLES: ToolTipStyles = {
 
 export interface EuiToolTipProps {
   /**
-   * Passes onto the the trigger.
+   * Passes onto the span wrapping the trigger.
    */
   anchorClassName?: string;
+  /**
+   * Passes onto the span wrapping the trigger.
+   */
+  anchorProps?: CommonProps & HTMLAttributes<HTMLSpanElement>;
   /**
    * The in-view trigger for your tooltip.
    */
@@ -105,6 +109,13 @@ export interface EuiToolTipProps {
    * Suggested position. If there is not enough room for it this will be changed.
    */
   position: ToolTipPositions;
+  /**
+   * When `true`, the tooltip's position is re-calculated when the user
+   * scrolls. This supports having fixed-position tooltip anchors.
+   *
+   * When nesting an `EuiTooltip` in a scrollable container, `repositionOnScroll` should be `true`
+   */
+  repositionOnScroll?: boolean;
 
   /**
    * If supplied, called when mouse movement causes the tool tip to be
@@ -151,16 +162,29 @@ export class EuiToolTip extends Component<EuiToolTipProps, State> {
 
   componentDidMount() {
     this._isMounted = true;
+    if (this.props.repositionOnScroll) {
+      window.addEventListener('scroll', this.positionToolTip, true);
+    }
   }
 
   componentWillUnmount() {
     this.clearAnimationTimeout();
     this._isMounted = false;
+    window.removeEventListener('scroll', this.positionToolTip, true);
   }
 
   componentDidUpdate(prevProps: EuiToolTipProps, prevState: State) {
     if (prevState.visible === false && this.state.visible === true) {
       requestAnimationFrame(this.testAnchor);
+    }
+
+    // update scroll listener
+    if (prevProps.repositionOnScroll !== this.props.repositionOnScroll) {
+      if (this.props.repositionOnScroll) {
+        window.addEventListener('scroll', this.positionToolTip, true);
+      } else {
+        window.removeEventListener('scroll', this.positionToolTip, true);
+      }
     }
   }
 
@@ -179,23 +203,17 @@ export class EuiToolTip extends Component<EuiToolTipProps, State> {
     }
   };
 
-  setPopoverRef = (ref: HTMLElement) => {
-    this.popover = ref;
+  setAnchorRef = (ref: HTMLElement) => (this.anchor = ref);
 
-    // if the popover has been unmounted, clear
-    // any previous knowledge about its size
-    if (ref == null) {
-      this.setState({
-        toolTipStyles: DEFAULT_TOOLTIP_STYLES,
-        arrowStyles: undefined,
-      });
-    }
-  };
+  setPopoverRef = (ref: HTMLElement) => (this.popover = ref);
 
   showToolTip = () => {
     if (!this.timeoutId) {
       this.timeoutId = setTimeout(() => {
-        enqueueStateChange(() => this.setState({ visible: true }));
+        enqueueStateChange(() => {
+          this.setState({ visible: true });
+          toolTipManager.registerTooltip(this.hideToolTip);
+        });
       }, delayToMsMap[this.props.delay]);
     }
   };
@@ -248,7 +266,12 @@ export class EuiToolTip extends Component<EuiToolTipProps, State> {
     this.clearAnimationTimeout();
     enqueueStateChange(() => {
       if (this._isMounted) {
-        this.setState({ visible: false });
+        this.setState({
+          visible: false,
+          toolTipStyles: DEFAULT_TOOLTIP_STYLES,
+          arrowStyles: undefined,
+        });
+        toolTipManager.deregisterToolTip(this.hideToolTip);
       }
     });
   };
@@ -290,85 +313,67 @@ export class EuiToolTip extends Component<EuiToolTipProps, State> {
       children,
       className,
       anchorClassName,
+      anchorProps,
       content,
       title,
       delay,
       display,
+      repositionOnScroll,
       ...rest
     } = this.props;
 
-    const { arrowStyles, id, toolTipStyles, visible } = this.state;
+    const {
+      arrowStyles,
+      id,
+      toolTipStyles,
+      visible,
+      calculatedPosition,
+    } = this.state;
 
-    const classes = classNames(
-      'euiToolTip',
-      positionsToClassNameMap[this.state.calculatedPosition],
-      className
-    );
-
-    const anchorClasses = classNames(
-      'euiToolTipAnchor',
-      display ? displayToClassNameMap[display] : null,
-      anchorClassName
-    );
-
-    let tooltip;
-    if (visible && (content || title)) {
-      tooltip = (
-        <EuiPortal>
-          <EuiToolTipPopover
-            className={classes}
-            style={toolTipStyles}
-            positionToolTip={this.positionToolTip}
-            popoverRef={this.setPopoverRef}
-            title={title}
-            id={id}
-            role="tooltip"
-            {...rest}
-          >
-            <div style={arrowStyles} className="euiToolTip__arrow" />
-            <EuiResizeObserver onResize={this.positionToolTip}>
-              {(resizeRef) => <div ref={resizeRef}>{content}</div>}
-            </EuiResizeObserver>
-          </EuiToolTipPopover>
-        </EuiPortal>
-      );
-    }
-
-    const anchor = (
-      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      <span
-        ref={(anchor) => (this.anchor = anchor)}
-        className={anchorClasses}
-        onMouseOver={this.showToolTip}
-        onMouseOut={this.onMouseOut}
-      >
-        {/**
-         * Re: jsx-a11y/mouse-events-have-key-events
-         * We apply onFocus, onBlur, etc to the children element because that's the element
-         * the user will be interacting with, as opposed to the enclosing anchor element.
-         * For example, if the inner component is a button and the user tabs to it, we want
-         * the enter key to trigger the button. That won't work if the enclosing anchor
-         * element has focus.
-         */}
-        {cloneElement(children, {
-          onFocus: (e: React.FocusEvent) => {
-            this.onFocus();
-            children.props.onFocus && children.props.onFocus(e);
-          },
-          onBlur: (e: React.FocusEvent) => {
-            this.onBlur();
-            children.props.onBlur && children.props.onBlur(e);
-          },
-          ...(visible && { 'aria-describedby': this.state.id }),
-        })}
-      </span>
-    );
+    const classes = classNames('euiToolTip', className);
+    const anchorClasses = classNames(anchorClassName, anchorProps?.className);
 
     return (
-      <Fragment>
-        {anchor}
-        {tooltip}
-      </Fragment>
+      <>
+        <EuiToolTipAnchor
+          {...anchorProps}
+          ref={this.setAnchorRef}
+          onBlur={this.onBlur}
+          onFocus={this.onFocus}
+          onMouseOver={this.showToolTip}
+          onMouseOut={this.onMouseOut}
+          id={this.state.id}
+          className={anchorClasses}
+          display={display!}
+          isVisible={visible}
+        >
+          {children}
+        </EuiToolTipAnchor>
+        {visible && (content || title) && (
+          <EuiPortal>
+            <EuiToolTipPopover
+              className={classes}
+              style={toolTipStyles}
+              positionToolTip={this.positionToolTip}
+              popoverRef={this.setPopoverRef}
+              title={title}
+              id={id}
+              role="tooltip"
+              calculatedPosition={calculatedPosition}
+              {...rest}
+            >
+              <EuiToolTipArrow
+                style={arrowStyles}
+                className="euiToolTip__arrow"
+                position={calculatedPosition}
+              />
+              <EuiResizeObserver onResize={this.positionToolTip}>
+                {(resizeRef) => <div ref={resizeRef}>{content}</div>}
+              </EuiResizeObserver>
+            </EuiToolTipPopover>
+          </EuiPortal>
+        )}
+      </>
     );
   }
 }

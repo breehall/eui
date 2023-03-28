@@ -11,21 +11,49 @@ Object {
   "bool": Object {
     "must": Array [
       Object {
-        "match": Object {
-          "group": Object {
-            "operator": "and",
-            "query": "kibana logstash",
-          },
+        "bool": Object {
+          "must": Array [
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "and",
+                  "query": "kibana",
+                },
+              },
+            },
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "and",
+                  "query": "logstash",
+                },
+              },
+            },
+          ],
         },
       },
     ],
     "must_not": Array [
       Object {
-        "match": Object {
-          "group": Object {
-            "operator": "and",
-            "query": "es beats",
-          },
+        "bool": Object {
+          "must": Array [
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "and",
+                  "query": "es",
+                },
+              },
+            },
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "and",
+                  "query": "beats",
+                },
+              },
+            },
+          ],
         },
       },
     ],
@@ -70,11 +98,25 @@ Object {
         },
       },
       Object {
-        "match": Object {
-          "group": Object {
-            "operator": "and",
-            "query": "eng es",
-          },
+        "bool": Object {
+          "must": Array [
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "and",
+                  "query": "eng",
+                },
+              },
+            },
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "and",
+                  "query": "es",
+                },
+              },
+            },
+          ],
         },
       },
       Object {
@@ -178,11 +220,25 @@ Object {
         },
       },
       Object {
-        "match": Object {
-          "group": Object {
-            "operator": "or",
-            "query": "eng es",
-          },
+        "bool": Object {
+          "should": Array [
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "or",
+                  "query": "eng",
+                },
+              },
+            },
+            Object {
+              "match": Object {
+                "group": Object {
+                  "operator": "or",
+                  "query": "es",
+                },
+              },
+            },
+          ],
         },
       },
     ],

@@ -8,6 +8,8 @@
 
 import React from 'react';
 import { mount, shallow, ReactWrapper } from 'enzyme';
+import { requiredProps } from '../../../test';
+import { shouldRenderCustomStyles } from '../../../test/internal';
 
 import {
   EuiSuperDatePicker,
@@ -30,9 +32,17 @@ const shallowAndDive = (component: React.ReactElement) =>
   shallow(component).dive().dive();
 
 describe('EuiSuperDatePicker', () => {
+  shouldRenderCustomStyles(<EuiSuperDatePicker onTimeChange={noop} />, {
+    skipStyles: true,
+  });
+  shouldRenderCustomStyles(<EuiSuperDatePicker onTimeChange={noop} />, {
+    childProps: ['updateButtonProps'],
+    skipParentTest: true,
+  });
+
   test('is rendered', () => {
     const component = shallowAndDive(
-      <EuiSuperDatePicker onTimeChange={noop} />
+      <EuiSuperDatePicker onTimeChange={noop} {...requiredProps} />
     );
 
     expect(component).toMatchSnapshot();
@@ -143,7 +153,7 @@ describe('EuiSuperDatePicker', () => {
     test('updateButtonProps', () => {
       const updateButtonProps: EuiSuperDatePickerProps['updateButtonProps'] = {
         fill: false,
-        color: 'ghost',
+        color: 'danger',
       };
 
       const component = mount(
@@ -152,9 +162,39 @@ describe('EuiSuperDatePicker', () => {
           updateButtonProps={updateButtonProps}
         />
       );
-      expect(component.find(EuiButton).props()).toMatchObject(
+      expect(component.find(EuiButton).last().props()).toMatchObject(
         updateButtonProps
       );
+    });
+
+    it('invokes onFocus callbacks on the date popover buttons', () => {
+      const focusMock = jest.fn();
+      const component = mount(
+        <EuiSuperDatePicker
+          onTimeChange={noop}
+          showUpdateButton={false}
+          onFocus={focusMock}
+        />
+      );
+
+      component
+        .find('button[data-test-subj="superDatePickerShowDatesButton"]')
+        .simulate('focus');
+      expect(focusMock).toBeCalledTimes(1);
+
+      component
+        .find('button[data-test-subj="superDatePickerShowDatesButton"]')
+        .simulate('click');
+
+      component
+        .find('button[data-test-subj="superDatePickerstartDatePopoverButton"]')
+        .simulate('focus');
+      expect(focusMock).toBeCalledTimes(2);
+
+      component
+        .find('button[data-test-subj="superDatePickerstartDatePopoverButton"]')
+        .simulate('focus');
+      expect(focusMock).toBeCalledTimes(3);
     });
 
     describe('showUpdateButton', () => {

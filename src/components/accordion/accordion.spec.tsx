@@ -72,7 +72,7 @@ describe('EuiAccordion', () => {
     });
   });
 
-  describe('Props and keyboard navigation', () => {
+  describe('Props and navigation', () => {
     it('should not have an arrow', () => {
       cy.realMount(
         <EuiAccordion {...noArrowProps}>
@@ -85,7 +85,21 @@ describe('EuiAccordion', () => {
       cy.get('.euiAccordion__iconButton').should('not.exist');
     });
 
-    it('manages focus when panel is opened', () => {
+    it('manages focus when panel is clicked', () => {
+      cy.realMount(
+        <EuiAccordion {...noArrowProps}>
+          <EuiPanel color="subdued">
+            Any content inside of <strong>EuiAccordion</strong> will appear
+            here.
+          </EuiPanel>
+        </EuiAccordion>
+      );
+      cy.get('button').contains('Click me to toggle').realClick();
+      cy.focused().invoke('attr', 'tabindex').should('equal', '-1');
+      cy.focused().contains('Any content inside of EuiAccordion');
+    });
+
+    it('manages focus when panel is opened by keyboard interaction', () => {
       cy.realMount(
         <EuiAccordion {...noArrowProps}>
           <EuiPanel color="subdued">
@@ -117,21 +131,6 @@ describe('EuiAccordion', () => {
       cy.focused().invoke('attr', 'tabindex').should('not.exist');
       cy.realPress('Tab');
       cy.focused().contains('a link');
-    });
-  });
-
-  describe('Automated accessibility check', () => {
-    it('has zero violations when expanded', () => {
-      cy.mount(
-        <EuiAccordion {...noArrowProps}>
-          <EuiPanel color="subdued">
-            Any content inside of <strong>EuiAccordion</strong> will appear
-            here. We will include <a href="#">a link</a> to confirm focus.
-          </EuiPanel>
-        </EuiAccordion>
-      );
-      cy.get('button.euiAccordion__button').click();
-      cy.checkAxe();
     });
   });
 });

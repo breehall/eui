@@ -9,11 +9,17 @@
 import React from 'react';
 import { render, mount } from 'enzyme';
 import { requiredProps } from '../../../test/required_props';
+import { shouldRenderCustomStyles } from '../../../test/internal';
 
-import { EuiButtonEmpty, COLORS, SIZES, FLUSH_TYPES } from './button_empty';
-import { ICON_SIDES } from '../button_content';
+import { EuiButtonEmpty, SIZES, FLUSH_TYPES } from './button_empty';
+import { ICON_SIDES } from '../_button_content_deprecated';
+import { BUTTON_COLORS } from '../../../themes/amsterdam/global_styling/mixins';
 
 describe('EuiButtonEmpty', () => {
+  shouldRenderCustomStyles(<EuiButtonEmpty>Content</EuiButtonEmpty>, {
+    childProps: ['contentProps'],
+  });
+
   test('is rendered', () => {
     const component = render(
       <EuiButtonEmpty {...requiredProps}>Content</EuiButtonEmpty>
@@ -74,12 +80,18 @@ describe('EuiButtonEmpty', () => {
     });
 
     describe('color', () => {
-      COLORS.forEach((color) => {
+      BUTTON_COLORS.forEach((color) => {
         test(`${color} is rendered`, () => {
           const component = render(<EuiButtonEmpty color={color} />);
 
           expect(component).toMatchSnapshot();
         });
+      });
+
+      test('ghost is rendered', () => {
+        const component = render(<EuiButtonEmpty color={'ghost'} />);
+
+        expect(component).toMatchSnapshot();
       });
     });
 

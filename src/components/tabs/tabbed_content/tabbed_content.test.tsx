@@ -9,6 +9,7 @@
 import React from 'react';
 import { render, mount } from 'enzyme';
 import { requiredProps, findTestSubject } from '../../../test';
+import { shouldRenderCustomStyles } from '../../../test/internal';
 
 import { EuiTabbedContent, AUTOFOCUS } from './tabbed_content';
 
@@ -31,6 +32,8 @@ const kibanaTab = {
 const tabs = [elasticsearchTab, kibanaTab];
 
 describe('EuiTabbedContent', () => {
+  shouldRenderCustomStyles(<EuiTabbedContent tabs={tabs} />);
+
   test('is rendered with required props and tabs', () => {
     const component = render(
       <EuiTabbedContent {...requiredProps} tabs={tabs} />
@@ -76,15 +79,6 @@ describe('EuiTabbedContent', () => {
       });
     });
 
-    describe('display', () => {
-      test('can be condensed', () => {
-        const component = render(
-          <EuiTabbedContent display="condensed" tabs={tabs} />
-        );
-        expect(component).toMatchSnapshot();
-      });
-    });
-
     describe('autoFocus', () => {
       AUTOFOCUS.forEach((focusType) => {
         test(`${focusType} is rendered`, () => {
@@ -125,7 +119,7 @@ describe('EuiTabbedContent', () => {
         ],
       });
 
-      expect(component).toMatchSnapshot();
+      expect(component.render()).toMatchSnapshot();
     });
   });
 });

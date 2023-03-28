@@ -9,7 +9,7 @@ import {
   EuiPinnableListGroup,
   EuiCode,
 } from '../../../../src/components';
-import { EuiPinnableListGroupItem } from './props';
+import { EuiPinnableListGroupItem, EuiListGroupItemExtraAction } from './props';
 
 import ListGroup from './list_group';
 const listGroupSource = require('!!raw-loader!./list_group');
@@ -53,7 +53,11 @@ export const ListGroupExample = {
           </p>
         </>
       ),
-      props: { EuiListGroup, EuiListGroupItem },
+      props: {
+        EuiListGroup,
+        EuiListGroupItem,
+        EuiListGroupItemExtraAction,
+      },
       demo: <ListGroup />,
       snippet: `<EuiListGroup flush={true} bordered={true}>
   <EuiListGroupItem onClick={handleOnClick} label="Item" />
@@ -103,7 +107,7 @@ export const ListGroupExample = {
       title: 'Secondary link actions',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: listGroupLinkActionsSource,
         },
       ],
@@ -129,6 +133,9 @@ export const ListGroupExample = {
     alwaysShow: pinned,
   }}
 />`,
+      props: {
+        EuiListGroupItemExtraAction,
+      },
     },
     {
       title: 'Text wrapping and tooltips',
@@ -139,12 +146,19 @@ export const ListGroupExample = {
         },
       ],
       text: (
-        <p>
-          Optional props <EuiCode>showToolTip</EuiCode> and{' '}
-          <EuiCode>wrapLines</EuiCode> can be used to augment the display of
-          list items. Use these when lists are inside small containers where it
-          is likely that the content will be truncated.
-        </p>
+        <>
+          <p>
+            Optional props <EuiCode>showToolTip</EuiCode> and{' '}
+            <EuiCode>wrapLines</EuiCode> can be used to augment the display of
+            list items. Use these when lists are inside small containers where
+            it is likely that the content will be truncated.
+          </p>
+          <p>
+            Similarly, <EuiCode>toolTipText</EuiCode> can be used to provide
+            tooltip text. By default, the tooltip will have the text same as the{' '}
+            <EuiCode>label</EuiCode>.
+          </p>
+        </>
       ),
       demo: <ListGroupExtra />,
       snippet: `<EuiListGroup showToolTips>
@@ -165,13 +179,11 @@ export const ListGroupExample = {
       text: (
         <>
           <p>
-            <strong>EuiListGroupItems</strong> will inherit the color from their
-            element type whether it is a <EuiCode>button</EuiCode>,{' '}
-            <EuiCode>anchor</EuiCode>, or <EuiCode>span</EuiCode>. You can
-            enforce a different color of <EuiCode>primary</EuiCode>,{' '}
-            <EuiCode>text</EuiCode>, or <EuiCode>subdued</EuiCode> with the{' '}
-            <EuiCode>color</EuiCode> prop. Or provide the prop directly to{' '}
-            <strong>EuiListGroup</strong>.
+            <strong>EuiListGroupItems</strong> will get by default the color{' '}
+            <EuiCode>text</EuiCode>. You can enforce a different color of{' '}
+            <EuiCode>primary</EuiCode>, <EuiCode>text</EuiCode>, or{' '}
+            <EuiCode>subdued</EuiCode> with the <EuiCode>color</EuiCode> prop.
+            Or provide the prop directly to <strong>EuiListGroup</strong>.
           </p>
           <p>
             They also accept options for text size;{' '}

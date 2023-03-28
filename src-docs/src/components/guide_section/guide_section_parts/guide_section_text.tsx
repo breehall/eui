@@ -7,12 +7,14 @@ export const LANGUAGES = ['javascript', 'html'] as const;
 
 type GuideSectionExampleText = {
   title?: ReactNode;
+  id?: string;
   children?: ReactNode;
   wrapText?: boolean;
 };
 
 export const GuideSectionExampleText: FunctionComponent<GuideSectionExampleText> = ({
   title,
+  id,
   children,
   wrapText = true,
 }) => {
@@ -21,9 +23,8 @@ export const GuideSectionExampleText: FunctionComponent<GuideSectionExampleText>
   if (title) {
     titleNode = (
       <>
-        <EuiSpacer />
         <EuiTitle>
-          <h2>{title}</h2>
+          <h2 id={id}>{title}</h2>
         </EuiTitle>
         <EuiSpacer size="m" />
       </>

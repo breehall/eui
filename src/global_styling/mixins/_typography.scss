@@ -1,5 +1,5 @@
-// sass-lint:disable no-vendor-prefixes
-// sass-lint:disable no-important
+// stylelint-disable property-no-vendor-prefix
+// stylelint-disable declaration-no-important
 
 @function fontSizeToRemOrEm($size, $sizingMethod: 'rem') {
   @if ($sizingMethod == 'rem') {
@@ -127,40 +127,34 @@
 @mixin euiTextBreakWord {
   // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
   overflow-wrap: break-word !important; // makes sure the long string will wrap and not bust out of the container
-  word-wrap: break-word !important; // spec says, they are literally just alternate names for each other but some browsers support one and not the other
-  word-break: break-word; // IE doesn't understand but that's ok
+  word-break: break-word;
 }
 
-// Text truncation
-//
-// Prevent text from wrapping onto multiple lines, and truncate with an
-// ellipsis.
-//
-// 1. Ensure that the node has a maximum width after which truncation can
-//    occur.
-// 2. Fix for IE 8/9 if `word-wrap: break-word` is in effect on ancestor
-//    nodes.
-
+/**
+ * Text truncation
+ *
+ * Prevent text from wrapping onto multiple lines, and truncate with an ellipsis.
+ *
+ * 1. Ensure that the node has a maximum width after which truncation can occur.
+ */
 @mixin euiTextTruncate {
-  // sass-lint:disable-block no-important
   max-width: 100%; // 1
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
-  word-wrap: normal !important; // 2
 }
 
 @mixin euiNumberFormat {
   font-feature-settings: $euiFontFeatureSettings, 'tnum' 1; // Fixed-width numbers for tabular data
 }
 
-
-// Text weight shifting
-//
-// When changing the font-weight based the state of the component
-// this mixin will ensure that the sizing is dependent on the boldest
-// weight so it doesn't shifter sibling content.
-
+/**
+ * Text weight shifting
+ *
+ * When changing the font-weight based the state of the component
+ * this mixin will ensure that the sizing is dependent on the boldest
+ * weight so it doesn't shifter sibling content.
+ */
 @mixin euiTextShift($fontWeight: $euiFontWeightBold, $attr: 'data-text') {
   &::after {
     display: block;
@@ -171,4 +165,3 @@
     visibility: hidden;
   }
 }
-

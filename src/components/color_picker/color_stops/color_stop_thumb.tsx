@@ -8,6 +8,7 @@
 
 import React, {
   FunctionComponent,
+  CSSProperties,
   ReactChild,
   useEffect,
   useMemo,
@@ -24,7 +25,7 @@ import {
   isStopInvalid,
 } from './utils';
 import { getChromaColor } from '../utils';
-import { keys, useMouseMove } from '../../../services';
+import { keys, useMouseMove, useEuiTheme } from '../../../services';
 
 import { EuiButtonIcon } from '../../button';
 import { EuiColorPicker, EuiColorPickerProps } from '../color_picker';
@@ -35,6 +36,12 @@ import { EuiPopover } from '../../popover';
 import { EuiScreenReaderOnly } from '../../accessibility';
 import { EuiSpacer } from '../../spacer';
 import { EuiRangeThumb } from '../../form/range/range_thumb';
+
+import {
+  euiColorStopThumbStyles,
+  euiColorStopThumbPopoverStyles,
+  euiColorStopStyles,
+} from './color_stop_thumb.styles';
 
 export interface ColorStop {
   stop: number;
@@ -65,6 +72,7 @@ interface EuiColorStopThumbProps extends CommonProps, ColorStop {
   closePopover: () => void;
   'data-index'?: string;
   'aria-valuetext'?: string;
+  style?: CSSProperties;
   valueInputProps?: Partial<EuiFieldNumberProps>;
 }
 
@@ -94,7 +102,9 @@ export const EuiColorStopThumb: FunctionComponent<EuiColorStopThumbProps> = ({
   closePopover,
   'data-index': dataIndex,
   'aria-valuetext': ariaValueText,
+  style,
   valueInputProps = {},
+  ...rest
 }) => {
   const background = useMemo(() => {
     const chromaColor = getChromaColor(color, colorPickerShowAlpha);
@@ -238,28 +248,42 @@ export const EuiColorStopThumb: FunctionComponent<EuiColorStopThumbProps> = ({
     }
   };
 
-  const classes = classNames(
-    'euiColorStopPopover',
-    {
-      'euiColorStopPopover-hasFocus': hasFocus || isPopoverOpen,
-    },
-    className
-  );
+  const euiTheme = useEuiTheme();
+
+  const popoverStyles = euiColorStopThumbPopoverStyles(euiTheme);
+  const cssPopoverStyles = [
+    popoverStyles.euiColorStopThumbPopover,
+    (hasFocus || isPopoverOpen) && popoverStyles.hasFocus,
+  ];
+
+  const thumbStyles = euiColorStopThumbStyles(euiTheme);
+  const cssThumbStyles = [
+    thumbStyles.euiColorStopThumb,
+    isPopoverOpen && thumbStyles.isPopoverOpen,
+  ];
+
+  const colorStopStyles = euiColorStopStyles(euiTheme);
+  const cssColorStopStyles = colorStopStyles.euiColorStop;
+
+  const classes = classNames('euiColorStopPopover', className);
 
   return (
     <EuiPopover
+      css={cssPopoverStyles}
+      {...rest}
       ref={popoverRef}
       className={classes}
-      anchorClassName="euiColorStopPopover__anchor"
+      anchorClassName="euiColorStopThumbPopover__anchor"
       panelPaddingSize="s"
       isOpen={isPopoverOpen}
       closePopover={closePopover}
       initialFocus={numberInputRef || undefined}
       focusTrapProps={{ clickOutsideDisables: false }}
-      panelClassName={
-        numberInputRef ? undefined : 'euiColorStopPopover-isLoadingPanel'
-      }
+      panelProps={{
+        css: numberInputRef ? undefined : popoverStyles.isLoadingPanel,
+      }}
       style={{
+        ...style,
         left: `${getPositionFromStopFn(stop)}%`,
       }}
       button={
@@ -295,6 +319,7 @@ export const EuiColorStopThumb: FunctionComponent<EuiColorStopThumbProps> = ({
                 aria-label={ariaLabel}
                 title={title}
                 className="euiColorStopThumb"
+                css={cssThumbStyles}
                 tabIndex={-1}
                 style={{
                   background,
@@ -306,7 +331,11 @@ export const EuiColorStopThumb: FunctionComponent<EuiColorStopThumbProps> = ({
         </EuiI18n>
       }
     >
-      <div className="euiColorStop" data-test-subj="euiColorStopPopover">
+      <div
+        className="euiColorStop"
+        css={cssColorStopStyles}
+        data-test-subj="euiColorStopPopover"
+      >
         <EuiScreenReaderOnly>
           <p aria-live="polite">
             <EuiI18n

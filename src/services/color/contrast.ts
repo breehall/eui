@@ -10,6 +10,8 @@ import chroma from 'chroma-js';
 import { shade, tint, lightness as getLightness } from './manipulation';
 import { getOn } from '../theme/utils';
 
+export const wcagContrastMin = 4.5; // WCAG AA minimum contrast ratio for normal (non-large) text
+
 /**
  * Creates a new color that meets or exceeds WCAG level AA
  * @param foreground - Color to manipulate
@@ -17,7 +19,7 @@ import { getOn } from '../theme/utils';
  * *
  * @param themeOrBackground - Color to use as the contrast basis or just pass EuiTheme
  */
-export const makeHighContrastColor = (_foreground: string, ratio = 4.55) => (
+export const makeHighContrastColor = (_foreground: string, ratio = 4.85) => (
   themeOrBackground:
     | string
     | {

@@ -40,7 +40,7 @@ const warningSnippet = [
 import Danger from './danger';
 const dangerSource = require('!!raw-loader!./danger');
 const dangerSnippet = [
-  `<EuiCallOut title="Sorry, there was an error" color="danger" iconType="alert">
+  `<EuiCallOut title="Sorry, there was an error" color="danger" iconType="error">
   <p><!-- Content --></p>
 </EuiCallOut>
 `,
@@ -75,7 +75,7 @@ export const CallOutExample = {
             <EuiCode>s</EuiCode> (small).
           </li>
           <li>
-            Use an <EuiCode>icon</EuiCode> prop if it adds context.
+            Use an <EuiCode>iconType</EuiCode> if it adds context.
           </li>
         </ul>
       </EuiText>
@@ -86,17 +86,15 @@ export const CallOutExample = {
       title: 'Info',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: infoSource,
         },
       ],
       text: (
-        <div>
-          <p>
-            Use <strong>EuiCallOut</strong> to communicate general information
-            to the user.
-          </p>
-        </div>
+        <p>
+          Use <strong>EuiCallOut</strong> to communicate general information to
+          the user.
+        </p>
       ),
       props: { EuiCallOut },
       snippet: infoSnippet,
@@ -107,7 +105,7 @@ export const CallOutExample = {
       title: 'Success',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: successSource,
         },
       ],
@@ -125,13 +123,19 @@ export const CallOutExample = {
       title: 'Warning',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: warningSource,
         },
       ],
       text: (
         <p>
           Use this callout to warn the user against decisions they might regret.
+          You should receive a warning message when the program detects that{' '}
+          <b>
+            something is not behaving right, but it didn&apos;t cause any
+            termination
+          </b>
+          .
         </p>
       ),
       snippet: warningSnippet,
@@ -141,12 +145,21 @@ export const CallOutExample = {
       title: 'Danger',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: dangerSource,
         },
       ],
       text: (
-        <p>Use this callout to let the user know that something went wrong.</p>
+        <p>
+          Use this callout to let the user know that something went wrong. For
+          example if you want to communicate an error. You should receive an
+          error message when the issue is{' '}
+          <b>
+            terminal, this doesn&apos;t always mean that the operation stops
+            completely, but the task is not complete
+          </b>
+          .
+        </p>
       ),
       snippet: dangerSnippet,
       demo: <Danger />,

@@ -3,11 +3,10 @@
 exports[`EuiTourStepIndicator can be complete 1`] = `
 <li
   aria-label="aria-label"
-  class="euiTourStepIndicator euiTourStepIndicator--complete testClass1 testClass2"
+  class="euiTourStepIndicator testClass1 testClass2 emotion-EuiTourStepIndicator"
   data-test-subj="test subject string"
 >
   <span
-    class="euiStepNumber__icon"
     color="subdued"
     data-euiicon-type="dot"
   >
@@ -19,11 +18,10 @@ exports[`EuiTourStepIndicator can be complete 1`] = `
 exports[`EuiTourStepIndicator can be incomplete 1`] = `
 <li
   aria-label="aria-label"
-  class="euiTourStepIndicator euiTourStepIndicator--incomplete testClass1 testClass2"
+  class="euiTourStepIndicator testClass1 testClass2 emotion-EuiTourStepIndicator"
   data-test-subj="test subject string"
 >
   <span
-    class="euiStepNumber__icon"
     color="subdued"
     data-euiicon-type="dot"
   >
@@ -35,12 +33,11 @@ exports[`EuiTourStepIndicator can be incomplete 1`] = `
 exports[`EuiTourStepIndicator is rendered 1`] = `
 <li
   aria-label="aria-label"
-  class="euiTourStepIndicator euiTourStepIndicator--active testClass1 testClass2"
+  class="euiTourStepIndicator testClass1 testClass2 emotion-EuiTourStepIndicator"
   data-test-subj="test subject string"
 >
   <span
     aria-current="step"
-    class="euiStepNumber__icon"
     color="success"
     data-euiicon-type="dot"
   >

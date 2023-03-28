@@ -1,9 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`EuiLoadingSpinner custom colors 1`] = `
+Array [
+  <span
+    aria-label="Loading"
+    class="euiLoadingSpinner emotion-euiLoadingSpinner-m"
+    role="progressbar"
+    style="border-color:#07C white white white"
+  />,
+  <span
+    aria-label="Loading"
+    class="euiLoadingSpinner emotion-euiLoadingSpinner-m"
+    role="progressbar"
+    style="border-color:black #D3DAE6 #D3DAE6 #D3DAE6"
+  />,
+  <span
+    aria-label="Loading"
+    class="euiLoadingSpinner emotion-euiLoadingSpinner-m"
+    role="progressbar"
+    style="color:red;border-color:black white white white"
+  />,
+]
+`;
+
 exports[`EuiLoadingSpinner is rendered 1`] = `
 <span
   aria-label="aria-label"
-  class="euiLoadingSpinner testClass1 testClass2 css-155ohbx-euiLoadingSpinner-m"
+  class="euiLoadingSpinner testClass1 testClass2 emotion-euiLoadingSpinner-m"
   data-test-subj="test subject string"
   role="progressbar"
 />
@@ -12,7 +35,7 @@ exports[`EuiLoadingSpinner is rendered 1`] = `
 exports[`EuiLoadingSpinner size l is rendered 1`] = `
 <span
   aria-label="Loading"
-  class="euiLoadingSpinner css-lh9wx8-euiLoadingSpinner-l"
+  class="euiLoadingSpinner emotion-euiLoadingSpinner-l"
   role="progressbar"
 />
 `;
@@ -20,7 +43,7 @@ exports[`EuiLoadingSpinner size l is rendered 1`] = `
 exports[`EuiLoadingSpinner size m is rendered 1`] = `
 <span
   aria-label="Loading"
-  class="euiLoadingSpinner css-155ohbx-euiLoadingSpinner-m"
+  class="euiLoadingSpinner emotion-euiLoadingSpinner-m"
   role="progressbar"
 />
 `;
@@ -28,7 +51,7 @@ exports[`EuiLoadingSpinner size m is rendered 1`] = `
 exports[`EuiLoadingSpinner size s is rendered 1`] = `
 <span
   aria-label="Loading"
-  class="euiLoadingSpinner css-1y37fq2-euiLoadingSpinner-s"
+  class="euiLoadingSpinner emotion-euiLoadingSpinner-s"
   role="progressbar"
 />
 `;
@@ -36,7 +59,7 @@ exports[`EuiLoadingSpinner size s is rendered 1`] = `
 exports[`EuiLoadingSpinner size xl is rendered 1`] = `
 <span
   aria-label="Loading"
-  class="euiLoadingSpinner css-1ow0yso-euiLoadingSpinner-xl"
+  class="euiLoadingSpinner emotion-euiLoadingSpinner-xl"
   role="progressbar"
 />
 `;
@@ -44,7 +67,7 @@ exports[`EuiLoadingSpinner size xl is rendered 1`] = `
 exports[`EuiLoadingSpinner size xxl is rendered 1`] = `
 <span
   aria-label="Loading"
-  class="euiLoadingSpinner css-z6egi2-euiLoadingSpinner-xxl"
+  class="euiLoadingSpinner emotion-euiLoadingSpinner-xxl"
   role="progressbar"
 />
 `;

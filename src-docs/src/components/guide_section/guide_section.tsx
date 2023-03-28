@@ -7,6 +7,11 @@ import {
   EuiButton,
   EuiButtonEmpty,
   EuiFlyout,
+  EuiPanelProps,
+  EuiPageSection,
+  CommonProps,
+  useIsWithinBreakpoints,
+  EuiPageSectionProps,
 } from '../../../../src';
 
 import { slugify } from '../../../../src/services/string/slugify';
@@ -20,8 +25,14 @@ import {
   GuideSectionExampleTabs,
   GuideSectionExampleTabsProps,
 } from './guide_section_parts/guide_section_tabs';
+import classNames from 'classnames';
 
-export interface GuideSection {
+export interface GuideSectionProps
+  extends CommonProps,
+    Pick<
+      GuideSectionExample,
+      'exampleToggles' | 'demoPanelProps' | 'ghostBackground'
+    > {
   id?: string;
   title?: string;
   text?: ReactNode;
@@ -30,13 +41,16 @@ export interface GuideSection {
   fullScreen?: {
     slug: string;
     demo: ReactNode;
+    showButton?: boolean;
   };
-  demoPanelProps?: GuideSectionExample['demoPanelProps'];
   props?: object;
   playground?: any;
-  ghostBackground?: boolean;
   wrapText?: boolean;
   snippet?: string | string[];
+  color?: EuiPanelProps['color'];
+  children?: ReactNode;
+  nested?: boolean;
+  sectionProps?: EuiPageSectionProps;
 }
 
 export const GuideSectionCodeTypesMap = {
@@ -66,7 +80,7 @@ export const GuideSectionCodeTypesMap = {
   },
 };
 
-export const GuideSection: FunctionComponent<GuideSection> = ({
+export const GuideSection: FunctionComponent<GuideSectionProps> = ({
   id,
   title,
   text,
@@ -78,9 +92,16 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
   ghostBackground,
   wrapText = true,
   demoPanelProps,
+  exampleToggles,
   snippet,
+  color,
+  children,
+  nested,
+  className,
+  sectionProps,
 }) => {
   const { path } = useRouteMatch();
+  const isLargeBreakpoint = useIsWithinBreakpoints(['m', 'l', 'xl']);
   const [renderingPlayground, setRenderingPlayground] = useState(false);
 
   const renderTabs = () => {
@@ -126,10 +147,12 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
       });
     }
 
-    return tabs.length ? (
+    const playgroundToggle = renderPlaygroundToggle();
+
+    return tabs.length || playgroundToggle ? (
       <GuideSectionExampleTabs
         tabs={tabs}
-        rightSideControl={renderPlaygroundToggle()}
+        rightSideControl={playgroundToggle}
       />
     ) : undefined;
   };
@@ -162,6 +185,7 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
       config,
       setGhostBackground,
       playgroundClassName,
+      playgroundCssStyles,
       playgroundPanelProps,
     } = playground();
 
@@ -169,6 +193,7 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
       config,
       setGhostBackground,
       playgroundClassName,
+      playgroundCssStyles,
       playgroundPanelProps,
       playgroundToggle: renderPlaygroundToggle(),
       tabs: renderTabs(),
@@ -176,8 +201,16 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
   };
 
   return (
-    <div className="guideSection" id={id}>
-      <GuideSectionExampleText title={title} wrapText={wrapText}>
+    <EuiPageSection
+      color={!isLargeBreakpoint ? 'transparent' : color || 'transparent'}
+      paddingSize={nested ? 'none' : 'l'}
+      restrictWidth
+      {...sectionProps}
+      id={title ? undefined : id} // Prefer setting the ID on titles, if present
+      className={classNames('guideSection', className)}
+    >
+      <EuiSpacer size={(color || title) && isLargeBreakpoint ? 'xxl' : 'xs'} />
+      <GuideSectionExampleText title={title} id={id} wrapText={wrapText}>
         {text}
       </GuideSectionExampleText>
 
@@ -191,9 +224,9 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
           {renderPlayground()}
         </EuiFlyout>
       )}
-      {(demo || fullScreen) && (
+      {(demo || (fullScreen && fullScreen.showButton !== false)) && (
         <>
-          <EuiSpacer />
+          {(nested || text) && <EuiSpacer />}
           <GuideSectionExample
             example={
               <EuiErrorBoundary>
@@ -216,9 +249,13 @@ export const GuideSection: FunctionComponent<GuideSection> = ({
             tabs={renderTabs()}
             ghostBackground={ghostBackground}
             demoPanelProps={demoPanelProps}
+            exampleToggles={exampleToggles}
           />
         </>
       )}
-    </div>
+
+      {children}
+      <EuiSpacer size={color && isLargeBreakpoint ? 'xxl' : 'xs'} />
+    </EuiPageSection>
   );
 };

@@ -14,8 +14,8 @@ import { EuiCollapsibleNav } from './collapsible_nav';
 import { EuiOverlayMaskProps } from '../overlay_mask';
 
 jest.mock('../overlay_mask', () => ({
-  EuiOverlayMask: ({ headerZindexLocation, ...props }: any) => (
-    <div {...props} />
+  EuiOverlayMask: ({ headerZindexLocation, maskRef, ...props }: any) => (
+    <div {...props} ref={maskRef} />
   ),
 }));
 
@@ -79,7 +79,7 @@ describe('EuiCollapsibleNav', () => {
 
     test('dockedBreakpoint', () => {
       const component = mount(
-        <EuiCollapsibleNav {...propsNeededToRender} dockedBreakpoint={500} />
+        <EuiCollapsibleNav {...propsNeededToRender} dockedBreakpoint="s" />
       );
 
       expect(

@@ -25,6 +25,7 @@ import { KibanaNavLinks, SecurityGroup } from './collapsible_nav_list';
 
 import contentSvg from '../../images/content.svg';
 import { useExitPath } from '../../services/routing/routing';
+import { EuiThemeProvider } from '../../../../src/services';
 
 const TopLinks: EuiPinnableListGroupItemProps[] = [
   {
@@ -151,22 +152,23 @@ const CollapsibleNavAll = () => {
       {/* Dark deployments section */}
       <EuiFlexItem grow={false} style={{ flexShrink: 0 }}>
         <EuiCollapsibleNavGroup isCollapsible={false} background="dark">
-          <EuiListGroup
-            color="ghost"
-            maxWidth="none"
-            gutterSize="none"
-            size="s"
-            listItems={[
-              {
-                label: 'Manage deployment',
-                href: '#',
-                iconType: 'logoCloud',
-                iconProps: {
-                  color: 'ghost',
+          <EuiThemeProvider colorMode="dark">
+            <EuiListGroup
+              maxWidth="none"
+              gutterSize="none"
+              size="s"
+              listItems={[
+                {
+                  label: 'Manage deployment',
+                  href: '#',
+                  iconType: 'logoCloud',
+                  iconProps: {
+                    color: 'ghost',
+                  },
                 },
-              },
-            ]}
-          />
+              ]}
+            />
+          </EuiThemeProvider>
         </EuiCollapsibleNavGroup>
       </EuiFlexItem>
 
@@ -296,8 +298,10 @@ const CollapsibleNavAll = () => {
         ]}
       />
 
-      <EuiPageTemplate template="centeredBody">
-        <EuiImage size="fullWidth" alt="Fake paragraph" url={contentSvg} />
+      <EuiPageTemplate>
+        <EuiPageTemplate.EmptyPrompt>
+          <EuiImage size="fullWidth" alt="Fake paragraph" url={contentSvg} />
+        </EuiPageTemplate.EmptyPrompt>
       </EuiPageTemplate>
     </>
   );

@@ -9,6 +9,7 @@ import {
   useEuiTheme,
   EuiLink,
   useEuiOverflowScroll,
+  logicalCSS,
 } from '../../../../src';
 import { ThemeExample } from '../theme/_components/_theme_example';
 import { ScrollContent } from './_scroll_content';
@@ -23,7 +24,7 @@ export default () => {
   const scrollingContent = (
     <EuiFlexGroup
       css={css`
-        width: 150%;
+        ${logicalCSS('width', '150%')}
       `}
       responsive={false}
     >
@@ -35,6 +36,7 @@ export default () => {
     <>
       <ThemeExample
         title={<code>.eui-xScroll</code>}
+        type="className"
         description={
           <>
             <p>
@@ -52,37 +54,34 @@ export default () => {
             role="region"
             aria-label="Example of eui-xScroll region"
             className="eui-xScrollWithShadows"
-            style={{ padding: `${euiTheme.size.base}` }}
+            style={{ padding: euiTheme.size.base }}
           >
             {scrollingContent}
           </div>
         }
-        snippet={
-          `<div
+        snippet={`<div
   tabIndex={0}
   role="region"
   aria-label=""
   className="eui-xScrollWithShadows"
-  style={{ padding: ` +
-          '`${euiTheme.size.base}`' +
-          ` }}>
+>
   <EuiPanel />
   <EuiPanel />
   <EuiPanel />
-</div>`
-        }
+</div>`}
       />
 
       {!showSass && (
         <ThemeExample
-          title={<code>{"useEuiOverflowScroll('x');"}</code>}
+          title={<code>{"useEuiOverflowScroll('x')"}</code>}
+          type="hook"
           description={
             <>
               <p>Styles hook for adding horizontal scrolling to a container.</p>
               <p>
                 To mask the top and bottom of the scrolled content, indicating
                 visually that there is more content below, pass in true to the
-                second paremeter <EuiCode>mask</EuiCode>.
+                second parameter <EuiCode>mask</EuiCode>.
               </p>
               <p>
                 <EuiCode>{"useEuiOverflowScroll('x', true);"}</EuiCode>
@@ -105,26 +104,15 @@ export default () => {
               {scrollingContent}
             </div>
           }
-          snippet={
-            `<div
-  tabIndex={0}
-  role="region"
-  aria-label=""
-  css={css` +
-            "`${useEuiOverflowScroll('x', true)}; " +
-            'padding: ${euiTheme.size.base};`' +
-            ` }}>
-  <EuiPanel />
-  <EuiPanel />
-  <EuiPanel />
-</div>`
-          }
+          snippet="${useEuiOverflowScroll('x', true)}"
+          snippetLanguage="emotion"
         />
       )}
 
       {showSass && (
         <ThemeExample
-          title={<code>@mixin euiXScroll;</code>}
+          title={<code>@include euiXScroll</code>}
+          type="mixin"
           description={
             <>
               <p>Sass mixin for adding horizontal scrolling to a container.</p>

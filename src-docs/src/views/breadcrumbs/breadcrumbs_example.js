@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { GuideSectionTypes } from '../../components';
 
-import { EuiCode, EuiBreadcrumbs, EuiText } from '../../../../src/components';
-import { BreadcrumbResponsiveMaxCount, BreadcrumbProps } from './props';
+import { EuiBreadcrumbs, EuiCode, EuiText } from '../../../../src/components';
+import { BreadcrumbProps, BreadcrumbResponsiveMaxCount } from './props';
 
 import { breadcrumbsConfig } from './playground';
 
@@ -28,7 +28,7 @@ const maxSource = require('!!raw-loader!./max');
 import Color from './color';
 const colorSource = require('!!raw-loader!./color');
 
-const breadcrumpProps = {
+const props = {
   EuiBreadcrumbs,
   EuiBreadcrumb: BreadcrumbProps,
   EuiBreadcrumbResponsiveMaxCount: BreadcrumbResponsiveMaxCount,
@@ -56,7 +56,7 @@ export const BreadcrumbsExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: breadcrumbsSource,
         },
       ],
@@ -84,7 +84,7 @@ export const BreadcrumbsExample = {
           />
         </>
       ),
-      props: breadcrumpProps,
+      props,
       playground: breadcrumbsConfig,
       snippet: `<EuiBreadcrumbs
   breadcrumbs={[
@@ -110,7 +110,7 @@ export const BreadcrumbsExample = {
       title: 'Limit the number of breadcrumbs',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: maxSource,
         },
       ],
@@ -118,13 +118,13 @@ export const BreadcrumbsExample = {
         <>
           <p>
             Use the <EuiCode>max</EuiCode> prop to collapse breadcrumbs beyond a
-            certain number. The center breadcrumbs will collpase into a single
+            certain number. The center breadcrumbs will collapse into a single
             item allowing the user to navigate these items from within a
             popover.
           </p>
         </>
       ),
-      props: breadcrumpProps,
+      props,
       snippet: `<EuiBreadcrumbs
   max={4}
   breadcrumbs={breadcrumbs}
@@ -135,7 +135,7 @@ export const BreadcrumbsExample = {
       title: 'Truncate each breadcrumb',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: truncateSource,
         },
       ],
@@ -149,7 +149,7 @@ export const BreadcrumbsExample = {
           </p>
         </>
       ),
-      props: breadcrumpProps,
+      props,
       demo: <Truncate />,
       snippet: [
         `<EuiBreadcrumbs
@@ -161,7 +161,7 @@ export const BreadcrumbsExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: truncateSingleSource,
         },
       ],
@@ -174,7 +174,7 @@ export const BreadcrumbsExample = {
           </p>
         </>
       ),
-      props: breadcrumpProps,
+      props,
       demo: <TruncateSingle />,
       snippet: [
         `<EuiBreadcrumbs
@@ -192,7 +192,7 @@ export const BreadcrumbsExample = {
       title: 'Responsive',
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: responsiveSource,
         },
       ],
@@ -206,7 +206,7 @@ export const BreadcrumbsExample = {
           </p>
         </>
       ),
-      props: breadcrumpProps,
+      props,
       snippet: [
         `<EuiBreadcrumbs
   responsive={false}
@@ -219,7 +219,7 @@ export const BreadcrumbsExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: responsiveCustomSource,
         },
       ],
@@ -231,7 +231,7 @@ export const BreadcrumbsExample = {
           </p>
         </>
       ),
-      props: breadcrumpProps,
+      props,
       snippet: [
         `<EuiBreadcrumbs
   responsive={{
@@ -258,13 +258,17 @@ export const BreadcrumbsExample = {
             emphasis or indicate state like <EuiCode>{"'danger'"}</EuiCode> for
             an error. However, use caution not to use color alone.
           </p>
+          <p>
+            Please also note that link colors cannot be overriden for{' '}
+            <EuiCode>type={'"application"'}</EuiCode> breadcrumbs.
+          </p>
         </>
       ),
-      props: breadcrumpProps,
+      props,
       demo: <Color />,
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: colorSource,
         },
       ],

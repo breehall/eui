@@ -9,6 +9,7 @@
 import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../../test/required_props';
+import { shouldRenderCustomStyles } from '../../../test/internal';
 
 import { EuiCheckableCard } from './checkable_card';
 
@@ -26,6 +27,11 @@ describe('EuiCheckableCard', () => {
 
     expect(component).toMatchSnapshot();
   });
+
+  shouldRenderCustomStyles(
+    <EuiCheckableCard {...checkablePanelRequiredProps} />,
+    { skipStyles: true } // `style` goes with ...rest onto the child check/radio input
+  );
 
   test('renders panel props', () => {
     const component = render(

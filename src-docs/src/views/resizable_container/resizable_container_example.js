@@ -23,6 +23,7 @@ import { PanelModeType } from '!!prop-loader!../../../../src/components/resizabl
 import ResizableContainerBasic from './resizable_container_basic';
 import ResizableContainerVertical from './resizable_container_vertical';
 import ResizableContainerResetValues from './resizable_container_reset_values';
+import ResizableContainerCallbacks from './resizable_container_callbacks';
 import ResizablePanels from './resizable_panels';
 import ResizablePanelCollapsible from './resizable_panel_collapsible';
 import ResizablePanelCollapsibleResponsive from './resizable_panel_collapsible_responsive';
@@ -32,6 +33,7 @@ import ResizablePanelCollapsibleExt from './resizable_panel_collapsible_external
 const ResizableContainerSource = require('!!raw-loader!./resizable_container_basic');
 const ResizableContainerVerticalSource = require('!!raw-loader!./resizable_container_vertical');
 const ResizableContainerResetValuesSource = require('!!raw-loader!./resizable_container_reset_values');
+const ResizableContainerCallbacksSource = require('!!raw-loader!./resizable_container_callbacks');
 const ResizablePanelsSource = require('!!raw-loader!./resizable_panels');
 const ResizablePanelCollapsibleSource = require('!!raw-loader!./resizable_panel_collapsible');
 const ResizablePanelCollapsibleResponsiveSource = require('!!raw-loader!./resizable_panel_collapsible_responsive');
@@ -61,6 +63,29 @@ const panelsSnippet = `<EuiResizablePanel color="subdued" paddingSize="none" wra
 </EuiResizablePanel>`;
 
 const verticalSnippet = `<EuiResizableContainer direction="vertical">
+  {(EuiResizablePanel, EuiResizableButton) => (
+    <>
+      <EuiResizablePanel initialSize={50} minSize="20%">
+        <EuiText>
+          <p>{text}</p>
+        </EuiText>
+      </EuiResizablePanel>
+
+      <EuiResizableButton />
+
+      <EuiResizablePanel initialSize={50} minSize="20%">
+        <EuiText>
+          <p>{text}</p>
+        </EuiText>
+      </EuiResizablePanel>
+    </>
+  )}
+</EuiResizableContainer>`;
+
+const callbacksSnippet = `<EuiResizableContainer
+  onResizeStart={(trigger) => console.log('onResizeStart', trigger)}
+  onResizeEnd={() => console.log('onResizeEnd')}
+>
   {(EuiResizablePanel, EuiResizableButton) => (
     <>
       <EuiResizablePanel initialSize={50} minSize="20%">
@@ -187,19 +212,30 @@ export const ResizableContainerExample = {
         <strong>EuiResizablePanel</strong> component and put the{' '}
         <strong>EuiResizableButton</strong> component between.
       </p>
+
+      <>
+        <EuiCallOut title="Consider adding a tabIndex for keyboard accessibility">
+          <p>
+            Add a prop <EuiCode>tabIndex={0}</EuiCode> to the{' '}
+            <strong>EuiResizableContainer</strong> if it is a fixed height or
+            has a lot of content. This ensures keyboard users can set focus on
+            the container and scroll to the bottom using arrow keys.
+          </p>
+        </EuiCallOut>
+      </>
     </EuiText>
   ),
   sections: [
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizableContainerSource,
         },
       ],
       title: 'Horizontal resizing',
       text: (
-        <div>
+        <>
           <p>
             Simple resizable container with two panels and a resizer between.
             This is the most common case you&#39;ll need in your app. Just drag{' '}
@@ -219,7 +255,7 @@ export const ResizableContainerExample = {
               eliminate overflow scrolling
             </li>
           </ul>
-        </div>
+        </>
       ),
       props: {
         EuiResizableContainer,
@@ -232,13 +268,13 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizablePanelsSource,
         },
       ],
       title: 'Resizable panel options',
       text: (
-        <div>
+        <>
           <p>
             Each <strong>EuiResizablePanel</strong> is simply an{' '}
             <strong>EuiPanel</strong> wrapped with a{' '}
@@ -254,7 +290,7 @@ export const ResizableContainerExample = {
             styles, but you can add them back in with <EuiCode>color</EuiCode>,{' '}
             <EuiCode>hasShadow</EuiCode>, and <EuiCode>paddingSize</EuiCode>.
           </p>
-        </div>
+        </>
       ),
       props: { EuiResizablePanel },
       snippet: panelsSnippet,
@@ -263,13 +299,13 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizableContainerResetValuesSource,
         },
       ],
       title: 'Horizontal resizing with controlled widths',
       text: (
-        <div>
+        <>
           <p>
             Sometimes it&#39;s necessary to control panel sizes from the
             outside. For example to store sizes in{' '}
@@ -289,7 +325,7 @@ export const ResizableContainerExample = {
               </p>
             </EuiText>
           </EuiCallOut>
-        </div>
+        </>
       ),
       props: { EuiResizableContainer, EuiResizablePanel, EuiResizableButton },
       demo: <ResizableContainerResetValues />,
@@ -297,7 +333,7 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizableContainerVerticalSource,
         },
       ],
@@ -316,13 +352,37 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
+          code: ResizableContainerCallbacksSource,
+        },
+      ],
+      title: 'Resizable container callbacks',
+      text: (
+        <>
+          <p>
+            <strong>EuiResizableContainer</strong> supports{' '}
+            <EuiCode>onResizeStart</EuiCode> and <EuiCode>onResizeEnd</EuiCode>{' '}
+            callback props to listen for when resizing starts and ends. The{' '}
+            <EuiCode>onResizeStart</EuiCode> callback is passed a{' '}
+            <EuiCode>{"trigger: 'pointer' | 'key'"}</EuiCode> parameter to
+            determine which user action triggered the resize.
+          </p>
+        </>
+      ),
+      props: { EuiResizableContainer, EuiResizablePanel, EuiResizableButton },
+      demo: <ResizableContainerCallbacks />,
+      snippet: callbacksSnippet,
+    },
+    {
+      source: [
+        {
+          type: GuideSectionTypes.TSX,
           code: ResizablePanelCollapsibleSource,
         },
       ],
       title: 'Collapsible resizable panels',
       text: (
-        <div>
+        <>
           <p>
             Panels can be designated as collapsible, which allows them to hide
             content and automatically resize to a minimal width. The intent of
@@ -341,7 +401,7 @@ export const ResizableContainerExample = {
             <EuiCode>mode=collapsible</EuiCode> (there must be at least one{' '}
             <EuiCode>mode=main</EuiCode> panel).
           </p>
-        </div>
+        </>
       ),
       props: {
         EuiResizableContainer,
@@ -357,19 +417,17 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizablePanelCollapsibleResponsiveSource,
         },
       ],
       title: 'Responsive layout',
       text: (
-        <div>
-          <p>
-            It is possible to dynamically change the{' '}
-            <EuiCode>direction</EuiCode> prop to allow for adapting layouts to
-            screen size. Resize the window to see the panel orientation change.
-          </p>
-        </div>
+        <p>
+          It is possible to dynamically change the <EuiCode>direction</EuiCode>{' '}
+          prop to allow for adapting layouts to screen size. Resize the window
+          to see the panel orientation change.
+        </p>
       ),
       snippet: responsiveSnippet,
       demo: <ResizablePanelCollapsibleResponsive />,
@@ -377,13 +435,13 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizablePanelCollapsibleOptsSource,
         },
       ],
       title: 'Collapsible panel options',
       text: (
-        <div>
+        <>
           <p>
             An <strong>EuiResizablePanel</strong> marked as{' '}
             <EuiCode language="ts">{"mode={['collapsible']}"}</EuiCode> also
@@ -397,7 +455,7 @@ export const ResizableContainerExample = {
   position: 'top',
 }]}`}
           </EuiCodeBlock>
-        </div>
+        </>
       ),
       demo: <ResizablePanelCollapsibleOpts />,
       snippet: collapsibleOptsSnippet,
@@ -405,13 +463,13 @@ export const ResizableContainerExample = {
     {
       source: [
         {
-          type: GuideSectionTypes.JS,
+          type: GuideSectionTypes.TSX,
           code: ResizablePanelCollapsibleExtSource,
         },
       ],
       title: 'Collapsible panels with external control',
       text: (
-        <div>
+        <>
           <p>
             <strong>EuiResizableContainer</strong> also provides action hooks
             for parent components to access internal methods, such as{' '}
@@ -439,7 +497,7 @@ export const ResizableContainerExample = {
             <EuiCode>menuLeft</EuiCode>, <EuiCode>menuRight</EuiCode>, etc, icon
             types.
           </p>
-        </div>
+        </>
       ),
       demo: <ResizablePanelCollapsibleExt />,
       snippet: collapsibleExtSnippet,

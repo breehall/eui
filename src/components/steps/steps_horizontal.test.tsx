@@ -9,18 +9,22 @@
 import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../test';
+import { shouldRenderCustomStyles } from '../../test/internal';
 
-import { EuiStepsHorizontal } from './steps_horizontal';
+import {
+  EuiStepsHorizontal,
+  EuiStepsHorizontalProps,
+} from './steps_horizontal';
 
-const steps = [
+const steps: EuiStepsHorizontalProps['steps'] = [
   {
     title: 'Completed Step 1',
-    isComplete: true,
+    status: 'complete',
     onClick: () => {},
   },
   {
     title: 'Selected Step 2',
-    isSelected: true,
+    status: 'current',
     onClick: () => {},
   },
   {
@@ -29,12 +33,16 @@ const steps = [
   },
   {
     title: 'Disabled Step 4',
-    disabled: true,
+    status: 'disabled',
     onClick: () => {},
   },
 ];
 
 describe('EuiStepsHorizontal', () => {
+  shouldRenderCustomStyles(
+    <EuiStepsHorizontal {...requiredProps} steps={steps} />
+  );
+
   test('is rendered', () => {
     const component = render(
       <EuiStepsHorizontal {...requiredProps} steps={steps} />

@@ -3,4 +3,6 @@ exports.rules = {
   'href-with-rel': require('./scripts/eslint-plugin/rel'),
   'require-license-header': require('./scripts/eslint-plugin/require_license_header'),
   'forward-ref': require('./scripts/eslint-plugin/forward_ref_display_name'),
+  'css-logical-properties': require('./scripts/eslint-plugin/css_logical_properties'),
+  'css_before_spread_props': require('./scripts/eslint-plugin/css_before_spread_props'),
 };

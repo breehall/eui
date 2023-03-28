@@ -9,11 +9,11 @@
 import React from 'react';
 import { render, mount } from 'enzyme';
 import { requiredProps } from '../../test';
+import { shouldRenderCustomStyles } from '../../test/internal';
 
-import { EuiCard } from './card';
+import { EuiCard, ALIGNMENTS } from './card';
 
-import { EuiIcon } from '../icon';
-import { EuiI18n } from '../i18n';
+import { EuiIcon, EuiAvatar, EuiI18n } from '../../components';
 import { COLORS, SIZES } from '../panel/panel';
 
 describe('EuiCard', () => {
@@ -29,6 +29,11 @@ describe('EuiCard', () => {
     expect(component).toMatchSnapshot();
   });
 
+  shouldRenderCustomStyles(
+    <EuiCard title="Card title" betaBadgeProps={{ label: 'beta' }} />,
+    { childProps: ['betaBadgeProps'] }
+  );
+
   describe('props', () => {
     test('icon', () => {
       const component = render(
@@ -36,6 +41,18 @@ describe('EuiCard', () => {
           title="Card title"
           description="Card description"
           icon={<EuiIcon className="myIconClass" type="apmApp" />}
+        />
+      );
+
+      expect(component).toMatchSnapshot();
+    });
+
+    test('an avatar icon', () => {
+      const component = render(
+        <EuiCard
+          title="Card title"
+          description="Card description"
+          icon={<EuiAvatar color="plain" size="xl" name="test" />}
         />
       );
 
@@ -95,7 +112,7 @@ describe('EuiCard', () => {
 
     describe('href', () => {
       it('supports href as a link', () => {
-        const component = mount(
+        const component = render(
           <EuiCard title="Hoi" description="There" href="#" />
         );
 
@@ -119,6 +136,19 @@ describe('EuiCard', () => {
           <EuiCard title="Hoi" description="There" onClick={handler} />
         );
         component.find('button').simulate('click');
+        expect(handler.mock.calls.length).toEqual(1);
+      });
+
+      it('should only call onClick once when title is a React node', () => {
+        const handler = jest.fn();
+        const component = mount(
+          <EuiCard
+            title={<span data-test-subj="click">Hoi</span>}
+            description="There"
+            onClick={handler}
+          />
+        );
+        component.find('[data-test-subj="click"]').simulate('click');
         expect(handler.mock.calls.length).toEqual(1);
       });
     });
@@ -203,16 +233,20 @@ describe('EuiCard', () => {
       expect(component).toMatchSnapshot();
     });
 
-    test('textAlign', () => {
-      const component = render(
-        <EuiCard
-          title="Card title"
-          description="Card description"
-          textAlign="right"
-        />
-      );
+    describe('textAlign', () => {
+      ALIGNMENTS.forEach((textAlign) => {
+        test(textAlign, () => {
+          const component = render(
+            <EuiCard
+              title="Card title"
+              description="Card description"
+              textAlign={textAlign}
+            />
+          );
 
-      expect(component).toMatchSnapshot();
+          expect(component).toMatchSnapshot();
+        });
+      });
     });
 
     test('isDisabled', () => {

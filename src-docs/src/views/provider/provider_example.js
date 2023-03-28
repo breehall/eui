@@ -44,7 +44,7 @@ export const ProviderExample = {
 
           <p>
             See{' '}
-            <EuiLink href="/#/theming/theme-provider">
+            <EuiLink href="#/theming/theme-provider">
               <strong>EuiThemeProvider</strong>
             </EuiLink>{' '}
             for full documentation as all relevant props will pass through. For
@@ -63,7 +63,7 @@ export const ProviderExample = {
             <strong>EuiProvider</strong> by composing its constituent parts.
             More context, functionality, and configurations will be added to{' '}
             <strong>EuiProvider</strong> in future releases. Nested instances of{' '}
-            <EuiLink href="/#/theming/theme-provider">
+            <EuiLink href="#/theming/theme-provider">
               <strong>EuiThemeProvider</strong>
             </EuiLink>
             , however, are valid.
@@ -95,11 +95,24 @@ export const ProviderExample = {
               The <strong>@emotion/cache</strong> library
             </EuiLink>{' '}
             provides configuration options that help with specifying the
-            injection location. We recommend using a{' '}
-            <EuiCode>{'<meta>'}</EuiCode> tag to achieve this.
+            injection location. We recommend using <EuiCode>{'<meta>'}</EuiCode>{' '}
+            tags to achieve this.
           </p>
 
           <GlobalStyles />
+
+          <p>
+            For most applications, the above configuration will be enough to
+            have styles ordered correctly. In advanced more cases, you may use
+            the <EuiCode>default</EuiCode>,<EuiCode>global</EuiCode>, and{' '}
+            <EuiCode>utility</EuiCode> properties on the{' '}
+            <EuiCode>cache</EuiCode> prop to further define where specific
+            styles should be inserted. See{' '}
+            <EuiLink href="#/utilities/provider#euiprovider-props">
+              the props documentation
+            </EuiLink>{' '}
+            for details.
+          </p>
 
           <p>
             Any other options available with{' '}
@@ -117,6 +130,37 @@ export const ProviderExample = {
             library, so you will need to add it to your application
             dependencies.
           </p>
+        </EuiText>
+      ),
+    },
+    {
+      title: 'Enforce usage',
+      text: (
+        <EuiText>
+          <p>
+            For complex applications with multiple mount points or template
+            wrappers, it may be beneficial to enable logging when components do
+            not have access to a parent <EuiCode>EuiProvider</EuiCode>.
+          </p>
+          <p>
+            <EuiCode>setEuiDevProviderWarning</EuiCode> is a function that will
+            enable adding logging or erroring if the Provider is missing. It
+            accepts three levels:
+          </p>
+          <ul>
+            <li>
+              <EuiCode>&apos;log&apos;</EuiCode>: uses{' '}
+              <EuiCode>console.log</EuiCode>
+            </li>
+            <li>
+              <EuiCode>&apos;warn&apos;</EuiCode>: uses{' '}
+              <EuiCode>console.warn</EuiCode>
+            </li>
+            <li>
+              <EuiCode>&apos;error&apos;</EuiCode>: <EuiCode>Throw</EuiCode> an
+              exception
+            </li>
+          </ul>
         </EuiText>
       ),
     },

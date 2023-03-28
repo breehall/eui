@@ -49,19 +49,14 @@ export const CodeSandboxLinkComponent = ({
   type = 'js',
   context,
 }) => {
-  let cssFile;
-  switch (context.theme) {
-    case 'dark':
-      cssFile = '@elastic/eui/dist/eui_theme_dark.css';
-      break;
-    default:
-      cssFile = '@elastic/eui/dist/eui_theme_light.css';
-      break;
-  }
+  const isDarkMode = context.theme.includes('dark');
+  const colorMode = isDarkMode ? 'dark' : 'light';
+
+  const cssFile = `@elastic/eui/dist/eui_theme_${colorMode}.css`;
 
   const providerPropsObject = {};
   // Only add configuration if it isn't the default
-  if (context.theme.includes('dark')) {
+  if (isDarkMode) {
     providerPropsObject.colorMode = 'dark';
   }
   // Can't spread an object inside of a string literal
@@ -125,7 +120,21 @@ ${demoContent}
     const displayToggleDeps = listExtraDeps(cleanedDisplayToggles);
 
     /* 6 */
-    mergedDeps = { ...demoContentDeps, ...displayToggleDeps };
+    mergedDeps = { ...mergedDeps, ...displayToggleDeps };
+  }
+
+  /**
+   * If dependencies include @elastic/charts, we need to include a few peer dependencies
+   * @see https://github.com/elastic/elastic-charts/wiki/Consuming-@elastic-charts#using-elastic-charts-in-a-standalone-project
+   */
+  if (demoContentDeps.hasOwnProperty('@elastic/charts')) {
+    mergedDeps = { ...mergedDeps, 'moment-timezone': 'latest' };
+    // We need to require the theme CSS as well for charts to actually render
+    demoContent = demoContent.replace(
+      "from '@elastic/charts';",
+      `from '@elastic/charts';
+import '@elastic/charts/dist/theme_only_${colorMode}.css';`
+    );
   }
 
   const config = {
@@ -138,6 +147,7 @@ ${demoContent}
               '@elastic/datemath',
               '@emotion/cache',
               '@emotion/react',
+              '@emotion/css',
               'moment',
               'react',
               'react-dom',
@@ -167,6 +177,7 @@ const cache = createCache({
   key: 'codesandbox',
   container: document.querySelector('meta[name="emotion-styles"]'),
 });
+cache.compat = true;
 
 ReactDOM.render(
   <EuiProvider cache={cache} ${providerProps}>
@@ -182,6 +193,7 @@ ReactDOM.render(
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10,300..700;0,300..700&family=Roboto+Mono:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet" />
   <meta name="emotion-styles">
 </head>
 <body>
@@ -195,7 +207,7 @@ ReactDOM.render(
   if (hasDisplayToggles(demoContent)) {
     const cleanedDisplayToggles = cleanEuiImports(displayTogglesRawCode);
 
-    config.files['display_toggles.js'] = {
+    config.files['display_toggles.tsx'] = {
       content: cleanedDisplayToggles,
     };
   }

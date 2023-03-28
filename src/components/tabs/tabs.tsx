@@ -13,27 +13,13 @@ import React, {
   ReactNode,
 } from 'react';
 import classNames from 'classnames';
-import { CommonProps, keysOf } from '../common';
+import { CommonProps } from '../common';
+import { useEuiTheme } from '../../services';
+import { euiTabsStyles } from './tabs.styles';
+import { EuiTabsContext } from './tabs_context';
 
-const displayToClassNameMap = {
-  condensed: 'euiTabs--condensed',
-  default: null,
-};
-
-export const DISPLAYS = keysOf(displayToClassNameMap);
-
-export type EuiTabsDisplaySizes = keyof typeof displayToClassNameMap;
-
-const sizeToClassNameMap = {
-  s: 'euiTabs--small',
-  m: null,
-  l: 'euiTabs--large',
-  xl: 'euiTabs--xlarge',
-};
-
-export const SIZES = keysOf(sizeToClassNameMap);
-
-export type EuiTabsSizes = keyof typeof sizeToClassNameMap;
+export const SIZES = ['s', 'm', 'l', 'xl'] as const;
+export type EuiTabsSizes = typeof SIZES[number];
 
 export type EuiTabsProps = CommonProps &
   HTMLAttributes<HTMLDivElement> & {
@@ -41,11 +27,6 @@ export type EuiTabsProps = CommonProps &
      * ReactNode to render as this component's content
      */
     children?: ReactNode;
-    /**
-     * **DEPRECATED IN AMSTERDAM**
-     * Choose `default` or alternative `condensed` display styles.
-     */
-    display?: EuiTabsDisplaySizes;
     /**
      * Evenly stretches each tab to fill the
      * horizontal space
@@ -69,7 +50,6 @@ export const EuiTabs = forwardRef<EuiTabRef, PropsWithChildren<EuiTabsProps>>(
     {
       children,
       className,
-      display = 'default',
       bottomBorder = true,
       expand = false,
       size = 'm',
@@ -77,30 +57,29 @@ export const EuiTabs = forwardRef<EuiTabRef, PropsWithChildren<EuiTabsProps>>(
     }: PropsWithChildren<EuiTabsProps>,
     ref
   ) => {
-    /**
-     * Temporary force of bottom border based on `display`
-     */
-    bottomBorder = display === 'condensed' ? false : bottomBorder;
+    const euiTheme = useEuiTheme();
 
-    const classes = classNames(
-      'euiTabs',
-      sizeToClassNameMap[size],
-      displayToClassNameMap[display],
-      {
-        'euiTabs--expand': expand,
-        'euiTabs--bottomBorder': bottomBorder,
-      },
-      className
-    );
+    const classes = classNames('euiTabs', className);
+
+    const styles = euiTabsStyles(euiTheme);
+
+    const cssStyles = [
+      styles.euiTabs,
+      styles[size],
+      bottomBorder && styles.bottomBorder,
+    ];
 
     return (
       <div
         ref={ref}
         className={classes}
+        css={cssStyles}
         {...(children && { role: 'tablist' })}
         {...rest}
       >
-        {children}
+        <EuiTabsContext.Provider value={{ expand, size }}>
+          {children}
+        </EuiTabsContext.Provider>
       </div>
     );
   }

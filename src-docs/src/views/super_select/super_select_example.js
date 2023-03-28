@@ -63,7 +63,7 @@ export const SuperSelectExample = {
         },
       ],
       text: (
-        <div>
+        <>
           <p>
             This is a simple replacement component for{' '}
             <strong>EuiSelect</strong> if you need more customization in either
@@ -87,7 +87,7 @@ export const SuperSelectExample = {
             &hellip; and the component will create a select styled button that
             triggers a popover of selectable items.
           </p>
-        </div>
+        </>
       ),
       props: { EuiSuperSelect },
       snippet: superSelectBasicSnippet,
@@ -102,13 +102,21 @@ export const SuperSelectExample = {
         },
       ],
       text: (
-        <p>
-          Both <EuiCode>inputDisplay</EuiCode> and{' '}
-          <EuiCode>dropdownDisplay</EuiCode> accept React nodes. Therefore you
-          can pass some descriptions with each option to show in the dropdown.
-          If your options will most likely be multi-line, add the{' '}
-          <EuiCode>hasDividers</EuiCode> prop to show borders between options.
-        </p>
+        <>
+          <p>
+            Both <EuiCode>inputDisplay</EuiCode> and{' '}
+            <EuiCode>dropdownDisplay</EuiCode> accept React nodes. Therefore you
+            can pass some descriptions with each option to show in the dropdown.
+            If your options will most likely be multi-line, add the{' '}
+            <EuiCode>hasDividers</EuiCode> prop to show borders between options.
+          </p>
+          <p>
+            A <EuiCode>placeholder</EuiCode> prop may also be passed that
+            accepts string as well as React nodes (to match your{' '}
+            <EuiCode>inputDisplay</EuiCode> if necessary). This placeholder will
+            only show when <EuiCode>valueOfSelected</EuiCode> is empty.
+          </p>
+        </>
       ),
       props: {},
       snippet: superSelectComplexSnippet,

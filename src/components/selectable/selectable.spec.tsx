@@ -6,6 +6,7 @@
  * Side Public License, v 1.
  */
 
+/// <reference types="cypress" />
 /// <reference types="../../../cypress/support"/>
 
 import React, { useState } from 'react';
@@ -92,7 +93,7 @@ describe('EuiSelectable', () => {
     it('can clear the input', () => {
       cy.realMount(<EuiSelectableWithSearchInput />);
 
-      // Focus the second option
+      // Search/filter down to the second option
       cy.get('input')
         .realClick()
         .realType('enc')
@@ -102,7 +103,7 @@ describe('EuiSelectable', () => {
             .should('have.attr', 'title', 'Enceladus');
         });
 
-      // Using ENTER
+      // Clear search using ENTER
       cy.get('[data-test-subj="clearSearchButton"]')
         .focus()
         .realPress('{enter}')
@@ -112,7 +113,7 @@ describe('EuiSelectable', () => {
             .should('have.attr', 'title', 'Titan');
         });
 
-      // Focus the second option
+      // Search/filter again
       cy.get('input')
         .realClick()
         .realType('enc')
@@ -122,10 +123,34 @@ describe('EuiSelectable', () => {
             .should('have.attr', 'title', 'Enceladus');
         });
 
-      // Using SPACE
+      // Clear search using SPACE
       cy.get('[data-test-subj="clearSearchButton"]')
         .focus()
         .realPress('Space')
+        .then(() => {
+          cy.get('li[role=option]')
+            .first()
+            .should('have.attr', 'title', 'Titan');
+        });
+
+      // Ensure the clear button does not respond to up/down arrow keys
+      cy.get('input')
+        .realClick()
+        .realType('titan')
+        .then(() => {
+          cy.get('li[role=option]')
+            .first()
+            .should('have.attr', 'title', 'Titan');
+        });
+      cy.get('[data-test-subj="clearSearchButton"]')
+        .focus()
+        .realPress('ArrowDown')
+        .then(() => {
+          cy.get('li[role=option]')
+            .first()
+            .should('have.attr', 'title', 'Titan');
+        })
+        .realPress('ArrowUp')
         .then(() => {
           cy.get('li[role=option]')
             .first()
@@ -195,12 +220,6 @@ describe('EuiSelectable', () => {
           ]);
         });
     });
-
-    it('has no accessibility errors', () => {
-      const onChange = cy.stub();
-      cy.realMount(<EuiSelectableWithSearchInput onChange={onChange} />);
-      cy.checkAxe();
-    });
   });
 
   describe('without a `searchable` configuration', () => {
@@ -230,17 +249,6 @@ describe('EuiSelectable', () => {
           { ...options[2], checked: 'on' },
         ]);
       });
-    });
-
-    it('has no accessibility errors', () => {
-      const onChange = cy.stub();
-      cy.realMount(
-        <EuiSelectableListboxOnly
-          aria-label="No search box"
-          onChange={onChange}
-        />
-      );
-      cy.checkAxe();
     });
   });
 
@@ -288,13 +296,6 @@ describe('EuiSelectable', () => {
       cy.realPress('Tab');
       cy.realPress('Enter');
       expect(cy.get('ul[role=listbox]')).to.exist;
-    });
-
-    it('has no accessibility errors', () => {
-      cy.realMount(<EuiSelectableNested />);
-      cy.get('button').realClick();
-      cy.get('li[role=option]').first(); // Make sure the EuiSelectable is rendered before a11y check
-      cy.checkAxe();
     });
   });
 });

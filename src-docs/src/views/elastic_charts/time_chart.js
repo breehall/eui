@@ -1,9 +1,10 @@
-import React, { useState, useContext, Fragment } from 'react';
-import { ThemeContext } from '../../components';
+import React, { useState } from 'react';
+
 import {
   Chart,
   BarSeries,
   Settings,
+  Tooltip,
   Axis,
   timeFormatter,
   niceTimeFormatByDay,
@@ -24,7 +25,11 @@ import {
   EuiButton,
 } from '../../../../src/components';
 
-import { formatDate, dateFormatAliases } from '../../../../src/services';
+import {
+  formatDate,
+  dateFormatAliases,
+  useEuiTheme,
+} from '../../../../src/services';
 
 import { TIME_DATA, TIME_DATA_2 } from './data';
 import {
@@ -34,8 +39,8 @@ import {
   ChartCard,
 } from './shared';
 
-export const TimeChart = () => {
-  const themeContext = useContext(ThemeContext);
+export default () => {
+  const { colorMode } = useEuiTheme();
 
   const [multi, setMulti] = useState(false);
   const [stacked, setStacked] = useState(false);
@@ -51,7 +56,7 @@ export const TimeChart = () => {
     setChartType(chartType);
   };
 
-  const isDarkTheme = themeContext.theme.includes('dark');
+  const isDarkTheme = colorMode === 'DARK';
   const theme = isDarkTheme
     ? EUI_CHARTS_THEME_DARK.theme
     : EUI_CHARTS_THEME_LIGHT.theme;
@@ -66,7 +71,7 @@ export const TimeChart = () => {
   const isBadChart = chartType === 'LineSeries' && stacked;
 
   return (
-    <Fragment>
+    <>
       <EuiTitle size="xxs">
         <h2>
           Number of {!multi && 'financial '}robo-calls
@@ -77,12 +82,8 @@ export const TimeChart = () => {
       <EuiSpacer size="s" />
 
       <Chart size={{ height: 200 }}>
-        <Settings
-          theme={theme}
-          showLegend={multi}
-          legendPosition="right"
-          tooltip="cross"
-        />
+        <Settings theme={theme} showLegend={multi} legendPosition="right" />
+        <Tooltip type="cross" />
         <ChartType
           id="financial"
           name="Financial"
@@ -203,6 +204,6 @@ export const TimeChart = () => {
           )}
         </EuiCopy>
       </div>
-    </Fragment>
+    </>
   );
 };

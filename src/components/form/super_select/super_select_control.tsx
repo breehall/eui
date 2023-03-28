@@ -16,13 +16,12 @@ import classNames from 'classnames';
 
 import { CommonProps } from '../../common';
 
-import { EuiScreenReaderOnly } from '../../accessibility';
 import {
   EuiFormControlLayout,
   EuiFormControlLayoutProps,
 } from '../form_control_layout';
-import { EuiI18n } from '../../i18n';
 import { getFormControlClassNameForIconCount } from '../form_control_layout/_num_icons';
+import { useFormContext } from '../eui_form_context';
 
 export interface EuiSuperSelectOption<T> {
   value: T;
@@ -34,14 +33,29 @@ export interface EuiSuperSelectOption<T> {
 
 export interface EuiSuperSelectControlProps<T>
   extends CommonProps,
-    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'placeholder'> {
+  /**
+   * @default false
+   */
   compressed?: boolean;
+  /**
+   * Expand to fill 100% of the parent.
+   * Defaults to `fullWidth` prop of `<EuiForm>`.
+   * @default false
+   */
   fullWidth?: boolean;
+  /**
+   * @default false
+   */
   isInvalid?: boolean;
+  /**
+   * @default false
+   */
   isLoading?: boolean;
   readOnly?: boolean;
 
   name?: string;
+  placeholder?: ReactNode;
   value?: T;
 
   options?: Array<EuiSuperSelectOption<T>>;
@@ -57,33 +71,30 @@ export interface EuiSuperSelectControlProps<T>
    * `string` | `ReactElement` or an array of these
    */
   append?: EuiFormControlLayoutProps['append'];
-  /**
-   * Creates a semantic label ID for the `div[role="listbox"]` that's opened on click or keypress.
-   * __Generated and passed down by `EuiSuperSelect`.__
-   */
-  screenReaderId?: string;
 }
 
 export const EuiSuperSelectControl: <T extends string>(
   props: EuiSuperSelectControlProps<T>
-) => ReturnType<FunctionComponent<EuiSuperSelectControlProps<T>>> = ({
-  className,
-  options = [],
-  id,
-  name,
-  fullWidth = false,
-  isLoading = false,
-  isInvalid = false,
-  readOnly,
-  defaultValue,
-  compressed = false,
-  value,
-  prepend,
-  append,
-  screenReaderId,
-  disabled,
-  ...rest
-}) => {
+) => ReturnType<FunctionComponent<EuiSuperSelectControlProps<T>>> = (props) => {
+  const { defaultFullWidth } = useFormContext();
+  const {
+    className,
+    options = [],
+    id,
+    name,
+    fullWidth = defaultFullWidth,
+    isLoading = false,
+    isInvalid = false,
+    readOnly,
+    defaultValue,
+    compressed = false,
+    value,
+    placeholder,
+    prepend,
+    append,
+    disabled,
+    ...rest
+  } = props;
   const numIconsClass = getFormControlClassNameForIconCount({
     isInvalid,
     isLoading,
@@ -118,6 +129,8 @@ export const EuiSuperSelectControl: <T extends string>(
       : selectedValue;
   }
 
+  const showPlaceholder = !!placeholder && !selectedValue;
+
   return (
     <Fragment>
       <input
@@ -140,19 +153,6 @@ export const EuiSuperSelectControl: <T extends string>(
         prepend={prepend}
         append={append}
       >
-        {/*
-          This is read when the user tabs in. The comma is important,
-          otherwise the screen reader often combines the text.
-        */}
-        <EuiScreenReaderOnly>
-          <span id={screenReaderId}>
-            <EuiI18n
-              token="euiSuperSelectControl.selectAnOption"
-              default="Select an option: {selectedValue}, is selected"
-              values={{ selectedValue }}
-            />
-          </span>
-        </EuiScreenReaderOnly>
         <button
           type="button"
           className={classes}
@@ -162,7 +162,13 @@ export const EuiSuperSelectControl: <T extends string>(
           readOnly={readOnly}
           {...rest}
         >
-          {selectedValue}
+          {showPlaceholder ? (
+            <span className="euiSuperSelectControl__placeholder">
+              {placeholder}
+            </span>
+          ) : (
+            selectedValue
+          )}
         </button>
       </EuiFormControlLayout>
     </Fragment>

@@ -9,6 +9,7 @@
 import React from 'react';
 import { render } from 'enzyme';
 import { requiredProps } from '../../test/required_props';
+import { shouldRenderCustomStyles } from '../../test/internal';
 
 import { EuiProgress, COLORS, SIZES } from './progress';
 
@@ -17,6 +18,12 @@ describe('EuiProgress', () => {
     const component = render(<EuiProgress {...requiredProps} />);
 
     expect(component).toMatchSnapshot();
+  });
+
+  shouldRenderCustomStyles(<EuiProgress />);
+  shouldRenderCustomStyles(<EuiProgress max={100} label="Test" />, {
+    childProps: ['labelProps'],
+    skipParentTest: true,
   });
 
   test('has max', () => {

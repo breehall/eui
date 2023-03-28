@@ -26,7 +26,15 @@ export const TypesSass: FunctionComponent<ThemeRowType> = ({ description }) => {
         snippet={'border: $euiBorderThin;'}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const TypesValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiBorders.map((type) => {
           return {
@@ -64,7 +72,16 @@ export const ColorSass: FunctionComponent<ThemeRowType> = ({ description }) => {
         snippet={`border-color: $${token};`}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const ColorValuesSass = () => {
+  const token = 'euiBorderColor';
+  const color = useJsonVars()[token];
+
+  return (
+    <>
       <ThemeValuesTable
         items={[token].map((type) => {
           return {
@@ -96,13 +113,21 @@ export const WidthSass: FunctionComponent<ThemeRowType> = ({ description }) => {
         }
         example={
           <div className={'guideSass__border guideSass__border--thickDashed'}>
-            <strong>{`border-width: ${values.euiBorderWidthThick} dashed ${values.euiBorderColor};`}</strong>
+            <strong>{`border: ${values.euiBorderWidthThick} dashed ${values.euiBorderColor};`}</strong>
           </div>
         }
         snippet={'border: $euiBorderWidthThick dashed $euiBorderColor;'}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const WidthValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiBorderWidths.map((type) => {
           return {
@@ -145,7 +170,15 @@ export const RadiusSass: FunctionComponent<ThemeRowType> = ({
         snippet={'border-radius: $euiBorderRadius;'}
         snippetLanguage="scss"
       />
+    </>
+  );
+};
 
+export const RadiusValuesSass = () => {
+  const values = useJsonVars();
+
+  return (
+    <>
       <ThemeValuesTable
         items={euiBorderRadii.map((type) => {
           return {

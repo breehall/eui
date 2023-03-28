@@ -11,7 +11,7 @@ import { EuiScreenReaderOnly } from '../../accessibility';
 import { EuiButtonGroup, EuiButtonIcon } from '../../button';
 import { EuiDraggable } from '../../drag_and_drop';
 import { EuiFlexGroup, EuiFlexItem } from '../../flex';
-import { EuiI18n } from '../../i18n';
+import { EuiI18n, useEuiI18n } from '../../i18n';
 import { EuiIcon } from '../../icon';
 import { EuiText } from '../../text';
 import { EuiToken } from '../../token';
@@ -61,8 +61,19 @@ export const EuiDataGridColumnSortingDraggable: FunctionComponent<EuiDataGridCol
     },
   ];
 
+  const dragHandleAriaLabel = useEuiI18n(
+    'euiColumnSortingDraggable.dragHandleAriaLabel',
+    'Drag handle'
+  );
+
   return (
-    <EuiDraggable draggableId={id} index={index} {...rest}>
+    <EuiDraggable
+      draggableId={id}
+      index={index}
+      hasInteractiveChildren
+      customDragHandle
+      {...rest}
+    >
       {(provided, state) => (
         <div
           className={`euiDataGridColumnSorting__item ${
@@ -111,20 +122,38 @@ export const EuiDataGridColumnSortingDraggable: FunctionComponent<EuiDataGridCol
               </EuiI18n>
             </EuiFlexItem>
 
-            <EuiFlexItem grow={false}>
-              <EuiToken
-                color={schemaDetails != null ? schemaDetails.color : undefined}
-                iconType={
-                  schemaDetails != null ? schemaDetails.icon : 'tokenString'
-                }
-              />
+            <EuiFlexItem
+              className="euiDataGridColumnSorting__name"
+              // This extra column name flex item affords the column more grabbable real estate
+              // for mouse users, while hiding repetition for keyboard/screen reader users
+              {...provided.dragHandleProps}
+              tabIndex={-1}
+              aria-hidden
+            >
+              <EuiFlexGroup
+                gutterSize="xs"
+                alignItems="center"
+                responsive={false}
+              >
+                <EuiFlexItem grow={false}>
+                  <EuiToken
+                    color={
+                      schemaDetails != null ? schemaDetails.color : undefined
+                    }
+                    iconType={
+                      schemaDetails != null ? schemaDetails.icon : 'tokenString'
+                    }
+                  />
+                </EuiFlexItem>
+                <EuiFlexItem>
+                  <EuiText size="xs">
+                    <p>{display}</p>
+                  </EuiText>
+                </EuiFlexItem>
+              </EuiFlexGroup>
             </EuiFlexItem>
-            <EuiFlexItem aria-hidden>
-              <EuiText size="xs">
-                <p>{display}</p>
-              </EuiText>
-            </EuiFlexItem>
-            <EuiFlexItem className="euiDataGridColumnSorting__orderButtons">
+
+            <EuiFlexItem>
               <EuiI18n
                 token="euiColumnSortingDraggable.toggleLegend"
                 default="Select sorting method for {display}"
@@ -154,10 +183,13 @@ export const EuiDataGridColumnSortingDraggable: FunctionComponent<EuiDataGridCol
                 )}
               </EuiI18n>
             </EuiFlexItem>
-            <EuiFlexItem grow={false} {...provided.dragHandleProps}>
-              <div {...provided.dragHandleProps}>
-                <EuiIcon type="grab" color="subdued" />
-              </div>
+
+            <EuiFlexItem
+              grow={false}
+              {...provided.dragHandleProps}
+              aria-label={dragHandleAriaLabel}
+            >
+              <EuiIcon type="grab" color="subdued" />
             </EuiFlexItem>
           </EuiFlexGroup>
         </div>
