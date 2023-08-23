@@ -44,7 +44,7 @@ import {
   EuiComboBoxOptionsListPosition,
   EuiComboBoxSingleSelectionShape,
 } from './types';
-import { EuiFilterSelectItem } from '../filter_group';
+import { EuiFilterSelectItemClass } from '../filter_group/filter_select_item';
 import AutosizeInput from 'react-input-autosize';
 import { CommonProps } from '../common';
 import { EuiFormControlLayoutProps } from '../form';
@@ -167,7 +167,7 @@ export interface _EuiComboBoxProps<T>
  * - export (Props - Defaults) & Partial<Defaults>
  */
 type DefaultProps<T> = Omit<
-  typeof EuiComboBox['defaultProps'],
+  (typeof EuiComboBox)['defaultProps'],
   'options' | 'selectedOptions'
 > & {
   options: Array<EuiComboBoxOptionOption<T>>;
@@ -271,16 +271,15 @@ export class EuiComboBox<T> extends Component<
     this.listRefInstance = ref;
   };
 
-  toggleButtonRefInstance: RefInstance<
-    HTMLButtonElement | HTMLSpanElement
-  > = null;
+  toggleButtonRefInstance: RefInstance<HTMLButtonElement | HTMLSpanElement> =
+    null;
   toggleButtonRefCallback: RefCallback<HTMLButtonElement | HTMLSpanElement> = (
     ref
   ) => {
     this.toggleButtonRefInstance = ref;
   };
 
-  optionsRefInstances: Array<RefInstance<EuiFilterSelectItem>> = [];
+  optionsRefInstances: Array<RefInstance<EuiFilterSelectItemClass>> = [];
   optionRefCallback: EuiComboBoxOptionsListProps<T>['optionRef'] = (
     index,
     ref
@@ -416,26 +415,6 @@ export class EuiComboBox<T> extends Component<
 
   clearSearchValue = () => {
     this.onSearchChange('');
-  };
-
-  removeLastOption = () => {
-    if (!this.props.selectedOptions.length) {
-      return;
-    }
-
-    // Backspace will be used to delete the input, not a pill.
-    if (this.state.searchValue.length) {
-      return;
-    }
-
-    // Delete last pill.
-    this.onRemoveOption(
-      this.props.selectedOptions[this.props.selectedOptions.length - 1]
-    );
-
-    if (Boolean(this.props.singleSelection) && !this.state.isListOpen) {
-      this.openList();
-    }
   };
 
   addCustomOption = (isContainerBlur: boolean, searchValue: string) => {
@@ -623,11 +602,6 @@ export class EuiComboBox<T> extends Component<
         } else {
           this.openList();
         }
-        break;
-
-      case keys.BACKSPACE:
-        event.stopPropagation();
-        this.removeLastOption();
         break;
 
       case keys.ESCAPE:
@@ -892,12 +866,8 @@ export class EuiComboBox<T> extends Component<
   };
 
   componentDidUpdate() {
-    const {
-      options,
-      selectedOptions,
-      singleSelection,
-      sortMatchesBy,
-    } = this.props;
+    const { options, selectedOptions, singleSelection, sortMatchesBy } =
+      this.props;
     const { searchValue } = this.state;
 
     // React 16.3 has a bug (fixed in 16.4) where getDerivedStateFromProps
@@ -971,9 +941,10 @@ export class EuiComboBox<T> extends Component<
     // Visually indicate the combobox is in an invalid state if it has lost focus but there is text entered in the input.
     // When custom options are disabled and the user leaves the combo box after entering text that does not match any
     // options, this tells the user that they've entered invalid input.
-    const markAsInvalid =
+    const markAsInvalid = !!(
       isInvalid ||
-      ((hasFocus === false || isListOpen === false) && searchValue);
+      ((hasFocus === false || isListOpen === false) && searchValue)
+    );
 
     const classes = classNames('euiComboBox', className, {
       'euiComboBox--compressed': compressed,
@@ -1094,6 +1065,7 @@ export class EuiComboBox<T> extends Component<
           append={singleSelection ? append : undefined}
           prepend={singleSelection ? prepend : undefined}
           isLoading={isLoading}
+          isInvalid={markAsInvalid}
           autoFocus={autoFocus}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}

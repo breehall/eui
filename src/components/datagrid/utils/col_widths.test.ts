@@ -6,7 +6,7 @@
  * Side Public License, v 1.
  */
 
-import { act } from 'react-dom/test-utils';
+import { act } from '@testing-library/react';
 import { testCustomHook } from '../../../test/internal';
 import {
   useDefaultColumnWidth,
@@ -99,9 +99,8 @@ describe('useColumnWidths', () => {
     });
 
     it('recomputes column widths on columns change', () => {
-      const { updateHookArgs, getUpdatedState } = testCustomHook<
-        ReturnedValues
-      >(useColumnWidths, args);
+      const { updateHookArgs, getUpdatedState } =
+        testCustomHook<ReturnedValues>(useColumnWidths, args);
 
       updateHookArgs({
         columns: [{ id: 'c', initialWidth: 125 }],

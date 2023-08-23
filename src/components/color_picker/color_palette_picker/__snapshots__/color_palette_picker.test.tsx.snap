@@ -21,12 +21,12 @@ exports[`EuiColorPalettePicker is rendered 1`] = `
           <button
             aria-haspopup="listbox"
             aria-label="aria-label"
-            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
             data-test-subj="test subject string"
             type="button"
           />
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -66,14 +66,14 @@ exports[`EuiColorPalettePicker is rendered with a selected custom text 1`] = `
           <button
             aria-haspopup="listbox"
             aria-label="aria-label"
-            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
             data-test-subj="test subject string"
             type="button"
           >
             Plain text as a custom option
           </button>
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -113,7 +113,7 @@ exports[`EuiColorPalettePicker is rendered with a selected fixed palette 1`] = `
           <button
             aria-haspopup="listbox"
             aria-label="aria-label"
-            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
             data-test-subj="test subject string"
             type="button"
           >
@@ -130,25 +130,25 @@ exports[`EuiColorPalettePicker is rendered with a selected fixed palette 1`] = `
                 class="euiColorPaletteDisplayFixed__bleedArea"
               >
                 <span
-                  style="background-color:#1fb0b2;width:20%"
+                  style="background-color: rgb(31, 176, 178); width: 20%;"
                 />
                 <span
-                  style="background-color:#ffdb6d;width:20%"
+                  style="background-color: rgb(255, 219, 109); width: 20%;"
                 />
                 <span
-                  style="background-color:#ee9191;width:20%"
+                  style="background-color: rgb(238, 145, 145); width: 20%;"
                 />
                 <span
-                  style="background-color:#ffffff;width:20%"
+                  style="background-color: rgb(255, 255, 255); width: 20%;"
                 />
                 <span
-                  style="background-color:#888094;width:20%"
+                  style="background-color: rgb(136, 128, 148); width: 20%;"
                 />
               </span>
             </span>
           </button>
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -188,7 +188,7 @@ exports[`EuiColorPalettePicker is rendered with a selected gradient palette 1`] 
           <button
             aria-haspopup="listbox"
             aria-label="aria-label"
-            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
             data-test-subj="test subject string"
             type="button"
           >
@@ -200,11 +200,10 @@ exports[`EuiColorPalettePicker is rendered with a selected gradient palette 1`] 
             <span
               aria-hidden="true"
               class="euiColorPaletteDisplay euiColorPaletteDisplay--sizeSmall"
-              style="background:linear-gradient(to right, #1fb0b2 0%, #ffdb6d 25%, #ee9191 50%, #ffffff 75%, #888094 100%)"
             />
           </button>
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -244,7 +243,7 @@ exports[`EuiColorPalettePicker is rendered with a selected gradient palette with
           <button
             aria-haspopup="listbox"
             aria-label="aria-label"
-            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
             data-test-subj="test subject string"
             type="button"
           >
@@ -256,11 +255,10 @@ exports[`EuiColorPalettePicker is rendered with a selected gradient palette with
             <span
               aria-hidden="true"
               class="euiColorPaletteDisplay euiColorPaletteDisplay--sizeSmall"
-              style="background:linear-gradient(to right, #54B399 0%, #D36086 53%, #9170B8 74%, #F5A700 100%)"
             />
           </button>
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -300,14 +298,14 @@ exports[`EuiColorPalettePicker is rendered with the prop selectionDisplay set as
           <button
             aria-haspopup="listbox"
             aria-label="aria-label"
-            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+            class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
             data-test-subj="test subject string"
             type="button"
           >
             Palette 1
           </button>
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -381,7 +379,7 @@ exports[`EuiColorPalettePicker more props are propagated to each option 1`] = `
             </span>
           </button>
           <div
-            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"

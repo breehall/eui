@@ -2,9 +2,9 @@
 
 exports[`renders EuiColorStopThumb 1`] = `
 <div
-  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover"
+  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover-euiTestCss"
   data-test-subj="test subject string"
-  style="left:0%"
+  style="left: 0%;"
 >
   <div
     class="euiPopover__anchor euiColorStopThumbPopover__anchor css-16vtueo-render"
@@ -18,7 +18,7 @@ exports[`renders EuiColorStopThumb 1`] = `
       class="euiRangeThumb euiColorStopThumb emotion-euiRangeThumb-euiColorStopThumb"
       data-test-subj="euiColorStopThumb"
       role="slider"
-      style="background:rgb(255,0,0)"
+      style="background: rgb(255, 0, 0);"
       tabindex="-1"
       title="Click to edit, drag to reposition"
       type="button"
@@ -29,9 +29,9 @@ exports[`renders EuiColorStopThumb 1`] = `
 
 exports[`renders disabled EuiColorStopThumb 1`] = `
 <div
-  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover"
+  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover-euiTestCss"
   data-test-subj="test subject string"
-  style="left:0%"
+  style="left: 0%;"
 >
   <div
     class="euiPopover__anchor euiColorStopThumbPopover__anchor css-16vtueo-render"
@@ -46,7 +46,7 @@ exports[`renders disabled EuiColorStopThumb 1`] = `
       data-test-subj="euiColorStopThumb"
       disabled=""
       role="slider"
-      style="background:rgb(255,0,0)"
+      style="background: rgb(255, 0, 0);"
       tabindex="-1"
       title="Click to edit, drag to reposition"
       type="button"
@@ -57,9 +57,9 @@ exports[`renders disabled EuiColorStopThumb 1`] = `
 
 exports[`renders picker-only EuiColorStopThumb 1`] = `
 <div
-  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover"
+  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover-euiTestCss"
   data-test-subj="test subject string"
-  style="left:0%"
+  style="left: 0%;"
 >
   <div
     class="euiPopover__anchor euiColorStopThumbPopover__anchor css-16vtueo-render"
@@ -73,7 +73,7 @@ exports[`renders picker-only EuiColorStopThumb 1`] = `
       class="euiRangeThumb euiColorStopThumb emotion-euiRangeThumb-euiColorStopThumb"
       data-test-subj="euiColorStopThumb"
       role="slider"
-      style="background:rgb(255,0,0)"
+      style="background: rgb(255, 0, 0);"
       tabindex="-1"
       title="Click to edit, drag to reposition"
       type="button"
@@ -84,9 +84,9 @@ exports[`renders picker-only EuiColorStopThumb 1`] = `
 
 exports[`renders readOnly EuiColorStopThumb 1`] = `
 <div
-  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover"
+  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover-euiTestCss"
   data-test-subj="test subject string"
-  style="left:0%"
+  style="left: 0%;"
 >
   <div
     class="euiPopover__anchor euiColorStopThumbPopover__anchor css-16vtueo-render"
@@ -100,7 +100,7 @@ exports[`renders readOnly EuiColorStopThumb 1`] = `
       class="euiRangeThumb euiColorStopThumb emotion-euiRangeThumb-euiColorStopThumb"
       data-test-subj="euiColorStopThumb"
       role="slider"
-      style="background:rgb(255,0,0)"
+      style="background: rgb(255, 0, 0);"
       tabindex="-1"
       title="Click to edit, drag to reposition"
       type="button"
@@ -111,9 +111,9 @@ exports[`renders readOnly EuiColorStopThumb 1`] = `
 
 exports[`renders swatch-only EuiColorStopThumb 1`] = `
 <div
-  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover"
+  class="euiPopover euiColorStopPopover testClass1 testClass2 emotion-euiPopover-euiColorStopThumbPopover-euiTestCss"
   data-test-subj="test subject string"
-  style="left:0%"
+  style="left: 0%;"
 >
   <div
     class="euiPopover__anchor euiColorStopThumbPopover__anchor css-16vtueo-render"
@@ -127,7 +127,7 @@ exports[`renders swatch-only EuiColorStopThumb 1`] = `
       class="euiRangeThumb euiColorStopThumb emotion-euiRangeThumb-euiColorStopThumb"
       data-test-subj="euiColorStopThumb"
       role="slider"
-      style="background:rgb(255,0,0)"
+      style="background: rgb(255, 0, 0);"
       tabindex="-1"
       title="Click to edit, drag to reposition"
       type="button"

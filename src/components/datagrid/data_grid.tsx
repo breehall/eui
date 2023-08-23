@@ -13,6 +13,7 @@ import {
   GridOnItemsRenderedProps,
 } from 'react-window';
 import { useGeneratedHtmlId } from '../../services';
+import { useEuiTablePaginationDefaults } from '../table/table_pagination';
 import { EuiFocusTrap } from '../focus_trap';
 import { EuiI18n, useEuiI18n } from '../i18n';
 import { useMutationObserver } from '../observer/mutation_observer';
@@ -118,7 +119,7 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
       className,
       gridStyle,
       toolbarVisibility = true,
-      pagination,
+      pagination: _pagination,
       sorting,
       inMemory,
       onColumnResize,
@@ -134,6 +135,17 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
     /**
      * Merge consumer settings with defaults
      */
+    const paginationDefaults = useEuiTablePaginationDefaults();
+    const pagination = useMemo(() => {
+      return _pagination
+        ? {
+            pageSize: paginationDefaults.itemsPerPage,
+            pageSizeOptions: paginationDefaults.itemsPerPageOptions,
+            ..._pagination,
+          }
+        : _pagination;
+    }, [_pagination, paginationDefaults]);
+
     const gridStyleWithDefaults = useMemo(
       () => ({ ...startingStyles, ...gridStyle }),
       [gridStyle]
@@ -191,18 +203,15 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
       );
     }, [columns]);
 
-    const [
-      displaySelector,
-      gridStyles,
-      rowHeightsOptions,
-    ] = useDataGridDisplaySelector(
-      checkOrDefaultToolBarDisplayOptions(
-        toolbarVisibility,
-        'showDisplaySelector'
-      ),
-      gridStyleWithDefaults,
-      _rowHeightsOptions
-    );
+    const [displaySelector, gridStyles, rowHeightsOptions] =
+      useDataGridDisplaySelector(
+        checkOrDefaultToolBarDisplayOptions(
+          toolbarVisibility,
+          'showDisplaySelector'
+        ),
+        gridStyleWithDefaults,
+        _rowHeightsOptions
+      );
 
     /**
      * Column order & visibility
@@ -259,10 +268,8 @@ export const EuiDataGrid = forwardRef<EuiDataGridRefProps, EuiDataGridProps>(
     /**
      * Focus
      */
-    const {
-      headerIsInteractive,
-      handleHeaderMutation,
-    } = useHeaderIsInteractive(contentRef.current);
+    const { headerIsInteractive, handleHeaderMutation } =
+      useHeaderIsInteractive(contentRef.current);
     const { focusProps: wrappingDivFocusProps, ...focusContext } = useFocus({
       headerIsInteractive,
       gridItemsRendered,

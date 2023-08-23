@@ -10,17 +10,25 @@ import React, {
   useContext,
   useEffect,
   useRef,
+  useMemo,
   useState,
   PropsWithChildren,
+  HTMLAttributes,
 } from 'react';
+import classNames from 'classnames';
+import { css } from '@emotion/css';
 import isEqual from 'lodash/isEqual';
+
+import type { CommonProps } from '../../components/common';
 
 import {
   EuiSystemContext,
   EuiThemeContext,
+  EuiNestedThemeContext,
   EuiModificationsContext,
   EuiColorModeContext,
 } from './context';
+import { EuiEmotionThemeProvider } from './emotion';
 import { buildTheme, getColorMode, getComputed, mergeDeep } from './utils';
 import {
   EuiThemeColorMode,
@@ -29,17 +37,23 @@ import {
   EuiThemeModifications,
 } from './types';
 
-type LEVELS = 'log' | 'warn' | 'error';
-let providerWarning: LEVELS | undefined = undefined;
-export const setEuiDevProviderWarning = (level: LEVELS | undefined) =>
-  (providerWarning = level);
-export const getEuiDevProviderWarning = () => providerWarning;
-
-export interface EuiThemeProviderProps<T> {
+export interface EuiThemeProviderProps<T> extends PropsWithChildren {
   theme?: EuiThemeSystem<T>;
   colorMode?: EuiThemeColorMode;
   modify?: EuiThemeModifications<T>;
   children: any;
+  /**
+   * Nested theme providers will receive a wrapping `span` tag in order to correctly
+   * set the default text `color` that all nested children will inherit.
+   *
+   * If an extra wrapper is not desired, pass `{ cloneElement: true }`.
+   * This requires a **single** child component that the correct color class can be passed to.
+   *
+   * The parent level `EuiProvider`/`EuiThemeProvider` will **not** render a wrapper element, as
+   * the default inherited text color will be set on the page `body`.
+   */
+  wrapperProps?: HTMLAttributes<HTMLElement> &
+    CommonProps & { cloneElement?: boolean };
 }
 
 export const EuiThemeProvider = <T extends {} = {}>({
@@ -47,7 +61,9 @@ export const EuiThemeProvider = <T extends {} = {}>({
   colorMode: _colorMode,
   modify: _modifications,
   children,
-}: PropsWithChildren<EuiThemeProviderProps<T>>) => {
+  wrapperProps,
+}: EuiThemeProviderProps<T>) => {
+  const { isGlobalTheme, bodyColor } = useContext(EuiNestedThemeContext);
   const parentSystem = useContext(EuiSystemContext);
   const parentModifications = useContext(EuiModificationsContext);
   const parentColorMode = useContext(EuiColorModeContext);
@@ -121,12 +137,58 @@ export const EuiThemeProvider = <T extends {} = {}>({
     }
   }, [colorMode, system, modifications]);
 
+  const nestedThemeContext = useMemo(() => {
+    return {
+      isGlobalTheme: false, // The theme that determines the global body styles
+      bodyColor: isGlobalTheme ? theme.colors.text : bodyColor,
+      hasDifferentColorFromGlobalTheme: isGlobalTheme
+        ? false
+        : bodyColor !== theme.colors.text,
+      colorClassName: css`
+        label: euiColorMode-${_colorMode};
+        color: ${theme.colors.text};
+      `,
+    };
+  }, [theme, isGlobalTheme, bodyColor, _colorMode]);
+
+  const renderedChildren = useMemo(() => {
+    if (isGlobalTheme) {
+      return children; // No wrapper
+    }
+
+    const { cloneElement, className, ...rest } = wrapperProps || {};
+    const props = {
+      ...rest,
+      className: classNames(className, nestedThemeContext.colorClassName),
+    };
+
+    if (cloneElement) {
+      return React.cloneElement(children, {
+        ...props,
+        className: classNames(children.props.className, props.className),
+      });
+    } else {
+      return (
+        <span
+          {...props}
+          className={classNames('euiThemeProvider', props.className)}
+        >
+          {children}
+        </span>
+      );
+    }
+  }, [isGlobalTheme, nestedThemeContext, wrapperProps, children]);
+
   return (
     <EuiColorModeContext.Provider value={colorMode}>
       <EuiSystemContext.Provider value={system}>
         <EuiModificationsContext.Provider value={modifications}>
           <EuiThemeContext.Provider value={theme}>
-            {children}
+            <EuiNestedThemeContext.Provider value={nestedThemeContext}>
+              <EuiEmotionThemeProvider>
+                {renderedChildren}
+              </EuiEmotionThemeProvider>
+            </EuiNestedThemeContext.Provider>
           </EuiThemeContext.Provider>
         </EuiModificationsContext.Provider>
       </EuiSystemContext.Provider>

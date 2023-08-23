@@ -9,6 +9,7 @@
 import classNames from 'classnames';
 import React, {
   Component,
+  ContextType,
   createRef,
   FocusEvent,
   FunctionComponent,
@@ -47,6 +48,7 @@ const EuiDataGridCellContent: FunctionComponent<
     setCellContentsRef: EuiDataGridCell['setCellContentsRef'];
     isExpanded: boolean;
     isDefinedHeight: boolean;
+    isFocused: boolean;
     ariaRowIndex: number;
   }
 > = memo(
@@ -60,12 +62,12 @@ const EuiDataGridCellContent: FunctionComponent<
     ariaRowIndex,
     rowHeightUtils,
     isDefinedHeight,
+    isFocused,
     ...rest
   }) => {
     // React is more permissible than the TS types indicate
-    const CellElement = renderCellValue as JSXElementConstructor<
-      EuiDataGridCellValueElementProps
-    >;
+    const CellElement =
+      renderCellValue as JSXElementConstructor<EuiDataGridCellValueElementProps>;
 
     return (
       <>
@@ -93,7 +95,7 @@ const EuiDataGridCellContent: FunctionComponent<
           />
         </div>
         <EuiScreenReaderOnly>
-          <p>
+          <p hidden={!isFocused}>
             {'- '}
             <EuiI18n
               token="euiDataGridCell.position"
@@ -142,6 +144,7 @@ export class EuiDataGridCell extends Component<
   style = null;
 
   static contextType = DataGridFocusContext;
+  declare context: ContextType<typeof DataGridFocusContext>;
 
   getInteractables = () => {
     const tabbingRef = this.cellContentsRef;
@@ -416,8 +419,8 @@ export class EuiDataGridCell extends Component<
       if (EuiDataGridCell.activeFocusTimeoutId) {
         window.clearTimeout(EuiDataGridCell.activeFocusTimeoutId);
       }
-      EuiDataGridCell.activeFocusTimeoutId = this.focusTimeout = window.setTimeout(
-        () => {
+      EuiDataGridCell.activeFocusTimeoutId = this.focusTimeout =
+        window.setTimeout(() => {
           this.context.setFocusedCell([colIndex, visibleRowIndex]);
 
           const interactables = this.getInteractables();
@@ -425,9 +428,7 @@ export class EuiDataGridCell extends Component<
             interactables[0].focus();
             this.setState({ disableCellTabIndex: true });
           }
-        },
-        0
-      );
+        }, 0);
       // Close the cell popover if the popover was open and the user clicked the cell
       if (this.props.popoverContext.popoverIsOpen) {
         this.props.popoverContext.closeCellPopover();
@@ -483,11 +484,8 @@ export class EuiDataGridCell extends Component<
 
   handleCellPopover = () => {
     if (this.isPopoverOpen()) {
-      const {
-        setPopoverAnchor,
-        setPopoverContent,
-        setCellPopoverProps,
-      } = this.props.popoverContext;
+      const { setPopoverAnchor, setPopoverContent, setCellPopoverProps } =
+        this.props.popoverContext;
 
       // Set popover anchor
       const cellAnchorEl = this.popoverAnchorRef.current!;
@@ -504,12 +502,9 @@ export class EuiDataGridCell extends Component<
         columnType,
       } = this.props;
       const PopoverElement = (renderCellPopover ||
-        DefaultCellPopover) as JSXElementConstructor<
-        EuiDataGridCellPopoverElementProps
-      >;
-      const CellElement = renderCellValue as JSXElementConstructor<
-        EuiDataGridCellValueElementProps
-      >;
+        DefaultCellPopover) as JSXElementConstructor<EuiDataGridCellPopoverElementProps>;
+      const CellElement =
+        renderCellValue as JSXElementConstructor<EuiDataGridCellValueElementProps>;
       const sharedProps = {
         rowIndex,
         colIndex,
@@ -669,6 +664,7 @@ export class EuiDataGridCell extends Component<
       isExpandable,
       isExpanded: popoverIsOpen,
       isDetails: false,
+      isFocused: this.state.isFocused,
       setCellContentsRef: this.setCellContentsRef,
       rowHeightsOptions,
       rowHeightUtils,

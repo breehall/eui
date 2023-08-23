@@ -1,5 +1,168 @@
 [
   {
+    "version": "87.2.0",
+    "changes": [
+      {
+        "token": "euiResizableButton.horizontalResizerAriaLabel",
+        "changeType": "modified",
+        "value": "Press the left or right arrow keys to adjust panels size"
+      },
+      {
+        "token": "euiResizableButton.verticalResizerAriaLabel",
+        "changeType": "modified",
+        "value": "Press the up or down arrow keys to adjust panels size"
+      }
+    ]
+  },
+  {
+    "version": "87.1.0",
+    "changes": [
+      {
+        "token": "euiCollapsibleNavBeta.ariaLabel",
+        "changeType": "added",
+        "value": "Site menu"
+      }
+    ]
+  },
+  {
+    "version": "87.0.0",
+    "changes": [
+      {
+        "token": "euiBreadcrumb.popoverAriaLabel",
+        "changeType": "added",
+        "value": "Clicking this button will toggle a popover dialog."
+      },
+      {
+        "token": "euiCollapsibleNavButton.ariaLabelOpen",
+        "changeType": "added",
+        "value": "Toggle navigation open"
+      },
+      {
+        "token": "euiCollapsibleNavButton.ariaLabelClose",
+        "changeType": "added",
+        "value": "Toggle navigation closed"
+      }
+    ]
+  },
+  {
+    "version": "81.1.0",
+    "changes": [
+      {
+        "token": "euiInlineEditForm.saveButtonAriaLabel",
+        "changeType": "added",
+        "value": "Save edit"
+      },
+      {
+        "token": "euiInlineEditForm.cancelButtonAriaLabel",
+        "changeType": "added",
+        "value": "Cancel edit"
+      },
+      {
+        "token": "euiInlineEditForm.inputKeyboardInstructions",
+        "changeType": "added",
+        "value": "Press Enter to save your edited text. Press Escape to cancel your edit."
+      },
+      {
+        "token": "euiInlineEditForm.activateEditModeDescription",
+        "changeType": "added",
+        "value": "Click to edit this text inline."
+      }
+    ]
+  },
+  {
+    "version": "81.0.0",
+    "changes": [
+      {
+        "token": "euiSelectableListItem.includedOption",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiSelectableListItem.includedOptionInstructions",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiSelectableListItem.excludedOptionInstructions",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiSelectableListItem.unckeckedOptionInstructions",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiSelectableListItem.checkedOptionInstructions",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiSelectableListItem.checkOptionInstructions",
+        "changeType": "added",
+        "value": "To check this option, press Enter."
+      },
+      {
+        "token": "euiSelectableListItem.uncheckOptionInstructions",
+        "changeType": "added",
+        "value": "To uncheck this option, press Enter."
+      },
+      {
+        "token": "euiSelectableListItem.excludeOptionInstructions",
+        "changeType": "added",
+        "value": "To exclude this option, press Enter."
+      },
+      {
+        "token": "euiSelectableListItem.mixedOption",
+        "changeType": "added",
+        "value": "Mixed (indeterminate) option."
+      },
+      {
+        "token": "euiSelectableListItem.mixedOptionInstructions",
+        "changeType": "added",
+        "value": "To check this option for all, press Enter once."
+      },
+      {
+        "token": "euiSelectableListItem.mixedOptionUncheckInstructions",
+        "changeType": "added",
+        "value": "To uncheck this option for all, press Enter twice."
+      },
+      {
+        "token": "euiSelectableListItem.mixedOptionExcludeInstructions",
+        "changeType": "added",
+        "value": "To exclude this option for all, press Enter twice."
+      }
+    ]
+  },
+  {
+    "version": "77.2.0",
+    "changes": [
+      {
+        "token": "euiInlineEditForm.saveButtonAriaLabel",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiInlineEditForm.cancelButtonAriaLabel",
+        "changeType": "deleted"
+      },
+      {
+        "token": "euiFormControlLayoutDelimited.delimiterLabel",
+        "changeType": "added",
+        "value": "to"
+      }
+    ]
+  },
+  {
+    "version": "77.1.0",
+    "changes": [
+      {
+        "token": "euiInlineEditForm.saveButtonAriaLabel",
+        "changeType": "added",
+        "value": "Save edit"
+      },
+      {
+        "token": "euiInlineEditForm.cancelButtonAriaLabel",
+        "changeType": "added",
+        "value": "Cancel edit"
+      }
+    ]
+  },
+  {
     "version": "76.1.0",
     "changes": [
       {

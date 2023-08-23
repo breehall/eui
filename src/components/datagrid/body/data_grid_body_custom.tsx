@@ -19,13 +19,16 @@ import { useRowHeightUtils, useDefaultRowHeight } from '../utils/row_heights';
 
 import {
   EuiDataGridBodyProps,
+  EuiDataGridCustomBodyProps,
   EuiDataGridSetCustomGridBodyProps,
 } from '../data_grid_types';
 import { useDataGridHeader } from './header';
 import { useDataGridFooter } from './footer';
 import { Cell } from './data_grid_cell_wrapper';
 
-export const EuiDataGridBodyCustomRender: FunctionComponent<EuiDataGridBodyProps> = ({
+export const EuiDataGridBodyCustomRender: FunctionComponent<
+  EuiDataGridBodyProps
+> = ({
   renderCustomGridBody,
   leadingControlColumns,
   trailingControlColumns,
@@ -138,7 +141,7 @@ export const EuiDataGridBodyCustomRender: FunctionComponent<EuiDataGridBodyProps
     rowHeightUtils,
   };
 
-  const _Cell = useCallback(
+  const _Cell = useCallback<EuiDataGridCustomBodyProps['Cell']>(
     ({ colIndex, visibleRowIndex, ...rest }) => {
       const style = {
         height: rowHeightUtils.isAutoHeight(visibleRowIndex, rowHeightsOptions)
@@ -157,9 +160,8 @@ export const EuiDataGridBodyCustomRender: FunctionComponent<EuiDataGridBodyProps
   );
 
   // Allow consumers to pass custom props/attributes/listeners etc. to the wrapping div
-  const [customGridBodyProps, setCustomGridBodyProps] = useState<
-    EuiDataGridSetCustomGridBodyProps
-  >({});
+  const [customGridBodyProps, setCustomGridBodyProps] =
+    useState<EuiDataGridSetCustomGridBodyProps>({});
 
   return (
     <div

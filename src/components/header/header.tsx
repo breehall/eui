@@ -8,28 +8,26 @@
 
 import React, { FunctionComponent, HTMLAttributes, useEffect } from 'react';
 import classNames from 'classnames';
-import { CommonProps } from '../common';
 
+import { useEuiTheme } from '../../services';
+import { CommonProps } from '../common';
+import { EuiBreadcrumb, EuiBreadcrumbsProps } from '../breadcrumbs';
+
+import { EuiHeaderBreadcrumbs } from './header_breadcrumbs';
 import {
   EuiHeaderSectionItem,
   EuiHeaderSectionItemProps,
   EuiHeaderSection,
 } from './header_section';
-import { EuiHeaderBreadcrumbs } from './header_breadcrumbs';
-import { EuiBreadcrumb, EuiBreadcrumbsProps } from '../breadcrumbs';
+import { euiHeaderStyles } from './header.styles';
 
 type EuiHeaderSectionItemType = EuiHeaderSectionItemProps['children'];
-type EuiHeaderSectionBorderType = EuiHeaderSectionItemProps['border'];
 
 export interface EuiHeaderSections {
   /**
    * An arry of items that will be wrapped in a #EuiHeaderSectionItem
    */
   items?: EuiHeaderSectionItemType[];
-  /**
-   * Apply the passed border side to each #EuiHeaderSectionItem
-   */
-  borders?: EuiHeaderSectionBorderType;
   /**
    * Breadcrumbs in the header cannot be wrapped in a #EuiHeaderSection in order for truncation to work.
    * Simply pass the array of EuiBreadcrumb objects
@@ -41,18 +39,11 @@ export interface EuiHeaderSections {
   breadcrumbProps?: Omit<EuiBreadcrumbsProps, 'breadcrumbs'>;
 }
 
-function createHeaderSection(
-  sections: EuiHeaderSectionItemType[],
-  border?: EuiHeaderSectionBorderType
-) {
+const createHeaderSection = (sections: EuiHeaderSectionItemType[]) => {
   return sections.map((section, index) => {
-    return (
-      <EuiHeaderSectionItem key={index} border={border}>
-        {section}
-      </EuiHeaderSectionItem>
-    );
+    return <EuiHeaderSectionItem key={index}>{section}</EuiHeaderSectionItem>;
   });
-}
+};
 
 export type EuiHeaderProps = CommonProps &
   HTMLAttributes<HTMLDivElement> & {
@@ -86,12 +77,11 @@ export const EuiHeader: FunctionComponent<EuiHeaderProps> = ({
   theme = 'default',
   ...rest
 }) => {
-  const classes = classNames(
-    'euiHeader',
-    `euiHeader--${theme}`,
-    `euiHeader--${position}`,
-    className
-  );
+  const classes = classNames('euiHeader', className);
+
+  const euiTheme = useEuiTheme();
+  const styles = euiHeaderStyles(euiTheme);
+  const cssStyles = [styles.euiHeader, styles[position], styles[theme]];
 
   useEffect(() => {
     if (position === 'fixed') {
@@ -126,7 +116,7 @@ export const EuiHeader: FunctionComponent<EuiHeaderProps> = ({
         // Items get wrapped in EuiHeaderSection and each item in a EuiHeaderSectionItem
         content.push(
           <EuiHeaderSection key={`items-${index}`}>
-            {createHeaderSection(section.items, section.borders)}
+            {createHeaderSection(section.items)}
           </EuiHeaderSection>
         );
       }
@@ -149,6 +139,7 @@ export const EuiHeader: FunctionComponent<EuiHeaderProps> = ({
 
   return (
     <div
+      css={cssStyles}
       className={classes}
       data-fixed-header={position === 'fixed' || undefined} // Used by EuiFlyouts as a query selector
       {...rest}

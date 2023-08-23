@@ -46,7 +46,7 @@ import {
 import { euiResizableContainerStyles } from './resizable_container.styles';
 
 export interface EuiResizableContainerProps
-  extends HTMLAttributes<HTMLDivElement>,
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>,
     CommonProps {
   /**
    * Specify the container direction
@@ -88,7 +88,9 @@ const initialState: EuiResizableContainerState = {
   resizers: {},
 };
 
-export const EuiResizableContainer: FunctionComponent<EuiResizableContainerProps> = ({
+export const EuiResizableContainer: FunctionComponent<
+  EuiResizableContainerProps
+> = ({
   direction = 'horizontal',
   children,
   className,

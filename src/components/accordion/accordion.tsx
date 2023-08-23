@@ -8,8 +8,9 @@
 
 import React, { Component, HTMLAttributes, ReactNode } from 'react';
 import classNames from 'classnames';
+import { tabbable, FocusableElement } from 'tabbable';
 
-import { CommonProps, keysOf } from '../common';
+import { CommonProps } from '../common';
 
 import { EuiLoadingSpinner } from '../loading';
 import { EuiResizeObserver } from '../observer/resize_observer';
@@ -32,17 +33,8 @@ import {
 } from './accordion.styles';
 import { logicalCSS } from '../../global_styling';
 
-const paddingSizeToClassNameMap = {
-  none: '',
-  xs: 'euiAccordion__padding--xs',
-  s: 'euiAccordion__padding--s',
-  m: 'euiAccordion__padding--m',
-  l: 'euiAccordion__padding--l',
-  xl: 'euiAccordion__padding--xl',
-};
-
-export const PADDING_SIZES = keysOf(paddingSizeToClassNameMap);
-export type EuiAccordionSize = keyof typeof paddingSizeToClassNameMap;
+export const PADDING_SIZES = ['none', 'xs', 's', 'm', 'l', 'xl'] as const;
+export type EuiAccordionPaddingSize = (typeof PADDING_SIZES)[number];
 
 export type EuiAccordionProps = CommonProps &
   Omit<HTMLAttributes<HTMLElement>, 'id'> & {
@@ -94,7 +86,7 @@ export type EuiAccordionProps = CommonProps &
     /**
      * The padding around the exposed accordion content.
      */
-    paddingSize?: EuiAccordionSize;
+    paddingSize?: EuiAccordionPaddingSize;
     /**
      * Placement of the arrow indicator, or 'none' to hide it.
      */
@@ -117,9 +109,13 @@ export type EuiAccordionProps = CommonProps &
     isDisabled?: boolean;
   };
 
+type EuiAccordionState = {
+  isOpen: boolean;
+};
+
 export class EuiAccordionClass extends Component<
   WithEuiThemeProps & EuiAccordionProps,
-  { isOpen: boolean }
+  EuiAccordionState
 > {
   static defaultProps = {
     initialIsOpen: false,
@@ -134,6 +130,7 @@ export class EuiAccordionClass extends Component<
 
   childContent: HTMLDivElement | null = null;
   childWrapper: HTMLDivElement | null = null;
+  tabbableChildren: FocusableElement[] | null = null;
 
   state = {
     isOpen: this.props.forceState
@@ -141,14 +138,16 @@ export class EuiAccordionClass extends Component<
       : this.props.initialIsOpen!,
   };
 
+  get isOpen() {
+    return this.props.forceState
+      ? this.props.forceState === 'open'
+      : this.state.isOpen;
+  }
+
   setChildContentHeight = () => {
-    const { forceState } = this.props;
     requestAnimationFrame(() => {
       const height =
-        this.childContent &&
-        (forceState ? forceState === 'open' : this.state.isOpen)
-          ? this.childContent.clientHeight
-          : 0;
+        this.childContent && this.isOpen ? this.childContent.clientHeight : 0;
       this.childWrapper &&
         this.childWrapper.setAttribute(
           'style',
@@ -159,17 +158,33 @@ export class EuiAccordionClass extends Component<
 
   componentDidMount() {
     this.setChildContentHeight();
+    if (!this.isOpen) this.preventTabbing();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(
+    prevProps: EuiAccordionProps,
+    prevState: EuiAccordionState
+  ) {
     this.setChildContentHeight();
+
+    if (
+      (prevProps.forceState === 'open' && this.props.forceState === 'closed') ||
+      (prevState.isOpen === true && this.state.isOpen === false)
+    ) {
+      this.preventTabbing();
+    }
+    if (
+      (prevProps.forceState === 'closed' && this.props.forceState === 'open') ||
+      (prevState.isOpen === false && this.state.isOpen === true)
+    ) {
+      this.enableTabbing();
+    }
   }
 
   onToggle = () => {
     const { forceState } = this.props;
     if (forceState) {
-      this.props.onToggle &&
-        this.props.onToggle(forceState === 'open' ? false : true);
+      this.props.onToggle?.(forceState === 'open' ? false : true);
     } else {
       this.setState(
         (prevState) => ({
@@ -179,9 +194,46 @@ export class EuiAccordionClass extends Component<
           if (this.state.isOpen && this.childWrapper) {
             this.childWrapper.focus();
           }
-          this.props.onToggle && this.props.onToggle(this.state.isOpen);
+          this.props.onToggle?.(this.state.isOpen);
         }
       );
+    }
+  };
+
+  // When accordions are closed, tabbable children should not be present in the tab order
+  preventTabbing = () => {
+    if (this.childContent) {
+      // Re-check for children on every close - content can change dynamically
+      this.tabbableChildren = tabbable(this.childContent);
+
+      this.tabbableChildren.forEach((element) => {
+        // If the element has an existing `tabIndex` set, make sure we can restore it
+        const originalTabIndex = element.getAttribute('tabIndex');
+        if (originalTabIndex) {
+          element.setAttribute('data-original-tabindex', originalTabIndex);
+        }
+
+        element.setAttribute('tabIndex', '-1');
+      });
+    }
+  };
+
+  enableTabbing = () => {
+    // If no tabbable children were set, we don't need to re-enable anything
+    if (this.tabbableChildren) {
+      this.tabbableChildren.forEach((element) => {
+        const originalTabIndex = element.getAttribute('data-original-tabindex');
+        if (originalTabIndex) {
+          // If the element originally had an existing `tabIndex` set, restore it
+          element.setAttribute('tabIndex', originalTabIndex);
+          element.removeAttribute('data-original-tabindex');
+        } else {
+          // If not, remove the tabIndex property
+          element.removeAttribute('tabIndex');
+        }
+      });
+      // Cleanup - unset the list of children
+      this.tabbableChildren = null;
     }
   };
 
@@ -223,8 +275,6 @@ export class EuiAccordionClass extends Component<
       ...rest
     } = this.props;
 
-    const isOpen = forceState ? forceState === 'open' : this.state.isOpen;
-
     // Force button element to be a legend if the element is a fieldset
     const ButtonElement = Element === 'fieldset' ? 'legend' : _ButtonElement;
     const buttonElementIsFocusable = ButtonElement === 'button';
@@ -238,16 +288,12 @@ export class EuiAccordionClass extends Component<
     const classes = classNames(
       'euiAccordion',
       {
-        'euiAccordion-isOpen': isOpen,
+        'euiAccordion-isOpen': this.isOpen,
       },
       className
     );
 
-    const paddingClass = paddingSize
-      ? classNames(paddingSizeToClassNameMap[paddingSize])
-      : undefined;
-
-    const childrenClasses = classNames(paddingClass, {
+    const childrenClasses = classNames('euiAccordion__children', {
       'euiAccordion__children-isLoading': isLoading,
     });
 
@@ -265,7 +311,7 @@ export class EuiAccordionClass extends Component<
     const iconButtonClasses = classNames(
       'euiAccordion__iconButton',
       {
-        'euiAccordion__iconButton-isOpen': isOpen,
+        'euiAccordion__iconButton-isOpen': this.isOpen,
         'euiAccordion__iconButton--right': _arrowDisplay === 'right',
       },
       arrowProps?.className
@@ -276,26 +322,28 @@ export class EuiAccordionClass extends Component<
     const cssButtonStyles = [
       buttonStyles.euiAccordion__button,
       isDisabled && buttonStyles.disabled,
+      buttonProps?.css,
     ];
 
     const childrenStyles = euiAccordionChildrenStyles(theme);
     const cssChildrenStyles = [
       childrenStyles.euiAccordion__children,
       isLoading && childrenStyles.isLoading,
-      paddingSize === 'none' ? undefined : childrenStyles[paddingSize!],
+      paddingSize && paddingSize !== 'none' && childrenStyles[paddingSize],
     ];
 
     const childWrapperStyles = euiAccordionChildWrapperStyles(theme);
     const cssChildWrapperStyles = [
       childWrapperStyles.euiAccordion__childWrapper,
-      isOpen && childWrapperStyles.isOpen,
+      this.isOpen && childWrapperStyles.isOpen,
     ];
 
     const iconButtonStyles = euiAccordionIconButtonStyles(theme);
     const cssIconButtonStyles = [
       iconButtonStyles.euiAccordion__iconButton,
-      isOpen && iconButtonStyles.isOpen,
+      this.isOpen && iconButtonStyles.isOpen,
       _arrowDisplay === 'right' && iconButtonStyles.arrowRight,
+      arrowProps?.css,
     ];
 
     const optionalActionStyles = euiAccordionOptionalActionStyles();
@@ -317,13 +365,13 @@ export class EuiAccordionClass extends Component<
       iconButton = (
         <EuiButtonIcon
           color="text"
-          css={cssIconButtonStyles}
           {...arrowProps}
           className={iconButtonClasses}
+          css={cssIconButtonStyles}
           iconType="arrowRight"
           onClick={this.onToggle}
           aria-controls={id}
-          aria-expanded={isOpen}
+          aria-expanded={this.isOpen}
           aria-labelledby={buttonId}
           tabIndex={buttonElementIsFocusable ? -1 : 0}
           isDisabled={isDisabled}
@@ -369,12 +417,13 @@ export class EuiAccordionClass extends Component<
 
     const button = (
       <ButtonElement
-        css={cssButtonStyles}
         {...buttonProps}
         id={buttonId}
         className={buttonClasses}
+        css={cssButtonStyles}
         aria-controls={id}
-        aria-expanded={isOpen}
+        // `aria-expanded` is only a valid attribute on interactive controls - axe-core throws a violation otherwise
+        aria-expanded={ButtonElement === 'button' ? this.isOpen : undefined}
         onClick={isDisabled ? undefined : this.onToggle}
         type={ButtonElement === 'button' ? 'button' : undefined}
         disabled={ButtonElement === 'button' ? isDisabled : undefined}

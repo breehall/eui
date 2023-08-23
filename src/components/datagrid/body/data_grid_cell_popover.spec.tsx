@@ -6,7 +6,9 @@
  * Side Public License, v 1.
  */
 
-/// <reference types="../../../../cypress/support"/>
+/// <reference types="cypress" />
+/// <reference types="cypress-real-events" />
+/// <reference types="../../../../cypress/support" />
 
 import React, { useEffect } from 'react';
 import { EuiDataGrid, EuiDataGridProps } from '../';
@@ -59,9 +61,10 @@ describe('EuiDataGridCellPopover', () => {
       );
 
       cy.realPress('Escape');
-      cy.focused()
-        .should('have.attr', 'data-gridcell-column-index', '0')
-        .should('have.attr', 'data-gridcell-row-index', '0');
+
+      cy.get(
+        '[data-gridcell-column-index="0"][data-gridcell-row-index="0"]'
+      ).should('be.focused');
     });
 
     it('when the expand button is clicked and then F2 key is pressed', () => {
@@ -102,11 +105,11 @@ describe('EuiDataGridCellPopover', () => {
   });
 
   it('allows consumers to use setCellPopoverProps, passed from renderCellPopover, to customize popover props', () => {
-    const RenderCellPopover = ({
-      DefaultCellPopover,
-      setCellPopoverProps,
-      ...props
-    }) => {
+    const RenderCellPopover: EuiDataGridProps['renderCellPopover'] = (
+      props
+    ) => {
+      const { DefaultCellPopover, setCellPopoverProps } = props;
+
       useEffect(() => {
         setCellPopoverProps({
           panelClassName: 'hello',

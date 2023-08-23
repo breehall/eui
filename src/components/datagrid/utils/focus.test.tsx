@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { act } from 'react-dom/test-utils';
+import { act } from '@testing-library/react';
 import { mount } from 'enzyme';
 import { keys } from '../../../services';
 import { testCustomHook } from '../../../test/internal';
@@ -387,6 +387,7 @@ describe('createKeyDownHandler', () => {
       const pagination = {
         pageIndex: 0,
         pageSize: 5,
+        pageSizeOptions: [5],
         onChangePage: jest.fn(),
         onChangeItemsPerPage: () => {},
       };
@@ -433,6 +434,7 @@ describe('createKeyDownHandler', () => {
       const pagination = {
         pageIndex: 1,
         pageSize: 5,
+        pageSizeOptions: [5],
         onChangePage: jest.fn(),
         onChangeItemsPerPage: () => {},
       };

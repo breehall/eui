@@ -2,7 +2,7 @@
 
 exports[`EuiSelectableTemplateSitewide is rendered 1`] = `
 <div
-  class="euiSelectable euiSelectableTemplateSitewide testClass1 testClass2"
+  class="euiSelectable euiSelectableTemplateSitewide testClass1 testClass2 emotion-euiTestCss"
   data-test-subj="test subject string"
 >
   <div
@@ -17,19 +17,8 @@ exports[`EuiSelectableTemplateSitewide is rendered 1`] = `
         <div
           class="euiFormControlLayout__childrenWrapper"
         >
-          <input
-            aria-activedescendant=""
-            aria-describedby="generated-id_instructions"
-            aria-haspopup="listbox"
-            aria-label="aria-label"
-            autocomplete="off"
-            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
-            placeholder="Search for anything..."
-            type="search"
-            value=""
-          />
           <div
-            class="euiFormControlLayoutIcons"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--left euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -41,13 +30,25 @@ exports[`EuiSelectableTemplateSitewide is rendered 1`] = `
               />
             </span>
           </div>
+          <input
+            aria-activedescendant=""
+            aria-describedby="generated-id_instructions"
+            aria-haspopup="listbox"
+            aria-label="aria-label"
+            autocomplete="off"
+            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
+            placeholder="Search for anything..."
+            type="search"
+            value=""
+          />
         </div>
       </div>
       <p
         class="emotion-euiScreenReaderOnly"
         id="generated-id_instructions"
       >
-         Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
+         
+        Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
       </p>
     </div>
   </div>
@@ -70,19 +71,8 @@ exports[`EuiSelectableTemplateSitewide props popoverButton is not rendered with 
         <div
           class="euiFormControlLayout__childrenWrapper"
         >
-          <input
-            aria-activedescendant=""
-            aria-describedby="generated-id_instructions"
-            aria-haspopup="listbox"
-            aria-label="Filter options"
-            autocomplete="off"
-            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
-            placeholder="Search for anything..."
-            type="search"
-            value=""
-          />
           <div
-            class="euiFormControlLayoutIcons"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--left euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -94,13 +84,25 @@ exports[`EuiSelectableTemplateSitewide props popoverButton is not rendered with 
               />
             </span>
           </div>
+          <input
+            aria-activedescendant=""
+            aria-describedby="generated-id_instructions"
+            aria-haspopup="listbox"
+            aria-label="Filter options"
+            autocomplete="off"
+            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
+            placeholder="Search for anything..."
+            type="search"
+            value=""
+          />
         </div>
       </div>
       <p
         class="emotion-euiScreenReaderOnly"
         id="generated-id_instructions"
       >
-         Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
+         
+        Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
       </p>
     </div>
   </div>
@@ -159,19 +161,8 @@ exports[`EuiSelectableTemplateSitewide props popoverFooter is rendered 1`] = `
         <div
           class="euiFormControlLayout__childrenWrapper"
         >
-          <input
-            aria-activedescendant=""
-            aria-describedby="generated-id_instructions"
-            aria-haspopup="listbox"
-            aria-label="Filter options"
-            autocomplete="off"
-            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
-            placeholder="Search for anything..."
-            type="search"
-            value=""
-          />
           <div
-            class="euiFormControlLayoutIcons"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--left euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -183,13 +174,25 @@ exports[`EuiSelectableTemplateSitewide props popoverFooter is rendered 1`] = `
               />
             </span>
           </div>
+          <input
+            aria-activedescendant=""
+            aria-describedby="generated-id_instructions"
+            aria-haspopup="listbox"
+            aria-label="Filter options"
+            autocomplete="off"
+            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
+            placeholder="Search for anything..."
+            type="search"
+            value=""
+          />
         </div>
       </div>
       <p
         class="emotion-euiScreenReaderOnly"
         id="generated-id_instructions"
       >
-         Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
+         
+        Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
       </p>
     </div>
   </div>
@@ -212,19 +215,8 @@ exports[`EuiSelectableTemplateSitewide props popoverProps is rendered 1`] = `
         <div
           class="euiFormControlLayout__childrenWrapper"
         >
-          <input
-            aria-activedescendant=""
-            aria-describedby="generated-id_instructions"
-            aria-haspopup="listbox"
-            aria-label="Filter options"
-            autocomplete="off"
-            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
-            placeholder="Search for anything..."
-            type="search"
-            value=""
-          />
           <div
-            class="euiFormControlLayoutIcons"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--left euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -236,13 +228,25 @@ exports[`EuiSelectableTemplateSitewide props popoverProps is rendered 1`] = `
               />
             </span>
           </div>
+          <input
+            aria-activedescendant=""
+            aria-describedby="generated-id_instructions"
+            aria-haspopup="listbox"
+            aria-label="Filter options"
+            autocomplete="off"
+            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
+            placeholder="Search for anything..."
+            type="search"
+            value=""
+          />
         </div>
       </div>
       <p
         class="emotion-euiScreenReaderOnly"
         id="generated-id_instructions"
       >
-         Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
+         
+        Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
       </p>
     </div>
   </div>
@@ -265,19 +269,8 @@ exports[`EuiSelectableTemplateSitewide props popoverTitle is rendered 1`] = `
         <div
           class="euiFormControlLayout__childrenWrapper"
         >
-          <input
-            aria-activedescendant=""
-            aria-describedby="generated-id_instructions"
-            aria-haspopup="listbox"
-            aria-label="Filter options"
-            autocomplete="off"
-            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
-            placeholder="Search for anything..."
-            type="search"
-            value=""
-          />
           <div
-            class="euiFormControlLayoutIcons"
+            class="euiFormControlLayoutIcons euiFormControlLayoutIcons--left euiFormControlLayoutIcons--absolute"
           >
             <span
               class="euiFormControlLayoutCustomIcon"
@@ -289,13 +282,25 @@ exports[`EuiSelectableTemplateSitewide props popoverTitle is rendered 1`] = `
               />
             </span>
           </div>
+          <input
+            aria-activedescendant=""
+            aria-describedby="generated-id_instructions"
+            aria-haspopup="listbox"
+            aria-label="Filter options"
+            autocomplete="off"
+            class="euiFieldSearch euiFieldSearch--fullWidth euiSelectableSearch euiSelectableTemplateSitewide__search"
+            placeholder="Search for anything..."
+            type="search"
+            value=""
+          />
         </div>
       </div>
       <p
         class="emotion-euiScreenReaderOnly"
         id="generated-id_instructions"
       >
-         Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
+         
+        Use the Up and Down arrow keys to move focus over options. Press Enter to select. Press Escape to collapse options.
       </p>
     </div>
   </div>

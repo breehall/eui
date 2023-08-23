@@ -27,12 +27,12 @@ const paddingSizeToClassNameMap = {
 
 export const PADDING_SIZES = keysOf(paddingSizeToClassNameMap);
 
-export type PaddingSize = typeof PADDING_SIZES[number];
+export type PaddingSize = (typeof PADDING_SIZES)[number];
 
 export type EuiEmptyPromptProps = CommonProps &
   Omit<
     _EuiPanelDivlike,
-    'borderRadius' | 'grow' | 'panelRef' | 'paddingSize' | 'title'
+    'borderRadius' | 'grow' | 'panelRef' | 'paddingSize' | 'title' | 'element'
   > & {
     /*
      * Accepts any [EuiIcon.type](#/display/icons)

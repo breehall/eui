@@ -16,8 +16,11 @@ import React, {
 import classNames from 'classnames';
 
 import { CommonProps, ExclusiveUnion } from '../common';
-import { getSecureRelForTarget, useEuiTheme } from '../../services';
-import { cloneElementWithCss } from '../../services/theme/clone_element';
+import {
+  getSecureRelForTarget,
+  useEuiTheme,
+  cloneElementWithCss,
+} from '../../services';
 import { EuiText } from '../text';
 import { EuiTitle } from '../title';
 import { EuiBetaBadge, EuiBetaBadgeProps } from '../badge/beta_badge';
@@ -34,7 +37,7 @@ import {
 } from './card.styles';
 
 export const ALIGNMENTS = ['left', 'center', 'right'] as const;
-type CardAlignment = typeof ALIGNMENTS[number];
+type CardAlignment = (typeof ALIGNMENTS)[number];
 
 /**
  * Certain props are only allowed when the layout is vertical
@@ -271,21 +274,22 @@ export const EuiCard: FunctionComponent<EuiCardProps> = ({
   if (betaBadgeProps?.label) {
     const betaStyles = euiCardBetaBadgeStyles(euiThemeContext, paddingSize);
     optionalBetaCSS = betaStyles.hasBetaBadge;
-    const anchorCSS = [betaStyles.euiCard__betaBadgeAnchor];
-    const badgeCSS = [betaStyles.euiCard__betaBadge];
+
     const { anchorProps, ...cleanedBetaBadgeProps } = betaBadgeProps;
+    const anchorCSS = [betaStyles.euiCard__betaBadgeAnchor, anchorProps?.css];
+    const badgeCSS = [betaStyles.euiCard__betaBadge, betaBadgeProps?.css];
 
     optionalBetaBadgeID = `${ariaId}BetaBadge`;
     optionalBetaBadge = (
       <EuiBetaBadge
-        css={badgeCSS}
         color={
           isDisabled && !betaBadgeProps.onClick && !betaBadgeProps.href
             ? 'subdued'
             : 'hollow'
         }
         {...cleanedBetaBadgeProps}
-        anchorProps={{ css: anchorCSS, ...anchorProps }}
+        css={badgeCSS}
+        anchorProps={{ ...anchorProps, css: anchorCSS }}
         id={optionalBetaBadgeID}
       />
     );

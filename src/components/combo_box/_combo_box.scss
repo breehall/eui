@@ -8,24 +8,27 @@
   /**
    * 1. Allow pills to truncate their text with an ellipsis.
    * 2. Don't allow pills/placeholder to overlap with the caret, loading icon or clear button.
-   * 3. The height on combo can be larger than normal text inputs.
+   * 3. The height on combo can be larger than normal text inputs except for single-selection comboboxes.
    */
 
-  &--compressed,
-  .euiFormControlLayout {
-    height: auto;
+  &--compressed:not(.euiComboBox--appended, .euiComboBox--prepended) {
+    height: auto; /* 3 */
+  }
+
+  &:not(.euiComboBox--appended, .euiComboBox--prepended) {
+    .euiFormControlLayout {
+      height: auto; /* 3 */
+    }
   }
 
   .euiComboBox__inputWrap {
     @include euiFormControlStyle($includeStates: false, $includeSizes: true);
-    @include euiFormControlWithIcon($isIconOptional: true);
     @include euiFormControlSize(auto, $includeAlternates: true);
+
     padding: $euiSizeXS $euiSizeS;
+    padding-right: var(--eui-form-control-layout-icons-padding, $euiSizeS); /* 2 */
     display: flex; /* 1 */
     outline: none; // Fixes an intermittent focus ring in Firefox
-
-    // to override the padding added above
-    @include euiFormControlLayoutPadding(1); /* 2 */
 
     .euiComboBoxPill {
       $inputMinWidth: $euiSize;
@@ -46,22 +49,6 @@
       &:hover {
         cursor: text;
       }
-    }
-
-    &.euiComboBox__inputWrap-isClearable {
-      @include euiFormControlLayoutPadding(2); /* 2 */
-    }
-
-    &.euiComboBox__inputWrap-isLoading {
-      @include euiFormControlLayoutPadding(2); /* 2 */
-
-      .euiComboBoxPlaceholder {
-        @include euiFormControlLayoutPadding(2); /* 2 */
-      }
-    }
-
-    &.euiComboBox__inputWrap-isLoading.euiComboBox__inputWrap-isClearable {
-      @include euiFormControlLayoutPadding(3); /* 2 */
     }
   }
 
@@ -130,31 +117,6 @@
       line-height: $euiFormControlCompressedHeight; /* 2 */
       padding-top: 0;
       padding-bottom: 0;
-
-      @include euiFormControlLayoutPadding(1, $compressed: true); /* 2 */
-
-      &.euiComboBox__inputWrap-isClearable {
-        @include euiFormControlLayoutPadding(2, $compressed: true); /* 2 */
-      }
-
-      &.euiComboBox__inputWrap-isLoading {
-        @include euiFormControlLayoutPadding(2, $compressed: true); /* 2 */
-
-        .euiComboBoxPlaceholder {
-          @include euiFormControlLayoutPadding(2, $compressed: true); /* 2 */
-        }
-      }
-
-      &.euiComboBox__inputWrap-isLoading.euiComboBox__inputWrap-isClearable {
-        @include euiFormControlLayoutPadding(3, $compressed: true); /* 2 */
-      }
     }
-  }
-
-  // Overrides the euiFormControlLayout prepend and append height that is 100%
-  .euiFormControlLayout__prepend,
-  .euiFormControlLayout__append {
-    // stylelint-disable-next-line declaration-no-important
-    height: auto !important;
   }
 }

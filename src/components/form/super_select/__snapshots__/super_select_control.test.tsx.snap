@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EuiSuperSelectControl is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -15,12 +15,12 @@ Array [
       <button
         aria-haspopup="listbox"
         aria-label="aria-label"
-        class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2"
+        class="euiSuperSelectControl euiFormControlLayout--1icons testClass1 testClass2 emotion-euiTestCss"
         data-test-subj="test subject string"
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -33,16 +33,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props compressed is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout euiFormControlLayout--compressed"
   >
@@ -55,7 +55,7 @@ Array [
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -68,16 +68,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props disabled options are rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -90,7 +90,7 @@ Array [
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -103,16 +103,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props empty value option is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -125,7 +125,7 @@ Array [
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -138,16 +138,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props fullWidth is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout euiFormControlLayout--fullWidth"
   >
@@ -160,7 +160,7 @@ Array [
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -173,16 +173,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props isInvalid is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -195,7 +195,7 @@ Array [
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           color="danger"
@@ -212,16 +212,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props isLoading is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -234,7 +234,7 @@ Array [
         type="button"
       />
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           aria-label="Loading"
@@ -252,16 +252,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props placeholder is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value=""
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -280,7 +280,7 @@ Array [
         </span>
       </button>
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -293,16 +293,16 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiSuperSelectControl props value option is rendered 1`] = `
-Array [
+<div>
   <input
     type="hidden"
     value="1"
-  />,
+  />
   <div
     class="euiFormControlLayout"
   >
@@ -317,7 +317,7 @@ Array [
         Option #1
       </button>
       <div
-        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right"
+        class="euiFormControlLayoutIcons euiFormControlLayoutIcons--right euiFormControlLayoutIcons--absolute"
       >
         <span
           class="euiFormControlLayoutCustomIcon"
@@ -330,6 +330,6 @@ Array [
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;

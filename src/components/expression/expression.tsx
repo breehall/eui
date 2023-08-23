@@ -34,7 +34,7 @@ export const COLORS = [
   'danger',
 ] as const;
 
-export type ExpressionColor = typeof COLORS[number];
+export type ExpressionColor = (typeof COLORS)[number];
 
 export type EuiExpressionProps = CommonProps & {
   /**
@@ -92,10 +92,9 @@ type Buttonlike = EuiExpressionProps &
 type Spanlike = EuiExpressionProps &
   Omit<HTMLAttributes<HTMLSpanElement>, 'value'>;
 
-export const EuiExpression: FunctionComponent<ExclusiveUnion<
-  Buttonlike,
-  Spanlike
->> = ({
+export const EuiExpression: FunctionComponent<
+  ExclusiveUnion<Buttonlike, Spanlike>
+> = ({
   className,
   description,
   descriptionProps,
@@ -149,13 +148,9 @@ export const EuiExpression: FunctionComponent<ExclusiveUnion<
 
   const Component = onClick ? 'button' : 'span';
 
-  const descriptionStyle = descriptionProps && descriptionProps.style;
   const customWidth =
     display === 'columns' && descriptionWidth
-      ? {
-          flexBasis: descriptionWidth,
-          ...descriptionStyle,
-        }
+      ? { flexBasis: descriptionWidth }
       : undefined;
 
   const invalidIcon = isInvalid ? (
@@ -170,18 +165,21 @@ export const EuiExpression: FunctionComponent<ExclusiveUnion<
   return (
     <Component css={cssStyles} className={classes} onClick={onClick} {...rest}>
       <span
-        className="euiExpression__description"
-        css={cssDescriptionStyles}
-        style={customWidth}
         {...descriptionProps}
+        className={classNames(
+          'euiExpression__description',
+          descriptionProps?.className
+        )}
+        css={[...cssDescriptionStyles, descriptionProps?.css]}
+        style={{ ...customWidth, ...descriptionProps?.style }}
       >
         {description}
       </span>{' '}
       {value && (
         <span
-          className="euiExpression__value"
-          css={cssValueStyles}
           {...valueProps}
+          className={classNames('euiExpression__value', valueProps?.className)}
+          css={[...cssValueStyles, valueProps?.css]}
         >
           {value}
         </span>

@@ -20,10 +20,7 @@ import {
   EuiTableSortingType,
 } from './table_types';
 import { PropertySort } from '../../services';
-import {
-  defaults as paginationBarDefaults,
-  Pagination as PaginationBarType,
-} from './pagination_bar';
+import { Pagination as PaginationBarType } from './pagination_bar';
 import { isString } from '../../services/predicate';
 import { Comparators, Direction } from '../../services/sort';
 import { EuiSearchBar, Query } from '../search_bar';
@@ -31,7 +28,14 @@ import { EuiSpacer } from '../spacer';
 import { CommonProps } from '../common';
 import { EuiSearchBarProps } from '../search_bar/search_bar';
 import { SchemaType } from '../search_bar/search_box';
-import { EuiTablePaginationProps } from '../table';
+import {
+  EuiTablePaginationProps,
+  euiTablePaginationDefaults,
+} from '../table/table_pagination';
+import {
+  EuiComponentDefaultsContext,
+  EuiComponentDefaults,
+} from '../provider/component_defaults';
 
 interface onChangeArgument {
   query: Query | null;
@@ -72,7 +76,13 @@ type InMemoryTableProps<T> = Omit<
    * Configures #Search.
    */
   search?: Search;
+  /**
+   * Configures #Pagination
+   */
   pagination?: undefined;
+  /**
+   * Configures #EuiTableSortingType
+   */
   sorting?: Sorting;
   /**
    * Set `allowNeutralSort` to false to force column sorting. Defaults to true.
@@ -152,7 +162,10 @@ const getQueryFromSearch = (
   return isString(query) ? EuiSearchBar.Query.parse(query) : query;
 };
 
-const getInitialPagination = (pagination: Pagination | undefined) => {
+const getInitialPagination = (
+  pagination: Pagination | undefined,
+  consumerDefaults: EuiComponentDefaults['EuiTablePagination']
+) => {
   if (!pagination) {
     return {
       pageIndex: undefined,
@@ -160,14 +173,19 @@ const getInitialPagination = (pagination: Pagination | undefined) => {
     };
   }
 
+  const defaults = {
+    ...euiTablePaginationDefaults,
+    ...consumerDefaults,
+  };
+
   const {
-    pageSizeOptions = paginationBarDefaults.pageSizeOptions,
-    showPerPageOptions,
+    pageSizeOptions = defaults.itemsPerPageOptions,
+    showPerPageOptions = defaults.showPerPageOptions,
   } = pagination as PaginationOptions;
 
-  const defaultPageSize = pageSizeOptions
-    ? pageSizeOptions[0]
-    : paginationBarDefaults.pageSizeOptions[0];
+  const defaultPageSize = pageSizeOptions?.includes(defaults.itemsPerPage)
+    ? defaults.itemsPerPage
+    : pageSizeOptions[0];
 
   const initialPageIndex =
     pagination === true
@@ -181,7 +199,7 @@ const getInitialPagination = (pagination: Pagination | undefined) => {
   if (
     showPerPageOptions &&
     initialPageSize != null &&
-    (!pageSizeOptions || !pageSizeOptions.includes(initialPageSize))
+    !pageSizeOptions?.includes(initialPageSize)
   ) {
     throw new Error(
       `EuiInMemoryTable received initialPageSize ${initialPageSize}, which wasn't provided within pageSizeOptions.`
@@ -237,10 +255,9 @@ function getInitialSorting<T>(
     };
   }
 
-  const {
-    field: sortable,
-    direction: sortDirection,
-  } = (sorting as SortingOptions).sort;
+  const { field: sortable, direction: sortDirection } = (
+    sorting as SortingOptions
+  ).sort;
 
   const sortColumn = findColumnByFieldOrName(columns, sortable);
 
@@ -263,6 +280,8 @@ export class EuiInMemoryTable<T> extends Component<
   EuiInMemoryTableProps<T>,
   State<T>
 > {
+  static contextType = EuiComponentDefaultsContext;
+
   static defaultProps = {
     responsive: true,
     tableLayout: 'fixed',
@@ -363,16 +382,12 @@ export class EuiInMemoryTable<T> extends Component<
     return null;
   }
 
-  constructor(props: EuiInMemoryTableProps<T>) {
+  constructor(props: EuiInMemoryTableProps<T>, context: EuiComponentDefaults) {
     super(props);
 
     const { columns, search, pagination, sorting, allowNeutralSort } = props;
-    const {
-      pageIndex,
-      pageSize,
-      pageSizeOptions,
-      showPerPageOptions,
-    } = getInitialPagination(pagination);
+    const { pageIndex, pageSize, pageSizeOptions, showPerPageOptions } =
+      getInitialPagination(pagination, context.EuiTablePagination);
     const { sortName, sortDirection } = getInitialSorting(columns, sorting);
 
     this.state = {
@@ -428,7 +443,10 @@ export class EuiInMemoryTable<T> extends Component<
     // EuiBasicTable returns the column's `field` instead of `name` on sort
     // and the column's `name` instead of `field` on pagination
     if (sortName) {
-      const sortColumn = findColumnByFieldOrName(this.props.columns, sortName);
+      const sortColumn = findColumnByFieldOrName(
+        this.props.columns,
+        sortName as ReactNode
+      );
       if (sortColumn) {
         // Ensure sortName uses `name`
         sortName = sortColumn.name as keyof T;
@@ -465,7 +483,7 @@ export class EuiInMemoryTable<T> extends Component<
     this.setState({
       pageIndex,
       pageSize,
-      sortName,
+      sortName: sortName as ReactNode,
       sortDirection,
     });
   };

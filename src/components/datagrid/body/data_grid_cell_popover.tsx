@@ -16,17 +16,16 @@ import {
   EuiDataGridCellPopoverElementProps,
 } from '../data_grid_types';
 
-export const DataGridCellPopoverContext = createContext<
-  DataGridCellPopoverContextShape
->({
-  popoverIsOpen: false,
-  cellLocation: { rowIndex: 0, colIndex: 0 },
-  openCellPopover: () => {},
-  closeCellPopover: () => {},
-  setPopoverAnchor: () => {},
-  setPopoverContent: () => {},
-  setCellPopoverProps: () => {},
-});
+export const DataGridCellPopoverContext =
+  createContext<DataGridCellPopoverContextShape>({
+    popoverIsOpen: false,
+    cellLocation: { rowIndex: 0, colIndex: 0 },
+    openCellPopover: () => {},
+    closeCellPopover: () => {},
+    setPopoverAnchor: () => {},
+    setPopoverContent: () => {},
+    setCellPopoverProps: () => {},
+  });
 
 export const useCellPopover = (): {
   cellPopoverContext: DataGridCellPopoverContextShape;
@@ -47,7 +46,9 @@ export const useCellPopover = (): {
   >({});
 
   const closeCellPopover = useCallback(() => setPopoverIsOpen(false), []);
-  const openCellPopover = useCallback(
+  const openCellPopover = useCallback<
+    DataGridCellPopoverContextShape['openCellPopover']
+  >(
     ({ rowIndex, colIndex }) => {
       // Prevent popover DOM issues when re-opening the same popover
       if (
@@ -147,7 +148,7 @@ export const JsonPopoverContent = ({ cellText }: { cellText: string }) => {
   let formattedText = cellText;
   try {
     formattedText = JSON.stringify(JSON.parse(formattedText), null, 2);
-  } catch (e) {} // eslint-disable-line no-empty
+  } catch (e) {}
 
   return (
     <EuiCodeBlock

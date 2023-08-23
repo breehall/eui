@@ -2,8 +2,6 @@ import React, { createElement, Fragment } from 'react';
 
 import { slugify } from '../../src/services';
 
-import { createHashHistory } from 'history';
-
 import { GuideSection, GuideMarkdownFormat } from './components';
 
 import { GuideTabbedPage } from './components/guide_tabbed_page';
@@ -151,6 +149,8 @@ import { ImageExample } from './views/image/image_example';
 
 import { InnerTextExample } from './views/inner_text/inner_text_example';
 
+import { InlineEditExample } from './views/inline_edit/inline_edit_example';
+
 import { KeyPadMenuExample } from './views/key_pad_menu/key_pad_menu_example';
 
 import { LinkExample } from './views/link/link_example';
@@ -296,15 +296,8 @@ const createExample = (example, customTitle) => {
     );
   }
 
-  const {
-    title,
-    sections,
-    beta,
-    isNew,
-    playground,
-    guidelines,
-    ...rest
-  } = example;
+  const { title, sections, isBeta, isNew, playground, guidelines, ...rest } =
+    example;
   const filteredSections = sections.filter((section) => section !== undefined);
 
   filteredSections.forEach((section) => {
@@ -332,7 +325,8 @@ const createExample = (example, customTitle) => {
     <EuiErrorBoundary>
       <GuideTabbedPage
         title={title}
-        isBeta={beta}
+        isBeta={isBeta}
+        isNew={isNew}
         playground={playgroundComponent}
         guidelines={guidelines}
         {...rest}
@@ -346,12 +340,13 @@ const createExample = (example, customTitle) => {
     name: customTitle || title,
     component,
     sections: filteredSections,
+    isBeta,
     isNew,
     hasGuidelines: typeof guidelines !== 'undefined',
   };
 };
 
-const createTabbedPage = ({ title, pages, isNew, ...rest }) => {
+const createTabbedPage = ({ title, pages, isBeta, isNew, ...rest }) => {
   const component = () => (
     <GuideTabbedPage title={title} pages={pages} {...rest} />
   );
@@ -368,6 +363,7 @@ const createTabbedPage = ({ title, pages, isNew, ...rest }) => {
     name: title,
     component,
     sections: pagesSections,
+    isBeta,
     isNew,
   };
 };
@@ -589,6 +585,7 @@ const navigation = [
       DatePickerExample,
       ExpressionExample,
       FilterGroupExample,
+      InlineEditExample,
       RangeControlExample,
       SearchBarExample,
       SelectableExample,
@@ -691,7 +688,6 @@ const allRoutes = navigation.reduce((accummulatedRoutes, section) => {
 }, []);
 
 export default {
-  history: createHashHistory(),
   navigation,
 
   getAppRoutes: function getAppRoutes() {

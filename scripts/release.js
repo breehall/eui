@@ -41,13 +41,12 @@ if (args.dry_run) {
     process.exit(1);
   }
 
-  // ensure git is on the correct remote and branch
-  await ensureUpstreamRemote();
-  await ensureMainBranch();
+  // ensure git and local setup is at latest
+  await ensureCorrectSetup();
 
-  // run linting and unit tests
+  // run lint, unit, and e2e tests
   if (args.steps.indexOf('test') > -1) {
-    execSync('npm test', execOptions);
+    execSync('npm run test-ci', execOptions);
   }
 
   // (trans|com)pile `src` into `lib` and `dist`
@@ -116,8 +115,7 @@ function parseArguments() {
 
   const allSteps = ['test', 'build', 'version', 'tag', 'publish', 'docs'];
   parser.add_argument('--steps', {
-    help:
-      'Which release steps to run; a comma-separated list of values that can include "test", "build", "version", "tag", "publish" and "docs". If no value is given, all steps are run. Example: --steps=test,build,version,tag',
+    help: 'Which release steps to run; a comma-separated list of values that can include "test", "build", "version", "tag", "publish" and "docs". If no value is given, all steps are run. Example: --steps=test,build,version,tag',
     default: allSteps.join(','),
   });
 
@@ -137,7 +135,14 @@ function parseArguments() {
   };
 }
 
-async function ensureUpstreamRemote() {
+async function ensureCorrectSetup() {
+  if (process.env.CI === 'true') {
+    return;
+  }
+
+  /**
+   * Ensure remote upstream is set to the correct repo
+   */
   try {
     const upstreamRemote = execSync('git config --get remote.upstream.url')
       .toString()
@@ -159,24 +164,31 @@ async function ensureUpstreamRemote() {
     );
     process.exit(1);
   }
-}
 
-async function ensureMainBranch() {
-  // ignore main check in CI since it's checking out the HEAD commit instead
-  if (process.env.CI === 'true') {
-    return;
-  }
-
-  // Obtain current branch name from git
-  const currentBranchName = execSync('git rev-parse --abbrev-ref HEAD')
-    .toString()
-    .trim();
-  if (currentBranchName !== 'main') {
+  /**
+   * Ensure the current branch is clean and pointed at upstream/main
+   */
+  const branchStatus = execSync('git status -v').toString().trim();
+  if (
+    !branchStatus.includes("Your branch is up to date with 'upstream/main'.")
+  ) {
     console.error(
-      `Unable to release: currently on branch "${currentBranchName}", expected "main"`
+      'Your branch is not pointed at "upstream/main". Please ensure your `main` branch is pointed at the correct remote first before proceeding.'
     );
     process.exit(1);
   }
+  if (!branchStatus.endsWith('nothing to commit, working tree clean')) {
+    console.error(
+      'Your staging is not clean. Please stash or check out your local changes before proceeding.'
+    );
+    process.exit(1);
+  }
+
+  /**
+   * Ensure latest has been pulled and dependencies are up to date
+   */
+  execSync('git pull');
+  execSync('yarn');
 }
 
 async function getVersionTypeFromChangelog(changelogMap) {

@@ -6,7 +6,9 @@
  * Side Public License, v 1.
  */
 
-/// <reference types="../../../../cypress/support"/>
+/// <reference types="cypress" />
+/// <reference types="cypress-real-events" />
+/// <reference types="../../../../cypress/support" />
 
 import React, { useState, useCallback } from 'react';
 
@@ -75,7 +77,7 @@ describe('EuiDataGridBodyCustomRender', () => {
         rowCount={raw_data.length}
         columns={columns}
         renderCellValue={({ rowIndex, columnId }) =>
-          `${columnId},${raw_data[rowIndex][columnId]}`
+          `${columnId},${raw_data[rowIndex][columnId as 'A' | 'B']}`
         }
         renderCustomGridBody={CustomGridBody}
         columnVisibility={{ visibleColumns, setVisibleColumns }}
@@ -144,7 +146,7 @@ describe('EuiDataGridBodyCustomRender', () => {
     ).contains('A,0');
 
     cy.get('[data-test-subj="dataGridHeaderCell-B"] button').click();
-    cy.contains('Hide column').click();
+    cy.contains('Hide column').should('be.visible').click();
 
     cy.get(
       '[data-gridcell-row-index="0"][data-gridcell-column-index="0"]'

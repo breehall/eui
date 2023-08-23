@@ -43,13 +43,13 @@ import { EuiScreenReaderOnly } from '../accessibility';
 import { euiFlyoutStyles, euiFlyoutCloseButtonStyles } from './flyout.styles';
 
 export const TYPES = ['push', 'overlay'] as const;
-type _EuiFlyoutType = typeof TYPES[number];
+type _EuiFlyoutType = (typeof TYPES)[number];
 
 export const SIDES = ['left', 'right'] as const;
-type _EuiFlyoutSide = typeof SIDES[number];
+export type _EuiFlyoutSide = (typeof SIDES)[number];
 
 export const SIZES = ['s', 'm', 'l'] as const;
-export type EuiFlyoutSize = typeof SIZES[number];
+export type EuiFlyoutSize = (typeof SIZES)[number];
 
 /**
  * Custom type checker for named flyout sizes since the prop
@@ -60,7 +60,7 @@ function isEuiFlyoutSizeNamed(value: any): value is EuiFlyoutSize {
 }
 
 export const PADDING_SIZES = ['none', 's', 'm', 'l'] as const;
-export type _EuiFlyoutPaddingSize = typeof PADDING_SIZES[number];
+export type _EuiFlyoutPaddingSize = (typeof PADDING_SIZES)[number];
 
 interface _EuiFlyoutProps {
   onClose: (event: MouseEvent | TouchEvent | KeyboardEvent) => void;
@@ -158,9 +158,8 @@ type Props<T extends ElementType> = CommonProps & {
 } & _EuiFlyoutProps &
   Omit<PropsOfElement<T>, keyof _EuiFlyoutProps>;
 
-export type EuiFlyoutProps<
-  T extends ElementType = typeof defaultElement
-> = Props<T> & Omit<ComponentPropsWithRef<T>, keyof Props<T>>;
+export type EuiFlyoutProps<T extends ElementType = typeof defaultElement> =
+  Props<T> & Omit<ComponentPropsWithRef<T>, keyof Props<T>>;
 
 export const EuiFlyout = forwardRef(
   <T extends ElementType = typeof defaultElement>(
@@ -184,6 +183,7 @@ export const EuiFlyout = forwardRef(
       pushMinBreakpoint = 'l',
       focusTrapProps: _focusTrapProps = {},
       includeFixedHeadersInFocusTrap = true,
+      'aria-describedby': _ariaDescribedBy,
       ...rest
     }: EuiFlyoutProps<T>,
     ref:
@@ -194,9 +194,8 @@ export const EuiFlyout = forwardRef(
     const Element = as || defaultElement;
     const maskRef = useRef<HTMLDivElement>(null);
 
-    const windowIsLargeEnoughToPush = useIsWithinMinBreakpoint(
-      pushMinBreakpoint
-    );
+    const windowIsLargeEnoughToPush =
+      useIsWithinMinBreakpoint(pushMinBreakpoint);
     const isPushed = type === 'push' && windowIsLargeEnoughToPush;
 
     /**
@@ -284,19 +283,18 @@ export const EuiFlyout = forwardRef(
       );
 
       const closeButtonStyles = euiFlyoutCloseButtonStyles(euiTheme);
-
       const closeButtonCssStyles = [
         closeButtonStyles.euiFlyout__closeButton,
         closeButtonStyles[closeButtonPosition],
         closeButtonPosition === 'outside' &&
           closeButtonStyles.outsideSide[side],
+        closeButtonProps?.css,
       ];
 
       closeButton = (
         <EuiI18n token="euiFlyout.closeAriaLabel" default="Close this dialog">
           {(closeAriaLabel: string) => (
             <EuiButtonIcon
-              css={closeButtonCssStyles}
               display={closeButtonPosition === 'outside' ? 'fill' : 'empty'}
               iconType="cross"
               color="text"
@@ -304,6 +302,7 @@ export const EuiFlyout = forwardRef(
               data-test-subj="euiFlyoutCloseButton"
               {...closeButtonProps}
               className={closeButtonClasses}
+              css={closeButtonCssStyles}
               onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
                 onClose(e.nativeEvent);
                 closeButtonProps?.onClick?.(e);
@@ -351,6 +350,7 @@ export const EuiFlyout = forwardRef(
      */
     const hasOverlayMask = ownFocus && !isPushed;
     const descriptionId = useGeneratedHtmlId();
+    const ariaDescribedBy = classnames(descriptionId, _ariaDescribedBy);
 
     const screenReaderDescription = (
       <EuiScreenReaderOnly>
@@ -405,21 +405,21 @@ export const EuiFlyout = forwardRef(
     let flyout = (
       <EuiFocusTrap
         disabled={isPushed}
-        scrollLock={ownFocus}
+        scrollLock={hasOverlayMask}
         clickOutsideDisables={!ownFocus}
         onClickOutside={onClickOutside}
         {...focusTrapProps}
       >
         <Element
-          css={cssStyles}
-          {...(rest as ComponentPropsWithRef<T>)}
-          role="dialog"
           className={classes}
-          tabIndex={0}
-          data-autofocus
-          aria-describedby={!isPushed ? descriptionId : undefined}
+          css={cssStyles}
           style={newStyle}
           ref={setRef}
+          {...(rest as ComponentPropsWithRef<T>)}
+          role={!isPushed ? 'dialog' : rest.role}
+          tabIndex={!isPushed ? 0 : rest.tabIndex}
+          aria-describedby={!isPushed ? ariaDescribedBy : _ariaDescribedBy}
+          data-autofocus={!isPushed || undefined}
         >
           {!isPushed && screenReaderDescription}
           {closeButton}

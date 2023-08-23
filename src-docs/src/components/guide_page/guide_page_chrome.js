@@ -41,6 +41,24 @@ export class GuidePageChrome extends Component {
     });
   };
 
+  renderSideNavBadge = ({ isBeta, isNew }) => {
+    if (isBeta) {
+      return (
+        <EuiBadge color="warning" className="guideSideNav__itemBadge">
+          BETA
+        </EuiBadge>
+      );
+    }
+    if (isNew) {
+      return (
+        <EuiBadge color="accent" className="guideSideNav__itemBadge">
+          NEW
+        </EuiBadge>
+      );
+    }
+    return undefined;
+  };
+
   scrollNavSectionIntoView = () => {
     // wait a bit for react to blow away and re-create the DOM
     // then scroll the selected nav section into view
@@ -80,7 +98,7 @@ export class GuidePageChrome extends Component {
       return;
     }
 
-    return subSectionsWithTitles.map(({ title, sections }) => {
+    return subSectionsWithTitles.map(({ title, isBeta, isNew, sections }) => {
       const id = slugify(title);
 
       const subSectionHref = `${href}/${id}`;
@@ -91,9 +109,8 @@ export class GuidePageChrome extends Component {
         ? this.renderSubSections(sectionHref, sections, searchTerm)
         : undefined;
 
-      const isCurrentlyOpenSubSection = window.location.hash.includes(
-        subSectionHref
-      );
+      const isCurrentlyOpenSubSection =
+        window.location.hash.includes(subSectionHref);
 
       let name = title;
       if (searchTerm) {
@@ -116,6 +133,7 @@ export class GuidePageChrome extends Component {
           : '',
         items: subItems,
         forceOpen: !!searchTerm || isCurrentlyOpenSubSection,
+        icon: this.renderSideNavBadge({ isBeta, isNew }),
       };
     });
   };
@@ -143,18 +161,9 @@ export class GuidePageChrome extends Component {
       });
 
       const items = matchingItems.map((item) => {
-        const { name, path, sections, isNew } = item;
+        const { name, path, sections, isBeta, isNew } = item;
 
         const href = `#/${path}`;
-
-        let newBadge;
-        if (isNew) {
-          newBadge = (
-            <EuiBadge color="accent" className="guideSideNav__newBadge">
-              NEW
-            </EuiBadge>
-          );
-        }
 
         let visibleName = name;
         if (searchTerm) {
@@ -176,7 +185,7 @@ export class GuidePageChrome extends Component {
           isSelected: item.path === this.props.currentRoute.path,
           forceOpen: !!(searchTerm && hasMatchingSubItem),
           className: 'guideSideNav__item',
-          icon: newBadge,
+          icon: this.renderSideNavBadge({ isBeta, isNew }),
         };
       });
 

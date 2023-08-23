@@ -27,6 +27,7 @@ import { EuiComboBoxTitle } from './combo_box_title';
 import { EuiI18n } from '../../i18n';
 import {
   EuiFilterSelectItem,
+  EuiFilterSelectItemClass,
   FilterChecked,
 } from '../../filter_group/filter_select_item';
 import { htmlIdGenerator } from '../../../services';
@@ -73,7 +74,10 @@ export type EuiComboBoxOptionsListProps<T> = CommonProps &
     onOptionClick?: OptionHandler<T>;
     onOptionEnterKey?: OptionHandler<T>;
     onScroll?: ListProps['onScroll'];
-    optionRef: (index: number, node: RefInstance<EuiFilterSelectItem>) => void;
+    optionRef: (
+      index: number,
+      node: RefInstance<EuiFilterSelectItemClass>
+    ) => void;
     /**
      * Array of EuiComboBoxOptionOption objects. See #EuiComboBoxOptionOption
      */
@@ -207,7 +211,8 @@ export class EuiComboBoxOptionsList<T> extends Component<
 
   ListRow = ({ data, index, style }: ListChildComponentProps) => {
     const option = data[index];
-    const { key, isGroupLabelOption, label, value, ...rest } = option;
+    const { key, isGroupLabelOption, label, value, prepend, append, ...rest } =
+      option;
     const {
       singleSelection,
       selectedOptions,
@@ -259,6 +264,9 @@ export class EuiComboBoxOptionsList<T> extends Component<
         {...rest}
       >
         <span className="euiComboBoxOption__contentWrapper">
+          {prepend && (
+            <span className="euiComboBoxOption__prepend">{prepend}</span>
+          )}
           {renderOption ? (
             <span className={OPTION_CONTENT_CLASSNAME}>
               {renderOption(
@@ -275,6 +283,9 @@ export class EuiComboBoxOptionsList<T> extends Component<
             >
               {label}
             </EuiHighlight>
+          )}
+          {append && (
+            <span className="euiComboBoxOption__append">{append}</span>
           )}
           {optionIsFocused && !optionIsDisabled ? hitEnterBadge : null}
         </span>
@@ -479,7 +490,7 @@ export class EuiComboBoxOptionsList<T> extends Component<
         hasShadow={false}
         className={classes}
         panelRef={this.listRefCallback}
-        data-test-subj={`comboBoxOptionsList ${dataTestSubj}`}
+        data-test-subj={classNames('comboBoxOptionsList', dataTestSubj)}
         style={{ ...style, zIndex: zIndex }}
         isOpen
         isAttached

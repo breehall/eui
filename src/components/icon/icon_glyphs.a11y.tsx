@@ -6,7 +6,9 @@
  * Side Public License, v 1.
  */
 
-/// <reference types="../../../cypress/support"/>
+/// <reference types="cypress" />
+/// <reference types="cypress-real-events" />
+/// <reference types="../../../cypress/support" />
 
 import React from 'react';
 import { EuiIcon } from './icon';
@@ -222,6 +224,7 @@ describe('EuiIcons', () => {
       'sortRight',
       'sortUp',
       'spaces',
+      'sparkles',
       'starEmpty',
       'starEmptySpace',
       'starFilled',
@@ -247,6 +250,7 @@ describe('EuiIcons', () => {
       'tear',
       'temperature',
       'timeline',
+      'timelineWithArrow',
       'timeRefresh',
       'timeslider',
       'training',

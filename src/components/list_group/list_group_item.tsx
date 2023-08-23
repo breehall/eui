@@ -19,7 +19,7 @@ import React, {
 import classNames from 'classnames';
 
 import { EuiIcon, IconType, EuiIconProps } from '../icon';
-import { EuiToolTip } from '../tool_tip';
+import { EuiToolTip, EuiToolTipProps } from '../tool_tip';
 import { useInnerText } from '../inner_text';
 import { ExclusiveUnion, CommonProps } from '../common';
 import {
@@ -27,8 +27,11 @@ import {
   EuiListGroupItemExtraActionProps,
 } from './list_group_item_extra_action';
 
-import { getSecureRelForTarget, useEuiTheme } from '../../services';
-import { cloneElementWithCss } from '../../services/theme/clone_element';
+import {
+  getSecureRelForTarget,
+  useEuiTheme,
+  cloneElementWithCss,
+} from '../../services';
 import { validateHref } from '../../services/security/href_validator';
 
 import {
@@ -40,10 +43,10 @@ import {
 } from './list_group_item.styles';
 
 export const SIZES = ['xs', 's', 'm', 'l'] as const;
-export type EuiListGroupItemSize = typeof SIZES[number];
+export type EuiListGroupItemSize = (typeof SIZES)[number];
 
 export const COLORS = ['primary', 'text', 'subdued'] as const;
-export type EuiListGroupItemColor = typeof COLORS[number];
+export type EuiListGroupItemColor = (typeof COLORS)[number];
 
 export type EuiListGroupItemProps = CommonProps &
   Omit<
@@ -141,6 +144,12 @@ export type EuiListGroupItemProps = CommonProps &
      * By default the text will be same as the label text.
      */
     toolTipText?: string;
+
+    /**
+     * Allows customizing the tooltip shown when `showToolTip` is true.
+     * Accepts any props that [EuiToolTip](/#/display/tooltip) accepts.
+     */
+    toolTipProps?: Partial<EuiToolTipProps>;
   };
 
 export const EuiListGroupItem: FunctionComponent<EuiListGroupItemProps> = ({
@@ -163,6 +172,7 @@ export const EuiListGroupItem: FunctionComponent<EuiListGroupItemProps> = ({
   wrapText,
   buttonRef,
   toolTipText,
+  toolTipProps,
   ...rest
 }) => {
   const isClickable = !!(href || onClick);
@@ -172,7 +182,7 @@ export const EuiListGroupItem: FunctionComponent<EuiListGroupItemProps> = ({
   const euiTheme = useEuiTheme();
 
   const iconStyles = euiListGroupItemIconStyles(euiTheme);
-  const cssIconStyles = [iconStyles.euiListGroupItem__icon];
+  const cssIconStyles = [iconStyles.euiListGroupItem__icon, iconProps?.css];
 
   let iconNode;
 
@@ -180,10 +190,10 @@ export const EuiListGroupItem: FunctionComponent<EuiListGroupItemProps> = ({
     iconNode = (
       <EuiIcon
         color="inherit" // forces the icon to inherit its parent color
-        css={cssIconStyles}
         {...iconProps}
         type={iconType}
         className={classNames('euiListGroupItem__icon', iconProps?.className)}
+        css={cssIconStyles}
       />
     );
 
@@ -317,16 +327,30 @@ export const EuiListGroupItem: FunctionComponent<EuiListGroupItemProps> = ({
 
   if (showToolTip) {
     const tooltipStyles = euiListGroupItemTooltipStyles();
-    const cssTooltipStyles = [tooltipStyles.euiListGroupItem__tooltip];
+    const cssTooltipStyles = [
+      tooltipStyles.euiListGroupItem__tooltip,
+      toolTipProps?.anchorProps?.css,
+    ];
+
+    const anchorClasses = classNames(
+      'euiListGroupItem__tooltip',
+      toolTipProps?.anchorClassName
+    );
+
+    const anchorPropsAndCss = {
+      ...toolTipProps?.anchorProps,
+      css: cssTooltipStyles,
+    };
 
     itemContent = (
       <li className={classes} css={cssStyles}>
         <EuiToolTip
-          anchorClassName="euiListGroupItem__tooltip"
-          anchorProps={{ css: cssTooltipStyles }}
           content={toolTipText ?? label}
           position="right"
           delay="long"
+          {...toolTipProps}
+          anchorClassName={anchorClasses}
+          anchorProps={anchorPropsAndCss}
         >
           {itemContent}
         </EuiToolTip>

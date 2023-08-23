@@ -46,7 +46,11 @@ export type StrictColorModeSwitch<T = string> = {
 
 export type EuiThemeShape = {
   colors: _EuiThemeColors;
+  /** - Default value: 16 */
   base: _EuiThemeBase;
+  /**
+   * @see {@link https://eui.elastic.co/#/theming/sizing | Reference} for more information
+   */
   size: _EuiThemeSizes;
   font: _EuiThemeFont;
   border: _EuiThemeBorder;
@@ -88,4 +92,11 @@ export type ComputedThemeShape<
 
 export type EuiThemeComputed<T = {}> = ComputedThemeShape<EuiThemeShape & T> & {
   themeName: string;
+};
+
+export type EuiThemeNested = {
+  isGlobalTheme: boolean;
+  hasDifferentColorFromGlobalTheme: boolean;
+  bodyColor: string;
+  colorClassName: string;
 };

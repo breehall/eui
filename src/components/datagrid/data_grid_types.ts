@@ -17,6 +17,8 @@ import {
   MutableRefObject,
   Ref,
   Component,
+  PropsWithChildren,
+  ComponentClass,
 } from 'react';
 import {
   VariableSizeGridProps,
@@ -151,7 +153,7 @@ export interface EuiDataGridControlHeaderCellProps {
   headerIsInteractive: boolean;
 }
 
-export interface EuiDataGridHeaderCellWrapperProps {
+export interface EuiDataGridHeaderCellWrapperProps extends PropsWithChildren {
   id: string;
   index: number;
   headerIsInteractive: boolean;
@@ -298,7 +300,7 @@ export type CommonGridProps = CommonProps &
      */
     inMemory?: EuiDataGridInMemory;
     /**
-     * A #EuiDataGridPagination object. Omit to disable pagination completely.
+     * A #EuiDataGridPaginationProps object. Omit to disable pagination completely.
      */
     pagination?: EuiDataGridPaginationProps;
     /**
@@ -427,7 +429,7 @@ export interface EuiDataGridBodyProps {
   renderFooterCellValue?: EuiDataGridCellProps['renderCellValue'];
   renderCustomGridBody?: EuiDataGridProps['renderCustomGridBody'];
   interactiveCellId: EuiDataGridCellProps['interactiveCellId'];
-  pagination?: EuiDataGridPaginationProps;
+  pagination?: Required<EuiDataGridPaginationProps>;
   headerIsInteractive: boolean;
   handleHeaderMutation: MutationCallback;
   setVisibleColumns: EuiDataGridHeaderRowProps['setVisibleColumns'];
@@ -453,9 +455,10 @@ export interface EuiDataGridCustomBodyProps {
    * that `EuiDataGridCell` accepts, such as `isExpandable` or `renderCellValue`.
    */
   Cell: JSXElementConstructor<
-    { colIndex: number; visibleRowIndex: number } & Partial<
-      EuiDataGridCellProps
-    >
+    {
+      colIndex: number;
+      visibleRowIndex: number;
+    } & Partial<EuiDataGridCellProps>
   >;
   /**
    * The currently visible columns are passed to your data grid renderer so that your
@@ -580,8 +583,8 @@ export interface EuiDataGridCellProps {
   className?: string;
   popoverContext: DataGridCellPopoverContextShape;
   renderCellValue:
-    | JSXElementConstructor<EuiDataGridCellValueElementProps>
-    | ((props: EuiDataGridCellValueElementProps) => ReactNode);
+    | ((props: EuiDataGridCellValueElementProps) => ReactNode)
+    | ComponentClass<EuiDataGridCellValueElementProps>;
   renderCellPopover?:
     | JSXElementConstructor<EuiDataGridCellPopoverElementProps>
     | ((props: EuiDataGridCellPopoverElementProps) => ReactNode);
@@ -591,7 +594,7 @@ export interface EuiDataGridCellProps {
   rowHeightsOptions?: EuiDataGridRowHeightsOptions;
   rowHeightUtils?: RowHeightUtilsType;
   rowManager?: EuiDataGridRowManager;
-  pagination?: EuiDataGridPaginationProps;
+  pagination?: Required<EuiDataGridPaginationProps>;
 }
 
 export interface EuiDataGridCellState {
@@ -704,8 +707,7 @@ export interface EuiDataGridColumn {
 }
 
 export type EuiDataGridColumnCellAction =
-  | JSXElementConstructor<EuiDataGridColumnCellActionProps>
-  | ((props: EuiDataGridColumnCellActionProps) => ReactNode);
+  ComponentType<EuiDataGridColumnCellActionProps>;
 
 export interface EuiDataGridColumnActions {
   /**
@@ -916,12 +918,16 @@ export interface EuiDataGridPaginationProps {
   /**
    * How many rows should initially be shown per page.
    * Pass `0` to display the selected "Show all" option and hide the pagination.
+   *
+   * @default 10
    */
-  pageSize: number;
+  pageSize?: number;
   /**
    * An array of page sizes the user can select from.
    * Pass `0` as one of the options to create a "Show all" option.
-   * Leave this prop undefined or use an empty array to hide "Rows per page" select button.
+   * Pass an empty array to hide "Rows per page" select button.
+   *
+   * @default [10, 25, 50]
    */
   pageSizeOptions?: number[];
   /**
@@ -934,18 +940,20 @@ export interface EuiDataGridPaginationProps {
   onChangePage: (pageIndex: number) => void;
 }
 
+export interface EuiDataGridColumnSortingConfig {
+  id: string;
+  direction: 'asc' | 'desc';
+}
+
 export interface EuiDataGridSorting {
   /**
    * A function that receives updated column sort details in response to user interactions in the toolbar controls
    */
-  onSort: (columns: EuiDataGridSorting['columns']) => void;
+  onSort: (columns: EuiDataGridColumnSortingConfig[]) => void;
   /**
    * An array of the column ids currently being sorted and their sort direction. The array order determines the sort order. `{ id: 'A'; direction: 'asc' }`
    */
-  columns: Array<{
-    id: string;
-    direction: 'asc' | 'desc';
-  }>;
+  columns: EuiDataGridColumnSortingConfig[];
 }
 
 export interface EuiDataGridInMemory {

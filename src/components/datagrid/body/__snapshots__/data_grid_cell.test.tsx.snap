@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EuiDataGridCell componentDidUpdate handles the cell popover by forwarding the cell's DOM node and contents to the parent popover context 1`] = `
-Array [
+<div>
   <div
     class="euiText emotion-euiText-m"
   >
@@ -17,9 +17,9 @@ Array [
         world
       </button>
     </div>
-  </div>,
+  </div>
   <div
-    class="euiPopoverFooter emotion-euiPopoverFooter-l"
+    class="euiPopoverFooter emotion-euiPopoverFooter-l-l"
   >
     <div
       class="euiFlexGroup emotion-euiFlexGroup-wrap-s-flexStart-stretch-row"
@@ -32,8 +32,8 @@ Array [
         </div>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`EuiDataGridCell renders 1`] = `
@@ -61,11 +61,13 @@ exports[`EuiDataGridCell renders 1`] = `
         <div>
           <button
             data-datagrid-interactable="true"
+            tabindex="-1"
           >
             hello
           </button>
           <button
             data-datagrid-interactable="true"
+            tabindex="-1"
           >
             world
           </button>
@@ -73,8 +75,10 @@ exports[`EuiDataGridCell renders 1`] = `
       </div>
       <p
         class="emotion-euiScreenReaderOnly"
+        hidden=""
       >
-        - someColumn, column 1, row 1
+        - 
+        someColumn, column 1, row 1
       </p>
     </div>
   </div>

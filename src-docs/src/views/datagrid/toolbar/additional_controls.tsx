@@ -16,6 +16,7 @@ import {
   EuiContextMenuItem,
   EuiContextMenuPanel,
   EuiPopover,
+  EuiDataGridPaginationProps,
 } from '../../../../../src';
 
 const columns = [
@@ -49,7 +50,7 @@ for (let i = 1; i < 20; i++) {
 }
 
 export default () => {
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+  const [pagination, setPagination] = useState({ pageIndex: 0 });
   const [isFlyoutVisible, setIsFlyoutVisible] = useState(false);
   const flyoutTitleId = useGeneratedHtmlId({
     prefix: 'dataGridAdditionalControlsFlyout',
@@ -94,13 +95,21 @@ export default () => {
     columns.map(({ id }) => id)
   );
 
-  const setPageIndex = useCallback(
-    (pageIndex) => setPagination({ ...pagination, pageIndex }),
-    [pagination, setPagination]
+  const setPageIndex = useCallback<EuiDataGridPaginationProps['onChangePage']>(
+    (pageIndex) =>
+      setPagination((pagination) => ({ ...pagination, pageIndex })),
+    []
   );
-  const setPageSize = useCallback(
-    (pageSize) => setPagination({ ...pagination, pageSize, pageIndex: 0 }),
-    [pagination, setPagination]
+  const setPageSize = useCallback<
+    EuiDataGridPaginationProps['onChangeItemsPerPage']
+  >(
+    (pageSize) =>
+      setPagination((pagination) => ({
+        ...pagination,
+        pageSize,
+        pageIndex: 0,
+      })),
+    []
   );
 
   return (
@@ -120,7 +129,6 @@ export default () => {
         renderCellValue={({ rowIndex, columnId }) => data[rowIndex][columnId]}
         pagination={{
           ...pagination,
-          pageSizeOptions: [5, 10, 25],
           onChangeItemsPerPage: setPageSize,
           onChangePage: setPageIndex,
         }}

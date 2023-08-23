@@ -95,18 +95,12 @@ export class EuiDualRangeClass extends Component<
 
   componentDidMount() {
     if (this.rangeSliderRef && this.rangeSliderRef.clientWidth === 0) {
-      // Safe to call `setState` inside conditional
-      // https://reactjs.org/docs/react-component.html#componentdidmount
-      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ isVisible: false });
     }
   }
 
   componentDidUpdate() {
     if (this.rangeSliderRef?.clientWidth && !this.state.isVisible) {
-      // Safe to call `setState` inside conditional
-      // https://reactjs.org/docs/react-component.html#componentdidupdate
-      // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({ isVisible: true });
     }
   }
@@ -387,6 +381,7 @@ export class EuiDualRangeClass extends Component<
     this.setState({
       rangeWidth: width,
     });
+    this.props.inputPopoverProps?.onPanelResize?.(width);
   };
 
   getNearestStep = (value: number) => {
@@ -457,6 +452,7 @@ export class EuiDualRangeClass extends Component<
       prepend,
       minInputProps,
       maxInputProps,
+      inputPopoverProps,
       isDraggable,
       theme,
       ...rest
@@ -466,7 +462,6 @@ export class EuiDualRangeClass extends Component<
 
     const { id } = this.state;
 
-    const digitTolerance = Math.max(String(min).length, String(max).length);
     const showInputOnly = showInput === 'inputWithPopover';
     const canShowDropdown = showInputOnly && !readOnly && !disabled;
 
@@ -477,29 +472,54 @@ export class EuiDualRangeClass extends Component<
         // Overridable props
         aria-describedby={this.props['aria-describedby']}
         aria-label={this.props['aria-label']}
+        disabled={disabled}
+        isInvalid={isInvalid}
+        name={`${name}-minValue`}
+        value={this.lowerValue}
+        readOnly={readOnly}
         {...minInputProps}
         // Non-overridable props
-        digitTolerance={digitTolerance}
         side="min"
         min={min}
         max={Number(this.upperValue)}
         step={step}
-        value={this.lowerValue}
-        disabled={disabled}
         compressed={compressed}
-        onChange={this.handleLowerInputChange}
-        onKeyDown={this.handleInputKeyDown}
-        name={`${name}-minValue`}
-        onFocus={canShowDropdown ? this.onInputFocus : onFocus}
-        onBlur={canShowDropdown ? this.onInputBlur : onBlur}
-        readOnly={readOnly}
         autoSize={!showInputOnly}
         fullWidth={!!showInputOnly && fullWidth}
-        isInvalid={isInvalid}
         controlOnly={showInputOnly}
-        onMouseDown={
-          showInputOnly ? () => (this.preventPopoverClose = true) : undefined
-        }
+        onChange={(event) => {
+          this.handleLowerInputChange(event);
+          minInputProps?.onChange?.(event);
+        }}
+        onKeyDown={(event) => {
+          this.handleInputKeyDown(event);
+          minInputProps?.onKeyDown?.(event);
+        }}
+        onFocus={(event) => {
+          if (canShowDropdown) {
+            this.onInputFocus(event);
+          } else {
+            onFocus?.(event);
+          }
+
+          minInputProps?.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          if (canShowDropdown) {
+            this.onInputBlur(event);
+          } else {
+            onBlur?.(event);
+          }
+
+          minInputProps?.onBlur?.(event);
+        }}
+        onMouseDown={(event) => {
+          if (showInputOnly) {
+            this.preventPopoverClose = true;
+          }
+
+          minInputProps?.onMouseDown?.(event);
+        }}
       />
     ) : undefined;
 
@@ -508,29 +528,54 @@ export class EuiDualRangeClass extends Component<
         // Overridable props
         aria-describedby={this.props['aria-describedby']}
         aria-label={this.props['aria-label']}
+        disabled={disabled}
+        isInvalid={isInvalid}
+        name={`${name}-maxValue`}
+        value={this.upperValue}
+        readOnly={readOnly}
         {...maxInputProps}
         // Non-overridable props
-        digitTolerance={digitTolerance}
         side="max"
         min={Number(this.lowerValue)}
         max={max}
         step={step}
-        value={this.upperValue}
-        disabled={disabled}
         compressed={compressed}
-        onChange={this.handleUpperInputChange}
-        onKeyDown={this.handleInputKeyDown}
-        name={`${name}-maxValue`}
-        onFocus={canShowDropdown ? this.onInputFocus : onFocus}
-        onBlur={canShowDropdown ? this.onInputBlur : onBlur}
-        readOnly={readOnly}
         autoSize={!showInputOnly}
         fullWidth={!!showInputOnly && fullWidth}
         controlOnly={showInputOnly}
-        isInvalid={isInvalid}
-        onMouseDown={
-          showInputOnly ? () => (this.preventPopoverClose = true) : undefined
-        }
+        onChange={(event) => {
+          this.handleUpperInputChange(event);
+          maxInputProps?.onChange?.(event);
+        }}
+        onKeyDown={(event) => {
+          this.handleInputKeyDown(event);
+          maxInputProps?.onKeyDown?.(event);
+        }}
+        onFocus={(event) => {
+          if (canShowDropdown) {
+            this.onInputFocus(event);
+          } else {
+            onFocus?.(event);
+          }
+
+          maxInputProps?.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          if (canShowDropdown) {
+            this.onInputBlur(event);
+          } else {
+            onBlur?.(event);
+          }
+
+          maxInputProps?.onBlur?.(event);
+        }}
+        onMouseDown={(event) => {
+          if (showInputOnly) {
+            this.preventPopoverClose = true;
+          }
+
+          maxInputProps?.onMouseDown?.(event);
+        }}
       />
     ) : undefined;
 
@@ -743,7 +788,11 @@ export class EuiDualRangeClass extends Component<
 
     const thePopover = showInputOnly ? (
       <EuiInputPopover
-        className="euiRange__popover"
+        {...inputPopoverProps}
+        className={classNames(
+          'euiDualRange__popover',
+          inputPopoverProps?.className
+        )}
         input={
           <EuiFormControlLayoutDelimited
             startControl={minInput!}
@@ -755,6 +804,7 @@ export class EuiDualRangeClass extends Component<
             append={append}
             prepend={prepend}
             isLoading={isLoading}
+            isInvalid={isInvalid}
           />
         }
         fullWidth={fullWidth}
